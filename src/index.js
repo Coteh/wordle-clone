@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameState = data.gameState;
                 wordleRenderer.renderInitialState(gameState.attempts);
                 currentInputElem = document.querySelector(
-                    `#middle > div:nth-child(${STARTING_LIVES - gameState.lives + 1}`
+                    `#middle > div:nth-child(${STARTING_LIVES - gameState.lives + 1})`
                 );
                 if (currentInputElem) currentInputElem.id = "current-input";
                 day = data.day;
