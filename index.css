@@ -1,0 +1,159 @@
+html {
+    font-size: 125%;
+}
+
+body {
+    background-color: black;
+    margin: 0;
+}
+
+svg {
+    color: white;
+}
+
+.top-menu {
+    background-color: rgb(87, 87, 87);
+    padding: 1rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.wordle-rows {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.keyboard-view {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.game-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    left: 50%;
+    width: 50vw;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 767px) {
+    .game-wrapper {
+        width: 100%;
+    }
+}
+
+@media (max-width: 413px) {
+    .game {
+        transform: scale(80%);
+    }
+}
+
+.game {
+    display: inline-block;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    transform-origin: top;
+}
+
+.game > .space {
+    height: 2%;
+}
+
+/* Dialog Window */
+
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    transform: translate(-50%, -50%);
+
+    background-color: rgb(22, 22, 22);
+    color: white;
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+
+    opacity: 1;
+
+    transition: top 0.5s, opacity 0.5s;
+}
+
+.dialog > div.dialog-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.dialog button {
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog button > span {
+    margin-left: 8px;
+}
+
+.dialog button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.dialog button.share-button {
+    background-color: green;
+}
+
+/* Notification */
+
+.notification {
+    position: fixed;
+    top: 5%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    transform: translate(-50%, 0);
+
+    background-color: lightgrey;
+    border: 1px solid black;
+    width: 300px;
+    height: 150px;
+
+    opacity: 1;
+
+    transition: top 0.5s, opacity 0.5s;
+}
+
+.notification > div.notification-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
