@@ -107,7 +107,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
 const renderDialog = (content, fadeIn) => {
     // Close any currently existing dialogs
     const dialogElem = document.querySelector(".dialog");
-    dialogElem?.remove();
+    if (dialogElem) dialogElem.remove();
 
     const template = document.querySelector("#dialog");
     const clone = template.content.cloneNode(true);
@@ -141,7 +141,7 @@ const renderDialog = (content, fadeIn) => {
 const renderNotification = (msg) => {
     // Close any currently existing notifications
     const notificationElem = document.querySelector(".notification");
-    notificationElem?.remove();
+    if (notificationElem) notificationElem.remove();
     // Clear existing notification timeout
     if (notificationTimeout) {
         clearTimeout(notificationTimeout);

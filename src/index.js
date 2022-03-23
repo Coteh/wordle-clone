@@ -9,6 +9,15 @@ const linkEntryToLetterMap = (letterMap) => (entry) => {
     if (currEntry !== "correct" && currEntry !== "within") letterMap.set(entry.letter, "incorrect");
 };
 
+const getLetterColour = (attempt, letterIndex) =>
+    attempt[letterIndex]
+        ? attempt[letterIndex].correct
+            ? CORRECT_COLOR
+            : attempt[letterIndex].within
+            ? WITHIN_COLOR
+            : INCORRECT_COLOR
+        : STANDARD_COLOR;
+
 document.addEventListener("DOMContentLoaded", async () => {
     const middleElem = document.querySelector("#middle");
     const bottomElem = document.querySelector("#bottom");
@@ -39,13 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         attempt[i].letter;
                     inputRowElems[index].querySelector(
                         `div:nth-child(${i + 1})`
-                    ).style.backgroundColor = attempt[i]
-                        ? attempt[i]?.correct
-                            ? CORRECT_COLOR
-                            : attempt[i]?.within
-                            ? WITHIN_COLOR
-                            : INCORRECT_COLOR
-                        : STANDARD_COLOR;
+                    ).style.backgroundColor = getLetterColour(attempt, i);
                 }
                 attempt.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             });
@@ -60,13 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 document.querySelector(
                     `#current-input > div:nth-child(${i + 1})`
-                ).style.backgroundColor = results[i]
-                    ? results[i]?.correct
-                        ? CORRECT_COLOR
-                        : results[i]?.within
-                        ? WITHIN_COLOR
-                        : INCORRECT_COLOR
-                    : STANDARD_COLOR;
+                ).style.backgroundColor = getLetterColour(results, i);
             }
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             renderKeyboard(bottomElem, letterMap, handleKeyInput);
