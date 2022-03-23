@@ -1,0 +1,5 @@
+node_modules
+build
+
+state.json
+playedbefore.json

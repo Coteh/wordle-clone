@@ -1,0 +1,24 @@
+{
+  "name": "wordle-clone",
+  "version": "1.0.0",
+  "description": "A clone of the popular Wordle game.",
+  "private": true,
+  "main": "index.js",
+  "bin": {
+    "wordle": "./cli.js",
+    "wordle-clone": "./cli.js"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test mocha"
+  },
+  "keywords": [],
+  "author": "James Cote (Coteh)",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^9.1.4",
+    "sinon": "^12.0.1"
+  },
+  "dependencies": {
+    "clipboardy": "^3.0.0"
+  }
+}

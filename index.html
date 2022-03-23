@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Wordle Clone</title>
+        <meta name="theme-color" content="#000">
+        <meta name="description" content="A clone of the popular Wordle game">
+        <meta name="robots" content="index, follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/index.css">
+        <link href="https://coteh.github.io/wordle-clone" rel="canonical">
+        <script src="https://unpkg.com/feather-icons"></script>
+    </head>
+    <body>
+        <div class="game-wrapper">
+            <div class="game">
+                <nav id="top" class="top-menu">
+                    <span>
+                        Wordle Clone
+                    </span>
+                    <span class="day-text"></span>
+                    <a class="help-link" href="#">
+                        <i data-feather="help-circle"></i>
+                    </a>
+                </nav>
+                <div class="space"></div>
+                <div id="middle" class="wordle-rows"></div>
+                <div class="space"></div>
+                <div id="bottom" class="keyboard-view"></div>
+                <script src="/src/consts.js"></script>
+                <script src="/src/render.js"></script>
+                <script src="/src/word.js"></script>
+                <script src="/src/game.js"></script>
+                <script src="/src/storage/browser.js"></script>
+                <script charset="UTF-8" src="/src/share.js"></script>
+                <script src="/src/index.js"></script>
+            </div>
+        </div>
+        <template id="dialog">
+            <div class="dialog">
+                <button class="close"><i data-feather="x"></i></button>
+                <div class="dialog-content">
+                </div>
+            </div>
+        </template>
+        <template id="notification">
+           <div class="notification">
+                <div class="notification-content">
+                    <span class="notification-message"></span>
+                </div>
+           </div> 
+        </template>
+        <template id="win-dialog-content">
+            <span>You win!</span>
+            <button class="button share-button">
+                <i data-feather="share-2"></i>
+                <span>Share</span>
+            </button>
+        </template>
+        <template id="lose-dialog-content">
+            <span>You lose!</span><br/>
+            <span>The word was <b id="word"></b></span><br/>
+            <span>Try again next time!</span>
+        </template>
+        <template id="how-to-play">
+            <span>
+                How to play: Guess a five-letter word. Green letters mean they are in the correct place. Yellow letters mean that the letter is in the word but in the wrong place. Dark Gray means that the letter is not in the word. You have six attempts. Good luck!
+            </span>
+            <span>
+                &copy 2022 James Cote
+            </span>
+        </template>
+        <script>
+            feather.replace();
+        </script>
+    </body>
+</html>
