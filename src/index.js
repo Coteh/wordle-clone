@@ -73,7 +73,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         renderWin() {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
-            winElem.querySelector(".share-button").addEventListener("click", copyShareText);
+            winElem.querySelector(".share-button").addEventListener("click", (e) => {
+                e.preventDefault();
+                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES);
+                console.log(shareText);
+                copyShareText(shareText);
+            });
             renderDialog(winElem, true);
         },
         renderGameOver(word) {
@@ -134,24 +139,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             case "win":
                 return wordleRenderer.renderWin();
         }
-    };
-
-    const copyShareText = async () => {
-        const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES);
-        console.log(shareText);
-        navigator.clipboard
-            .writeText(shareText)
-            .then(() => {
-                const message = document.createElement("span");
-                message.innerText = "Copied to clipboard!";
-                renderDialog(message);
-            })
-            .catch((e) => {
-                console.error(e);
-                const message = document.createElement("span");
-                message.innerText = "Could not copy to clipboard due to error";
-                renderDialog(message);
-            });
     };
 
     const handleKeyInput = (key) => {
