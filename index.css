@@ -110,6 +110,7 @@ svg {
 
 .dialog button > span {
     margin-left: 8px;
+    color: white;
 }
 
 .dialog button.close {
