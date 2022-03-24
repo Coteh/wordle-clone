@@ -1,5 +1,5 @@
 const CORRECT_COLOR = "green";
-const WITHIN_COLOR = "#99aa00";
+const WITHIN_COLOR = "#eec039";
 const INCORRECT_COLOR = "#333";
 const STANDARD_COLOR = "#aaa";
 
@@ -27,6 +27,7 @@ const renderInputRow = (parentElem, numberOfLetters) => {
         const letterElem = document.createElement("span");
         letterElem.style.display = "inline-block";
         letterElem.style.verticalAlign = "middle";
+        letterElem.style.marginTop = "0.5rem";
         letterElem.style.fontSize = "3rem";
         letterElem.style.fontWeight = "bold";
         letterElem.style.fontFamily = "sans-serif";

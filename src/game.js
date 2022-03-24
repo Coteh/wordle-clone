@@ -79,7 +79,7 @@ const initState = () => {
 const getWord = async (day) => {
     let words;
     if (typeof process === "undefined") {
-        const resp = await fetch("/words.txt");
+        const resp = await fetch("words.txt");
         words = (await resp.text()).trimEnd().split("\n");
     } else {
         const resp = fs.readFileSync("words.txt");
@@ -152,7 +152,7 @@ const initGame = async (_eventHandler) => {
         const wordListResp = fs.readFileSync("words.txt");
         wordList = wordListResp.toString().trimEnd().split("\n");
     } else {
-        const wordListResp = await fetch("/words.txt");
+        const wordListResp = await fetch("words.txt");
         wordList = (await wordListResp.text()).trimEnd().split("\n");
     }
 
