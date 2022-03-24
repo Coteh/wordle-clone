@@ -50,7 +50,7 @@ const ATTEMPTS = [
     ],
 ];
 
-describe("game storage", () => {
+describe("game storage - browser", () => {
     let stubbedLocalStorage;
     let stubbedDateNow;
 

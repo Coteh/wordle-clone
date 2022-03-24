@@ -7,4 +7,5 @@ cp index.css ./build
 cp src/*.js ./build/src
 cp src/storage/index.js ./build/src/storage
 cp src/storage/browser.js ./build/src/storage
+cp favicon.ico ./build
 cp words.txt ./build
