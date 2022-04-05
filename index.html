@@ -9,6 +9,10 @@
         <link rel="stylesheet" href="index.css">
         <link href="https://coteh.github.io/wordle-clone" rel="canonical">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <script
+            src="https://js.sentry-cdn.com/ff7ad2773fc84f6694b683181248006a.min.js"
+            crossorigin="anonymous"
+        ></script>
         <script src="https://unpkg.com/feather-icons"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3QNNES1C4Y"></script>
@@ -81,6 +85,12 @@
         </template>
         <script>
             feather.replace();
+
+            Sentry.onLoad(() => {
+                Sentry.init({
+                    release: "wordle-clone@1.0.3",
+                });
+            });
         </script>
     </body>
 </html>
