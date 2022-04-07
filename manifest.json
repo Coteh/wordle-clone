@@ -1,0 +1,19 @@
+{
+    "short_name": "Wordle Clone",
+    "name": "Wordle Clone",
+    "icons": [
+        {
+            "src": "icon128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "icon152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        }
+    ],
+    "start_url": ".",
+    "display": "fullscreen",
+    "orientation": "portrait"
+}
