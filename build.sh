@@ -1,14 +1,18 @@
 #!/bin/sh
 
-mkdir -p build/src/storage
-mkdir -p build/src/share
+OUTPUT_DIR=./build
 
-cp index.html ./build
-cp index.css ./build
-cp src/*.js ./build/src
-cp src/storage/index.js ./build/src/storage
-cp src/storage/browser.js ./build/src/storage
-cp src/share/index.js ./build/src/share
-cp src/share/browser.js ./build/src/share
-cp favicon.ico ./build
-cp words.txt ./build
+mkdir -p $OUTPUT_DIR/src/storage
+mkdir -p $OUTPUT_DIR/src/share
+
+cp index.html $OUTPUT_DIR
+cp index.css $OUTPUT_DIR
+cp src/*.js $OUTPUT_DIR/src
+cp src/storage/index.js $OUTPUT_DIR/src/storage
+cp src/storage/browser.js $OUTPUT_DIR/src/storage
+cp src/share/index.js $OUTPUT_DIR/src/share
+cp src/share/browser.js $OUTPUT_DIR/src/share
+cp favicon.ico $OUTPUT_DIR
+cp icon*.png $OUTPUT_DIR
+cp manifest.json $OUTPUT_DIR
+cp words.txt $OUTPUT_DIR
