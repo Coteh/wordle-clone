@@ -204,6 +204,8 @@ svg {
 }
 
 .box .box-letter {
+    display: block;
+    position: absolute;
     line-height: normal;
     font-size: 2rem;
     font-weight: bold;
