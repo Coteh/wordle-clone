@@ -1,3 +1,15 @@
+/* Variables */
+
+:root {
+    --standard-color: #aaa;
+    --standard-block-color: #000;
+    --correct-color: green;
+    --within-color: #eec039;
+    --incorrect-color: #333;
+}
+
+/* Main Content */
+
 html {
     font-size: 125%;
 }
@@ -5,6 +17,7 @@ html {
 body {
     background-color: black;
     margin: 0;
+    overflow: hidden;
 }
 
 svg {
@@ -19,52 +32,63 @@ svg {
     color: white;
     display: flex;
     justify-content: space-between;
+    height: 64px;
+    box-sizing: border-box;
 }
 
 .wordle-rows {
     width: 100%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .keyboard-view {
+    display: flex;
+    align-items: center;
     width: 100%;
     display: flex;
     justify-content: center;
+    height: max-content;
 }
 
 .game-wrapper {
-    display: flex;
-    justify-content: center;
     position: relative;
     left: 50%;
     width: 50vw;
+    height: 100%;
     transform: translateX(-50%);
 }
 
-@media (max-width: 767px) {
+.input-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+    height: 16.67%;
+    max-height: 3rem;
+}
+
+.game > .space {
+    flex: 1;
+}
+
+@media (max-width: 1028px) {
     .game-wrapper {
         width: 100%;
     }
 }
 
-@media (max-width: 413px) {
-    .game {
-        transform: scale(80%);
-    }
-}
-
 .game {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: auto;
-    height: 100%;
+    height: calc(100% - 64px);
     width: 100%;
     transform-origin: top;
-}
-
-.game > .space {
-    height: 2%;
 }
 
 /* Dialog Window */
@@ -157,4 +181,116 @@ svg {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+/* Boxes */
+
+.box {
+    padding: 1em;
+    margin: 0.1em;
+    border: 1px solid black;
+    line-height: 1.9em;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-height: 2.75em;
+    aspect-ratio: 1/1;
+    width: 100%;
+    max-width: 2.75em;
+}
+
+.box .box-letter {
+    line-height: normal;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    color: white;
+}
+
+/* Keyboard */
+
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.keyboard > .keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.keyboard > .keyboard-row > .keyboard-item {
+    position: relative;
+    padding: 1em 0.5em;
+    margin: 0.1em;
+    border: 1px solid black;
+    border-radius: 0.25em;
+    width: 5%;
+    height: 1em;
+    line-height: 1em;
+    color: white;
+    text-align: center;
+}
+
+.keyboard > .keyboard-row > .keyboard-item.big {
+    width: 10%;
+}
+
+@media (max-width: 600px) {
+    .keyboard > .keyboard-row > .keyboard-item {
+        width: 0.4em;
+    }
+
+    .keyboard > .keyboard-row > .keyboard-item.big {
+        width: 2.1em;
+    }
+}
+
+.keyboard > .keyboard-row > .keyboard-item > div {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: sans-serif;
+    pointer-events: none;
+}
+
+.keyboard > .keyboard-row > .keyboard-item.big > div {
+    font-size: 0.8em;
+}
+
+/* Colours */
+
+.standard {
+    background-color: var(--standard-color);
+}
+
+.box.standard {
+    background-color: var(--standard-block-color);
+    border: 1px solid var(--standard-color);
+}
+
+.correct {
+    background-color: var(--correct-color);
+}
+
+.within {
+    background-color: var(--within-color);
+}
+
+.incorrect {
+    background-color: var(--incorrect-color);
 }
