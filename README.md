@@ -38,12 +38,12 @@ wordle
     - Browser version
     - CLI version
 - Share functionality
+- Countdown to next day's Wordle
 
 ## Future Additions
 
 - Hard Mode
 - Player Statistics
-- Countdown to next day's Wordle
 - Archive
 - Animations
 - Code cleanup
