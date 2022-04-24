@@ -2,6 +2,8 @@
 
 [![Run Tests](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml)
 
+### [**Click here to play**](https://coteh.github.io/wordle-clone)
+
 A clone of the worldwide phenomenon known as [Wordle](https://www.powerlanguage.co.uk/wordle/).
 
 Can be played on either the browser or the command line.
