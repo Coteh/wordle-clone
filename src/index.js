@@ -18,6 +18,10 @@ const getLetterColour = (attempt, letterIndex) =>
             : INCORRECT_COLOR
         : STANDARD_COLOR;
 
+const updateCountdown = (countdownElem) => {
+    countdownElem.innerText = getCountdownToNextDayString();
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     const middleElem = document.querySelector("#middle");
     const bottomElem = document.querySelector("#bottom");
@@ -79,11 +83,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log(shareText);
                 copyShareText(shareText);
             });
+            updateCountdown(winElem.querySelector(".countdown"));
+            setInterval(() => updateCountdown(document.querySelector(".countdown")), 1000);
             renderDialog(winElem, true);
         },
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
             loseElem.querySelector("#word").innerText = word;
+            updateCountdown(loseElem.querySelector(".countdown"));
+            setInterval(() => updateCountdown(document.querySelector(".countdown")), 1000);
             renderDialog(loseElem, true);
         },
         renderInput(key) {

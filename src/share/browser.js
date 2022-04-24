@@ -58,14 +58,10 @@ const copyShareText = (shareText) => {
     navigator.clipboard
         .writeText(shareText)
         .then(() => {
-            const message = document.createElement("span");
-            message.innerText = "Copied to clipboard!";
-            renderDialog(message);
+            renderNotification("Copied to clipboard!");
         })
         .catch((e) => {
             console.error(e);
-            const message = document.createElement("span");
-            message.innerText = "Could not copy to clipboard due to error";
-            renderDialog(message);
+            renderNotification("Could not copy to clipboard due to error");
         });
 };

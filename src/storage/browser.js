@@ -4,8 +4,6 @@ const DAY_KEY = "day";
 const ENDED_KEY = "ended";
 const PLAYED_BEFORE_KEY = "played_before";
 
-const getCurrentDay = () => Math.floor(Date.now() / 1000 / 60 / 60 / 24);
-
 const saveGame = (attempts, lives, ended) => {
     window.localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
     window.localStorage.setItem(LIVES_KEY, lives);
