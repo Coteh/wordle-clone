@@ -56,14 +56,10 @@ describe("game storage - browser", () => {
 
     beforeEach(() => {
         stubbedLocalStorage = window.localStorage = sinon.stub(MockStorage.prototype);
-        console.log(window.localStorage);
-        console.log(Date.now());
         stubbedDateNow = sinon.stub(Date, "now").returns(FAKE_TIMESTAMP);
-        console.log(Date.now());
     });
     afterEach(() => {
         sinon.restore();
-        console.log(Date.now());
     });
     it("should save progress", () => {
         sinon.assert.notCalled(stubbedLocalStorage.setItem);

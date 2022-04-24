@@ -11,6 +11,9 @@ if (typeof process !== "undefined") {
     checkFirstTime = storage.checkFirstTime;
     setPlayedBefore = storage.setPlayedBefore;
 
+    const datetime = require("./datetime");
+    getCurrentDay = datetime.getCurrentDay;
+
     STARTING_LIVES = require("./consts").STARTING_LIVES;
 
     debugEnabled = process.env.DEBUG === "true";
@@ -156,7 +159,7 @@ const initGame = async (_eventHandler) => {
         wordList = (await wordListResp.text()).trimEnd().split("\n");
     }
 
-    const day = Math.floor(Date.now() / 1000 / 60 / 60 / 24) % wordList.length;
+    const day = getCurrentDay() % wordList.length;
     word = await getWord(day);
 
     gameState = initState();

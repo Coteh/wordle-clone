@@ -44,6 +44,7 @@
                 <div id="bottom" class="keyboard-view"></div>
                 <script src="src/consts.js"></script>
                 <script src="src/render.js"></script>
+                <script src="src/datetime.js"></script>
                 <script src="src/game.js"></script>
                 <script src="src/storage/browser.js"></script>
                 <script charset="UTF-8" src="src/share/index.js"></script>
@@ -71,11 +72,19 @@
                 <i data-feather="share-2"></i>
                 <span>Share</span>
             </button>
+            <div>
+                Next Wordle:
+                <span class="countdown">20:00:00</span>
+            </div>
         </template>
         <template id="lose-dialog-content">
             <span>You lose!</span><br/>
             <span>The word was <b id="word"></b></span><br/>
             <span>Try again next time!</span>
+            <div>
+                Next Wordle:
+                <span class="countdown">20:00:00</span>
+            </div>
         </template>
         <template id="how-to-play">
             <span>

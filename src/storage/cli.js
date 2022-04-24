@@ -1,8 +1,7 @@
 const { ATTEMPTS_KEY, LIVES_KEY, DAY_KEY, ENDED_KEY, PLAYED_BEFORE_KEY } = require("./index");
 const fs = require("fs");
 const { STARTING_LIVES } = require("../consts");
-
-const getCurrentDay = () => Math.floor(Date.now() / 1000 / 60 / 60 / 24);
+const { getCurrentDay } = require("../datetime");
 
 const saveGame = (attempts, lives, ended) => {
     const jsonStr = JSON.stringify({
