@@ -7,32 +7,13 @@ let notificationTimeout;
 
 const renderInputRow = (parentElem, numberOfLetters) => {
     const container = document.createElement("div");
-    container.style.display = "flex";
     container.className = "input-row";
 
     for (let i = 0; i < numberOfLetters; i++) {
         const box = document.createElement("div");
-        box.style.padding = "1em";
-        box.style.border = "1px solid black";
-        box.style.width = "3.8em";
-        box.style.height = "3.8em";
-        box.style.lineHeight = "1.9em";
-        box.style.backgroundColor = STANDARD_COLOR;
-        box.style.textAlign = "center";
-        box.style.position = "relative";
-        box.style.boxSizing = "border-box";
-        box.style.display = "flex";
-        box.style.justifyContent = "center";
-        box.style.alignItems = "center";
+        box.classList.add("box", "standard");
         const letterElem = document.createElement("span");
-        letterElem.style.display = "inline-block";
-        letterElem.style.verticalAlign = "middle";
-        letterElem.style.marginTop = "0.5rem";
-        letterElem.style.fontSize = "3rem";
-        letterElem.style.fontWeight = "bold";
-        letterElem.style.fontFamily = "sans-serif";
-        letterElem.style.textTransform = "uppercase";
-        letterElem.style.color = "white";
+        letterElem.classList.add("box-letter");
         box.appendChild(letterElem);
         container.appendChild(box);
     }
@@ -51,45 +32,26 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
     const bigKeys = ["enter", "backspace"];
     const container = document.createElement("div");
     container.id = "keyboard";
-    container.style.display = "flex";
-    container.style.flexWrap = "wrap";
-    container.style.width = "500px";
-    container.style.justifyContent = "center";
+    container.classList.add("keyboard");
 
     rows.forEach((row) => {
         const rowElem = document.createElement("div");
-        rowElem.style.display = "flex";
+        rowElem.classList.add("keyboard-row");
         row.forEach((item) => {
             const letterStatus = letterMap.get(item);
             const itemElem = document.createElement("div");
-            itemElem.style.padding = "1em 0.5em";
-            itemElem.style.border = "1px solid black";
-            itemElem.style.width = bigKeys.includes(item) ? "2.3em" : "0.8em";
-            itemElem.style.height = "1.5em";
-            itemElem.style.lineHeight = "1.5em";
-            itemElem.style.backgroundColor =
-                letterStatus === "correct"
-                    ? CORRECT_COLOR
-                    : letterStatus === "within"
-                    ? WITHIN_COLOR
-                    : letterStatus === "incorrect"
-                    ? INCORRECT_COLOR
-                    : STANDARD_COLOR;
-            itemElem.style.color = "white";
-            itemElem.style.textAlign = "center";
+            itemElem.classList.add("keyboard-item");
+            if (bigKeys.includes(item)) {
+                itemElem.classList.add("big");
+            }
+            itemElem.classList.add(letterStatus || "standard");
             itemElem.addEventListener("click", (e) => {
                 e.preventDefault();
                 console.log(item);
                 handleKeyInput(item);
             });
-            const letterElem = document.createElement("span");
+            const letterElem = document.createElement("div");
             letterElem.innerText = item === "backspace" ? "←" : item;
-            letterElem.style.display = "inline-block";
-            letterElem.style.verticalAlign = "middle";
-            letterElem.style.fontSize = bigKeys.includes(item) ? "1em" : "1.5em";
-            letterElem.style.fontWeight = "bold";
-            letterElem.style.fontFamily = "sans-serif";
-            letterElem.style.pointerEvents = "none";
             itemElem.appendChild(letterElem);
             rowElem.appendChild(itemElem);
         });
