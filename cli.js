@@ -5,7 +5,7 @@ const readline = require("readline");
 const { stdin: input, stdout: output } = require("process");
 const { generateShareText } = require("./src/share");
 const { STARTING_LIVES } = require("./src/consts");
-const { getCountdownToNextDayString } = require("./src/datetime");
+const { getCountdownString, getNextDate } = require("./src/datetime");
 
 const rl = readline.createInterface({
     input,
@@ -117,7 +117,7 @@ const runGame = async () => {
             });
         }
     }
-    console.log(`Next Wordle: ${getCountdownToNextDayString()}`);
+    console.log(`Next Wordle: ${getCountdownString(getNextDate())}`);
 };
 
 runGame().finally(() => rl.close());

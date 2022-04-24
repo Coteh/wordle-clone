@@ -18,8 +18,8 @@ const getLetterColour = (attempt, letterIndex) =>
             : INCORRECT_COLOR
         : STANDARD_COLOR;
 
-const updateCountdown = (countdownElem) => {
-    countdownElem.innerText = getCountdownToNextDayString();
+const updateCountdown = (countdownElem, nextDate) => {
+    countdownElem.innerText = getCountdownString(nextDate);
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -83,15 +83,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log(shareText);
                 copyShareText(shareText);
             });
-            updateCountdown(winElem.querySelector(".countdown"));
-            setInterval(() => updateCountdown(document.querySelector(".countdown")), 1000);
+            const nextDate = getNextDate();
+            updateCountdown(winElem.querySelector(".countdown"), nextDate);
+            setInterval(
+                () => updateCountdown(document.querySelector(".countdown"), nextDate),
+                1000
+            );
             renderDialog(winElem, true);
         },
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
             loseElem.querySelector("#word").innerText = word;
-            updateCountdown(loseElem.querySelector(".countdown"));
-            setInterval(() => updateCountdown(document.querySelector(".countdown")), 1000);
+            const nextDate = getNextDate();
+            updateCountdown(loseElem.querySelector(".countdown"), nextDate);
+            setInterval(
+                () => updateCountdown(document.querySelector(".countdown"), nextDate),
+                1000
+            );
             renderDialog(loseElem, true);
         },
         renderInput(key) {
