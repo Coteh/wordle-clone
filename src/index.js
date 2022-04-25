@@ -22,6 +22,14 @@ const updateCountdown = (countdownElem, nextDate) => {
     countdownElem.innerText = getCountdownString(nextDate);
 };
 
+const setCountdownInterval = (nextDate) => {
+    setInterval(() => {
+        const nextDateElem = document.querySelector(".countdown");
+        if (!nextDateElem) return;
+        updateCountdown(nextDateElem, nextDate);
+    }, 1000);
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     const middleElem = document.querySelector("#middle");
     const bottomElem = document.querySelector("#bottom");
@@ -42,12 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const wordleRenderer = {
         renderInitialState(attempts) {
             attempts.forEach((attempt, index) => {
-                console.log(index);
                 for (let i = 0; i < 5; i++) {
-                    console.log(
-                        inputRowElems[index].querySelector(`div:nth-child(${i + 1})`),
-                        attempt[i]
-                    );
                     inputRowElems[index].querySelector(`div:nth-child(${i + 1}) > span`).innerText =
                         attempt[i].letter;
                     inputRowElems[index].querySelector(
@@ -61,10 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         renderCheckResults(results) {
             for (let i = 0; i < 5; i++) {
-                console.log(
-                    document.querySelector(`#current-input > div:nth-child(${i + 1})`),
-                    results[i]
-                );
                 document.querySelector(
                     `#current-input > div:nth-child(${i + 1})`
                 ).style.backgroundColor = getLetterColour(results, i);
@@ -80,15 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             winElem.querySelector(".share-button").addEventListener("click", (e) => {
                 e.preventDefault();
                 const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES);
-                console.log(shareText);
                 copyShareText(shareText);
             });
             const nextDate = getNextDate();
             updateCountdown(winElem.querySelector(".countdown"), nextDate);
-            setInterval(
-                () => updateCountdown(document.querySelector(".countdown"), nextDate),
-                1000
-            );
+            setCountdownInterval(nextDate);
             renderDialog(winElem, true);
         },
         renderGameOver(word) {
@@ -96,10 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             loseElem.querySelector("#word").innerText = word;
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);
-            setInterval(
-                () => updateCountdown(document.querySelector(".countdown"), nextDate),
-                1000
-            );
+            setCountdownInterval(nextDate);
             renderDialog(loseElem, true);
         },
         renderInput(key) {
@@ -113,7 +105,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             ).innerText = "";
         },
         renderLifeDecrease(lives) {
-            console.log(lives);
             currentInputElem.id = "";
             currentInputElem = inputRowElems[6 - lives];
             currentInputElem.id = "current-input";
