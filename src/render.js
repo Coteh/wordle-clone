@@ -51,7 +51,8 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
                 handleKeyInput(item);
             });
             const letterElem = document.createElement("div");
-            letterElem.innerText = item === "backspace" ? "←" : item;
+            letterElem.innerHTML =
+                item === "backspace" ? `<i data-feather="delete"></i>` : item.toUpperCase();
             itemElem.appendChild(letterElem);
             rowElem.appendChild(itemElem);
         });
@@ -63,6 +64,8 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
         prevKeyboard.remove();
     }
     parentElem.appendChild(container);
+
+    feather.replace();
 
     return container;
 };
