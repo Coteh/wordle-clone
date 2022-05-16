@@ -264,14 +264,14 @@ svg {
     height: 100%;
     display: inline-block;
     vertical-align: middle;
-    font-size: 1em;
+    font-size: 0.75em;
     font-weight: bold;
     font-family: sans-serif;
     pointer-events: none;
 }
 
 .keyboard > .keyboard-row > .keyboard-item.big > div {
-    font-size: 0.8em;
+    font-size: 0.65em;
 }
 
 /* Colours */
