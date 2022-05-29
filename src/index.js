@@ -173,6 +173,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderDialog(createDialogContentFromTemplate("#how-to-play"), true);
     });
 
+    const overlayBackElem = document.querySelector(".overlay-back");
+    overlayBackElem.addEventListener("click", (e) => {
+        const dialog = document.querySelector(".dialog");
+        if (dialog) dialog.remove();
+        overlayBackElem.style.display = "none";
+    });
+
     await initGame(eventHandler);
 
     gameLoaded = true;
