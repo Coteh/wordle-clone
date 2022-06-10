@@ -78,11 +78,14 @@ const renderDialog = (content, fadeIn) => {
     const template = document.querySelector("#dialog");
     const clone = template.content.cloneNode(true);
 
+    const overlayBackElem = document.querySelector(".overlay-back");
+
     const closeBtn = clone.querySelector("button.close");
     closeBtn.addEventListener("click", (e) => {
         e.preventDefault();
         const dialog = document.querySelector(".dialog");
         dialog.remove();
+        overlayBackElem.style.display = "none";
     });
 
     const dialogContent = clone.querySelector(".dialog-content");
@@ -100,6 +103,8 @@ const renderDialog = (content, fadeIn) => {
     }
 
     document.body.appendChild(clone);
+
+    overlayBackElem.style.display = "block";
 
     feather.replace();
 };
