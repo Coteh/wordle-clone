@@ -101,6 +101,12 @@
             Sentry.onLoad(() => {
                 Sentry.init({
                     release: "wordle-clone@1.0.7",
+                    beforeSend(event) {
+                        if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
+                            return null;
+                        }
+                        return event;
+                    }
                 });
             });
         </script>
