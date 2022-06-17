@@ -3,3 +3,7 @@ build
 
 state.json
 playedbefore.json
+
+# Cypress output
+cypress/videos
+cypress/screenshots

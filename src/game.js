@@ -26,6 +26,13 @@ const WORD_NOT_PROVIDED_ERROR_ID = "WordNotProvided";
 const USER_RAN_OUT_OF_LIVES = "UserRanOutOfLives";
 const GAME_IS_OVER = "GameIsOver";
 
+class WordListFetchError extends Error {
+    constructor(e) {
+        super(e);
+        this.name = "WordListFetchError";
+    }
+}
+
 const getErrorMessage = (errorID, userInput) => {
     switch (errorID) {
         case WORDS_DIFFERENT_LENGTH_ERROR_ID:
@@ -78,18 +85,25 @@ const initState = () => {
     return state;
 };
 
-// TODO add unit test for getting word from word list for a given day
-const getWord = async (day) => {
-    let words;
-    if (typeof process === "undefined") {
-        const resp = await fetch("words.txt");
-        words = (await resp.text()).trimEnd().split("\n");
-    } else {
-        const resp = fs.readFileSync("words.txt");
-        words = resp.toString().trimEnd().split("\n");
+const loadWordList = async () => {
+    // TODO abstract the loading of words into separate struct/method
+    if (typeof process !== "undefined") {
+        const wordListResp = fs.readFileSync("words.txt");
+        return wordListResp.toString().trimEnd().split("\n");
     }
+    const wordListResp = await fetch("words.txt");
+    if (wordListResp.status !== 200) {
+        throw new Error("Word list not found");
+    }
+    const text = await wordListResp.text();
+    return text.trimEnd().split("\n");
+};
 
-    return words[day];
+const getWord = async (day, wordList) => {
+    if (day < 0 || day >= wordList.length) {
+        throw new Error("Day index out of bounds");
+    }
+    return wordList[day];
 };
 
 const checkForWord = (userInput, word, wordList) => {
@@ -150,17 +164,16 @@ const checkForWord = (userInput, word, wordList) => {
 };
 
 const initGame = async (_eventHandler) => {
-    // TODO abstract the loading of words into separate struct/method
-    if (typeof process !== "undefined") {
-        const wordListResp = fs.readFileSync("words.txt");
-        wordList = wordListResp.toString().trimEnd().split("\n");
-    } else {
-        const wordListResp = await fetch("words.txt");
-        wordList = (await wordListResp.text()).trimEnd().split("\n");
+    try {
+        wordList = await loadWordList();
+    } catch (e) {
+        throw new WordListFetchError(e);
     }
 
+    if (debugEnabled) console.log(wordList);
+
     const day = getCurrentDay() % wordList.length;
-    word = await getWord(day);
+    word = await getWord(day, wordList);
 
     gameState = initState();
 
@@ -215,6 +228,7 @@ const submitWord = (gameState, currentInput) => {
 if (typeof process !== "undefined") {
     module.exports = {
         checkForWord,
+        getWord,
         initGame,
         submitWord,
         getErrorMessage,

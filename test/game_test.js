@@ -1,5 +1,6 @@
 const {
     checkForWord,
+    getWord,
     WORDS_DIFFERENT_LENGTH_ERROR_ID,
     NOT_IN_WORD_LIST_ERROR_ID,
     WORD_NOT_PROVIDED_ERROR_ID,
@@ -304,6 +305,34 @@ describe("core game logic", () => {
         const result = checkForWord("asdfg", "codes");
         result.results.forEach((entry, i) => {
             assertEntry(entry, expected[i], i);
+        });
+    });
+});
+
+describe.only("get word", () => {
+    const wordList = [
+        "first",
+        "tests",
+        "third",
+        "fours",
+        "fifth",
+        "sixth",
+        "seven",
+        "balls",
+        "words",
+        "break",
+    ];
+    it("should get the day's word", async () => {
+        assert.strictEqual(await getWord(5, wordList), "sixth");
+    });
+    it("should handle out of bounds", async () => {
+        await assert.rejects(getWord(10, wordList), {
+            name: "Error",
+            message: "Day index out of bounds",
+        });
+        await assert.rejects(getWord(-1, wordList), {
+            name: "Error",
+            message: "Day index out of bounds",
         });
     });
 });
