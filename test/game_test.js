@@ -309,7 +309,7 @@ describe("core game logic", () => {
     });
 });
 
-describe.only("get word", () => {
+describe("get word", () => {
     const wordList = [
         "first",
         "tests",
