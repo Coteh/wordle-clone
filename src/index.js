@@ -157,6 +157,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             dialog.remove();
         }
+        // NTS: Perhaps it'd make more sense if overlay backdrop only disappeared when a valid dialog is passed,
+        // but if an invalid dialog is being passed, it might not be on the screen either.
+        // In this case, it may be better to leave this as-is and always have the backdrop close so that players can still play.
         overlayBackElem.style.display = "none";
     };
 

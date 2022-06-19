@@ -89,7 +89,7 @@ describe("wordle clone", () => {
         cy.currentRow().inputCell(2).inputLetter().should("be.empty");
     });
 
-    it("allows for enter on the touch keyboard to be used to submit word", () => {
+    it("allows for enter on the touch keyboard to be used to submit word and select the next row", () => {
         cy.keyboardItem("s").click();
         cy.keyboardItem("p").click();
         cy.keyboardItem("i").click();
@@ -279,17 +279,46 @@ describe("wordle clone", () => {
             cy.inputRow(2).should("not.have.id", "current-input");
         });
 
-        it("prevents player from making any more inputs on the touch keyboard", (done) => {
-            cy.inputRow(1).inputCell(1).inputLetter().should("have.text", "l");
-            cy.inputRow(1).inputCell(2).inputLetter().should("have.text", "e");
-            cy.inputRow(1).inputCell(3).inputLetter().should("have.text", "a");
-            cy.inputRow(1).inputCell(4).inputLetter().should("have.text", "f");
-            cy.inputRow(1).inputCell(5).inputLetter().should("have.text", "y");
+        [
+            {
+                name: "backspace",
+                input: "backspace",
+            },
+            {
+                name: "f key",
+                input: "f",
+            },
+            {
+                name: "enter key",
+                input: "enter",
+            },
+        ].forEach((def) => {
+            it(`prevents player from making any more inputs on the touch keyboard after closing dialog - case '${def.name}'`, () => {
+                cy.inputRowHasWord(1, "leafy");
+                for (let i = 2; i <= 6; i++) {
+                    cy.inputRowShouldBeEmpty(i);
+                }
 
-            cy.keyboardItem("backspace").shouldNotBeActionable(done);
+                cy.inputRow(1).should("have.id", "current-input");
+                cy.inputRow(2).should("not.have.id", "current-input");
+
+                cy.get(".overlay-back").click("left");
+
+                cy.keyboardItem(def.input).click();
+
+                cy.inputRowHasWord(1, "leafy");
+                for (let i = 2; i <= 6; i++) {
+                    cy.inputRowShouldBeEmpty(i);
+                }
+
+                cy.inputRow(1).should("have.id", "current-input");
+                cy.inputRow(2).should("not.have.id", "current-input");
+            });
         });
 
-        it("prevents player from making any more inputs with physical keyboard", () => {
+        it("prevents player from making any more inputs with physical keyboard after closing dialog", () => {
+            cy.get(".overlay-back").click("left");
+
             cy.inputRowHasWord(1, "leafy");
             for (let i = 2; i <= 6; i++) {
                 cy.inputRowShouldBeEmpty(i);
@@ -308,6 +337,19 @@ describe("wordle clone", () => {
             for (let i = 2; i <= 6; i++) {
                 cy.inputRowShouldBeEmpty(i);
             }
+
+            cy.inputRow(1).should("have.id", "current-input");
+            cy.inputRow(2).should("not.have.id", "current-input");
+
+            cy.get("body").type("{enter}");
+
+            cy.inputRowHasWord(1, "leafy");
+            for (let i = 2; i <= 6; i++) {
+                cy.inputRowShouldBeEmpty(i);
+            }
+
+            cy.inputRow(1).should("have.id", "current-input");
+            cy.inputRow(2).should("not.have.id", "current-input");
         });
 
         it("counts down to next day's Wordle", () => {
@@ -334,7 +376,46 @@ describe("wordle clone", () => {
             cy.contains("word was leafy").should("be.visible");
         });
 
-        it("prevents player from making any more inputs", () => {
+        it("does not progress the input row", () => {
+            cy.inputRow(6).should("have.id", "current-input");
+        });
+
+        [
+            {
+                name: "backspace",
+                input: "backspace",
+            },
+            {
+                name: "f key",
+                input: "f",
+            },
+            {
+                name: "enter key",
+                input: "enter",
+            },
+        ].forEach((def) => {
+            it(`prevents player from making any more inputs on the touch keyboard after closing dialog - case '${def.name}'`, () => {
+                for (let i = 1; i <= 6; i++) {
+                    cy.inputRowHasWord(i, "barge");
+                }
+
+                cy.inputRow(6).should("have.id", "current-input");
+
+                cy.get(".overlay-back").click("left");
+
+                cy.keyboardItem(def.input).click();
+
+                for (let i = 1; i <= 6; i++) {
+                    cy.inputRowHasWord(i, "barge");
+                }
+
+                cy.inputRow(6).should("have.id", "current-input");
+            });
+        });
+
+        it("prevents player from making any more inputs with physical keyboard after closing dialog", () => {
+            cy.get(".overlay-back").click("left");
+
             for (let i = 1; i <= 6; i++) {
                 cy.inputRowHasWord(i, "barge");
             }
@@ -350,6 +431,16 @@ describe("wordle clone", () => {
             for (let i = 1; i <= 6; i++) {
                 cy.inputRowHasWord(i, "barge");
             }
+
+            cy.inputRow(6).should("have.id", "current-input");
+
+            cy.get("body").type("{enter}");
+
+            for (let i = 1; i <= 6; i++) {
+                cy.inputRowHasWord(i, "barge");
+            }
+
+            cy.inputRow(6).should("have.id", "current-input");
         });
 
         it("counts down to next day's Wordle", () => {
@@ -365,7 +456,7 @@ describe("wordle clone", () => {
             // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
             cy.clock(DAY_MS * 1, ["Date"]);
         });
-        it("should load word from server", () => {
+        it("should handle word list from server", () => {
             cy.intercept("/words.txt", {
                 fixture: "words.txt",
             });
@@ -382,7 +473,7 @@ describe("wordle clone", () => {
                 cy.contains("You win!").should("be.visible");
             });
         });
-        it("should handle gracefully if word cannot be loaded from server", () => {
+        it("should handle gracefully if word list cannot be handled", () => {
             cy.intercept("GET", "/words.txt", {
                 statusCode: 404,
                 body: "Not found",
@@ -430,7 +521,7 @@ describe("wordle clone", () => {
                                 {
                                     letter: "a",
                                     correct: false,
-                                    within: true,
+                                    within: false,
                                 },
                             ],
                             [
@@ -442,12 +533,12 @@ describe("wordle clone", () => {
                                 {
                                     letter: "a",
                                     correct: true,
-                                    within: true,
+                                    within: false,
                                 },
                                 {
                                     letter: "y",
                                     correct: false,
-                                    within: false,
+                                    within: true,
                                 },
                                 {
                                     letter: "o",
@@ -475,11 +566,11 @@ describe("wordle clone", () => {
             cy.inputRow(1).inputCell(2).should("have.class", "within");
             cy.inputRow(1).inputCell(3).should("have.class", "incorrect");
             cy.inputRow(1).inputCell(4).should("have.class", "incorrect");
-            cy.inputRow(1).inputCell(5).should("have.class", "within");
+            cy.inputRow(1).inputCell(5).should("have.class", "incorrect");
 
             cy.inputRow(2).inputCell(1).should("have.class", "incorrect");
             cy.inputRow(2).inputCell(2).should("have.class", "correct");
-            cy.inputRow(2).inputCell(3).should("have.class", "incorrect");
+            cy.inputRow(2).inputCell(3).should("have.class", "within");
             cy.inputRow(2).inputCell(4).should("have.class", "incorrect");
             cy.inputRow(2).inputCell(5).should("have.class", "incorrect");
 
@@ -551,7 +642,7 @@ describe("wordle clone", () => {
                         {
                             letter: "a",
                             correct: false,
-                            within: true,
+                            within: false,
                         },
                     ],
                     [
@@ -563,12 +654,12 @@ describe("wordle clone", () => {
                         {
                             letter: "a",
                             correct: true,
-                            within: true,
+                            within: false,
                         },
                         {
                             letter: "y",
                             correct: false,
-                            within: false,
+                            within: true,
                         },
                         {
                             letter: "o",
@@ -647,7 +738,7 @@ describe("wordle clone", () => {
                         {
                             letter: "a",
                             correct: false,
-                            within: true,
+                            within: false,
                         },
                     ])
                 )
@@ -724,7 +815,6 @@ describe("wordle clone", () => {
 
             cy.window().then((win) => {
                 win.navigator.clipboard.readText().then((text) => {
-                    console.log(text);
                     expect(text).to.eq(`Wordle Clone 2 2/6
 ⬛🟨⬛⬛🟨
 🟩🟩🟩🟩🟩`);
@@ -755,7 +845,6 @@ describe("wordle clone", () => {
 
             cy.window().then((win) => {
                 win.navigator.clipboard.readText().then((text) => {
-                    console.log(text);
                     expect(text).to.eq(PREV_COPIED_TEXT);
                 });
             });
@@ -799,6 +888,8 @@ describe("wordle clone", () => {
             cy.get(".dialog").should("be.visible");
             cy.get(".overlay-back").should("be.visible");
 
+            // Need to use cypress-real-events realType method to simulate a "real" enter key press to trigger the exact scenario
+            // that happens in real browser where the browser is still focused on the help link at this point and triggers the help dialog again.
             cy.get(".help-link").realType("{enter}");
 
             cy.get(".dialog").should("not.exist");
@@ -808,25 +899,67 @@ describe("wordle clone", () => {
 
     describe("dialogs", () => {
         beforeEach(() => {
+            // The How to Play dialog is an example of a closable dialog that can be triggered in normal usage
             cy.get(".help-link").click();
         });
 
         describe("general dialog behaviour", () => {
             it("should be visible", () => {
                 cy.get(".dialog").should("be.visible");
+                cy.get(".overlay-back").should("be.visible");
             });
 
-            it("adds an overlay behind that prevents inputs from being made", (done) => {
-                cy.get(".overlay-back").should("be.visible");
+            [
+                {
+                    name: "backspace",
+                    input: "backspace",
+                },
+                {
+                    name: "f key",
+                    input: "f",
+                },
+                {
+                    name: "enter key",
+                    input: "enter",
+                },
+            ].forEach((def) => {
+                it(`prevents inputs from being made on touch keyboard - case '${def.name}'`, (done) => {
+                    cy.keyboardItem(def.input).shouldNotBeActionable(done);
+                });
+            });
 
-                cy.get("body").type("b");
+            it("prevents player from making any more inputs with physical keyboard", () => {
+                for (let i = 1; i <= 6; i++) {
+                    cy.inputRowShouldBeEmpty(i);
+                }
+
+                cy.get("body").type("{backspace}");
 
                 for (let i = 1; i <= 6; i++) {
                     cy.inputRowShouldBeEmpty(i);
                 }
 
-                cy.keyboardItem("backspace").shouldNotBeActionable(done);
+                cy.get("body").type("f");
+
+                for (let i = 1; i <= 6; i++) {
+                    cy.inputRowShouldBeEmpty(i);
+                }
+
+                cy.inputRow(1).should("have.id", "current-input");
+                cy.inputRow(2).should("not.have.id", "current-input");
+
+                cy.get("body").type("{enter}");
+
+                for (let i = 1; i <= 6; i++) {
+                    cy.inputRowShouldBeEmpty(i);
+                }
+
+                cy.inputRow(1).should("have.id", "current-input");
+                cy.inputRow(2).should("not.have.id", "current-input");
             });
+
+            // NTS: If dialog does not appear on the screen for some reason, which should never happen anyway under normal operation, then player can make physical key inputs.
+            // At this time, I'm not going to handle this case since behaviour would already be undefined at that point; thus, handling this particular case may be a bit too much.
         });
 
         describe("closable dialogs", () => {
@@ -895,6 +1028,7 @@ describe("wordle clone", () => {
 
         describe("non-closable dialogs", () => {
             beforeEach(() => {
+                // The error dialog is an example of a non-closable dialog that can be triggered in normal usage
                 cy.intercept("GET", "/words.txt", {
                     statusCode: 404,
                     body: "Not found",
@@ -993,8 +1127,11 @@ describe("wordle clone", () => {
                 cy.keyboardItem("y").click();
                 cy.keyboardItem("enter").click();
 
-                cy.contains("You win!").should("be.visible");
-                cy.contains("Next Wordle").should("be.visible");
+                // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
+                cy.wait(500);
+
+                cy.contains("You win!").shouldBeInViewport();
+                cy.contains("Next Wordle").shouldBeInViewport();
             });
         });
     });

@@ -1,8 +1,3 @@
-const CORRECT_COLOR = "green";
-const WITHIN_COLOR = "#eec039";
-const INCORRECT_COLOR = "#333";
-const STANDARD_COLOR = "#aaa";
-
 let notificationTimeout;
 
 const renderInputRow = (parentElem, numberOfLetters) => {
