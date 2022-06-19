@@ -1130,9 +1130,10 @@ describe("wordle clone", () => {
                 cy.task("log", "Checking dialog placement...");
 
                 // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
-                // Adding an extra 0.5s to accommodate for the occasional delay that could potentially happen on CI runner
-                // TODO: still need to look into this fully
-                cy.wait(1000);
+                cy.wait(500);
+
+                cy.contains("You win!").should("be.visible");
+                cy.contains("Next Wordle").should("be.visible");
 
                 cy.contains("You win!").shouldBeInViewport();
                 cy.contains("Next Wordle").shouldBeInViewport();
