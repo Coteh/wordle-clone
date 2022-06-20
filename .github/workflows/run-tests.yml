@@ -1,7 +1,7 @@
 name: Run Tests
 on: [push]
 jobs:
-  Test-Game-Logic:
+  test-game-logic:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Checking out ${{ github.ref }} from ${{ github.repository }}."
@@ -13,3 +13,11 @@ jobs:
         run: npm install
       - name: Run test
         run: npm run test
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Checking out ${{ github.ref }} from ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v4

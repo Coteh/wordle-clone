@@ -1,8 +1,3 @@
-const CORRECT_COLOR = "green";
-const WITHIN_COLOR = "#eec039";
-const INCORRECT_COLOR = "#333";
-const STANDARD_COLOR = "#aaa";
-
 let notificationTimeout;
 
 const renderInputRow = (parentElem, numberOfLetters) => {
@@ -11,7 +6,7 @@ const renderInputRow = (parentElem, numberOfLetters) => {
 
     for (let i = 0; i < numberOfLetters; i++) {
         const box = document.createElement("div");
-        box.classList.add("box", "standard");
+        box.classList.add("box");
         const letterElem = document.createElement("span");
         letterElem.classList.add("box-letter");
         box.appendChild(letterElem);
@@ -47,7 +42,6 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
             itemElem.classList.add(letterStatus || "standard");
             itemElem.addEventListener("click", (e) => {
                 e.preventDefault();
-                console.log(item);
                 handleKeyInput(item);
             });
             const letterElem = document.createElement("div");
@@ -70,7 +64,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
     return container;
 };
 
-const renderDialog = (content, fadeIn) => {
+const renderDialog = (content, fadeIn, closable = true) => {
     // Close any currently existing dialogs
     const dialogElem = document.querySelector(".dialog");
     if (dialogElem) dialogElem.remove();
@@ -81,12 +75,16 @@ const renderDialog = (content, fadeIn) => {
     const overlayBackElem = document.querySelector(".overlay-back");
 
     const closeBtn = clone.querySelector("button.close");
-    closeBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const dialog = document.querySelector(".dialog");
-        dialog.remove();
-        overlayBackElem.style.display = "none";
-    });
+    if (closable) {
+        closeBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const dialog = document.querySelector(".dialog");
+            dialog.remove();
+            overlayBackElem.style.display = "none";
+        });
+    } else {
+        closeBtn.style.display = "none";
+    }
 
     const dialogContent = clone.querySelector(".dialog-content");
     dialogContent.appendChild(content);

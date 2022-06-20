@@ -95,12 +95,22 @@
                 &copy 2022 James Cote
             </span>
         </template>
+        <template id="error-dialog-content">
+            <span>
+                The following error occurred:
+            </span>
+            <span class="error-text"></span>
+            <span>
+                Please refresh the page and try again later.<br/>
+                If this persists, please reach out to me on <a href="https://github.com/Coteh/wordle-clone/issues/new?assignees=&labels=&template=bug_report.md" target="_blank">GitHub</a> or <a href="mailto:james.cote.730@gmail.com" target="_blank">email</a> with more information and I'll take a look.
+            </span>
+        </template>
         <script>
             feather.replace();
 
             Sentry.onLoad(() => {
                 Sentry.init({
-                    release: "wordle-clone@1.0.7",
+                    release: "wordle-clone@1.0.8",
                     beforeSend(event) {
                         if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                             return null;

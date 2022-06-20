@@ -9,14 +9,14 @@ const linkEntryToLetterMap = (letterMap) => (entry) => {
     if (currEntry !== "correct" && currEntry !== "within") letterMap.set(entry.letter, "incorrect");
 };
 
-const getLetterColour = (attempt, letterIndex) =>
+const getLetterColourClass = (attempt, letterIndex) =>
     attempt[letterIndex]
         ? attempt[letterIndex].correct
-            ? CORRECT_COLOR
+            ? "correct"
             : attempt[letterIndex].within
-            ? WITHIN_COLOR
-            : INCORRECT_COLOR
-        : STANDARD_COLOR;
+            ? "within"
+            : "incorrect"
+        : "standard";
 
 const updateCountdown = (countdownElem, nextDate) => {
     countdownElem.innerText = getCountdownString(nextDate);
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         attempt[i].letter;
                     inputRowElems[index].querySelector(
                         `div:nth-child(${i + 1})`
-                    ).style.backgroundColor = getLetterColour(attempt, i);
+                    ).className = `box ${getLetterColourClass(attempt, i)}`;
                 }
                 attempt.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             });
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             for (let i = 0; i < 5; i++) {
                 document.querySelector(
                     `#current-input > div:nth-child(${i + 1})`
-                ).style.backgroundColor = getLetterColour(results, i);
+                ).className = `box ${getLetterColourClass(results, i)}`;
             }
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             renderKeyboard(bottomElem, letterMap, handleKeyInput);
@@ -148,8 +148,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    const closeDialog = (dialog, overlayBackElem) => {
+        if (dialog) {
+            // Check if dialog is closable first before closing (close button would be visible, if so)
+            const closeBtn = dialog.querySelector("button.close");
+            if (closeBtn.style.display === "none") {
+                return;
+            }
+            dialog.remove();
+        }
+        // NTS: Perhaps it'd make more sense if overlay backdrop only disappeared when a valid dialog is passed,
+        // but if an invalid dialog is being passed, it might not be on the screen either.
+        // In this case, it may be better to leave this as-is and always have the backdrop close so that players can still play.
+        overlayBackElem.style.display = "none";
+    };
+
     const handleKeyInput = (key) => {
-        if (gameState.ended) {
+        const dialog = document.querySelector(".dialog");
+        if (dialog && (key === "enter" || key === "escape")) {
+            return closeDialog(dialog, overlayBackElem);
+        }
+        if (dialog || gameState.ended) {
             return;
         }
         if (key === "enter") {
@@ -171,16 +190,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     helpLink.addEventListener("click", (e) => {
         e.preventDefault();
         renderDialog(createDialogContentFromTemplate("#how-to-play"), true);
+        helpLink.blur();
     });
 
     const overlayBackElem = document.querySelector(".overlay-back");
     overlayBackElem.addEventListener("click", (e) => {
         const dialog = document.querySelector(".dialog");
-        if (dialog) dialog.remove();
-        overlayBackElem.style.display = "none";
+        closeDialog(dialog, overlayBackElem);
     });
 
-    await initGame(eventHandler);
+    try {
+        await initGame(eventHandler);
+    } catch (e) {
+        if (Sentry) Sentry.captureException(e);
+        const elem = createDialogContentFromTemplate("#error-dialog-content");
+        const errorContent = elem.querySelector(".error-text");
+        if (e instanceof WordListFetchError) {
+            errorContent.innerText = "Could not fetch word list.";
+        } else {
+            console.error("Unknown error occurred", e);
+            errorContent.innerText = e.message;
+        }
+        renderDialog(elem, true, false);
+    }
 
     gameLoaded = true;
 });
