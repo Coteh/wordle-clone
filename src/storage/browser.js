@@ -13,7 +13,7 @@ const saveGame = (attempts, lives, ended) => {
 
 const loadGame = () => {
     const attempts = JSON.parse(window.localStorage.getItem(ATTEMPTS_KEY) || "[]");
-    const lives = parseInt(window.localStorage.getItem(LIVES_KEY)) || 0;
+    const lives = parseInt(window.localStorage.getItem(LIVES_KEY)) ?? STARTING_LIVES;
     const ended = JSON.parse(window.localStorage.getItem(ENDED_KEY) || "false");
     return {
         attempts,

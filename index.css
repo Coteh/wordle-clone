@@ -195,6 +195,18 @@ svg {
     transform: translate(-50%, -50%);
 }
 
+/* Error Content */
+
+span.error-text {
+    margin: 1em;
+}
+
+/* Text Content */
+
+a {
+    color: white;
+}
+
 /* Boxes */
 
 .box {
@@ -269,6 +281,18 @@ svg {
     }
 }
 
+@media (max-width: 320px) {
+    .keyboard > .keyboard-row > .keyboard-item {
+        width: 0.2em;
+        height: 0.5em;
+        line-height: 0.5em;
+    }
+
+    .keyboard > .keyboard-row > .keyboard-item.big {
+        width: 1.6em;
+    }
+}
+
 .keyboard > .keyboard-row > .keyboard-item > div {
     position: absolute;
     left: 0;
@@ -292,7 +316,7 @@ svg {
     background-color: var(--standard-color);
 }
 
-.box.standard {
+.box {
     background-color: var(--standard-block-color);
     border: 1px solid var(--standard-color);
 }
