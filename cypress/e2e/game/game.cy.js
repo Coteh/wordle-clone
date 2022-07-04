@@ -454,6 +454,9 @@ describe("wordle clone", () => {
         beforeEach(() => {
             // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
             // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
+            // TODO: Currently, this cy.clock invocation does not work; this test is using the cy.clock from the top beforeEach handler.
+            // This is fine atm, as both tests mock the same day, but this is something that should ideally be fixed as this test is supposed
+            // to be mocking the day separate from all other tests.
             cy.clock(DAY_MS * 1, ["Date"]);
         });
         it("should handle word list from server", () => {
@@ -462,16 +465,13 @@ describe("wordle clone", () => {
             });
             cy.clearBrowserCache();
             cy.reload();
-            cy.fixture("words.txt").then((file) => {
-                const expectedWord = file.split("\n")[1];
-                cy.keyboardItem("l").click();
-                cy.keyboardItem("e").click();
-                cy.keyboardItem("a").click();
-                cy.keyboardItem("f").click();
-                cy.keyboardItem("y").click();
-                cy.keyboardItem("enter").click();
-                cy.contains("You win!").should("be.visible");
-            });
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("f").click();
+            cy.keyboardItem("y").click();
+            cy.keyboardItem("enter").click();
+            cy.contains("You win!").should("be.visible");
         });
         it("should handle gracefully if word list cannot be handled", () => {
             cy.intercept("GET", "/words.txt", {
