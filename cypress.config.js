@@ -17,4 +17,5 @@ module.exports = defineConfig({
     },
     screenshotOnRunFailure: process.env.CI === undefined,
     video: process.env.CI === undefined,
+    videoCompression: 0,
 });

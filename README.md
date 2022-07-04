@@ -4,7 +4,7 @@
 
 ### [**Click here to play**](https://coteh.github.io/wordle-clone)
 
-![Browser Game Screenshot](screenshot.png "Browser Game Screenshot")
+![Browser Game Screenshot](screenshot.gif "Browser Game Screenshot")
 
 A clone of the worldwide phenomenon known as [Wordle](https://www.powerlanguage.co.uk/wordle/).
 
