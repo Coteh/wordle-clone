@@ -6,20 +6,14 @@ const INPUT_DELAY_MS = 150;
 
 describe("misc", () => {
     beforeEach(() => {
+        // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
+        // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
+        cy.clock(DAY_MS * 2 + (DAY_MS * 1) / 2, ["Date"]);
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
             },
         });
-        // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
-        // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
-        cy.clock(DAY_MS * 2 + (DAY_MS * 1) / 2, ["Date"]);
-        cy.intercept("/words.txt", {
-            fixture: "words.txt",
-        });
-        cy.clearBrowserCache();
-        cy.reload();
-        cy.waitForGameReady();
     });
 
     it("gameplay screenshot", () => {
