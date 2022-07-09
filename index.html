@@ -106,19 +106,25 @@
             </span>
         </template>
         <script>
-            feather.replace();
-
-            Sentry.onLoad(() => {
-                Sentry.init({
-                    release: "wordle-clone@1.0.8",
-                    beforeSend(event) {
-                        if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
-                            return null;
+            if (typeof feather !== "undefined") {
+                feather.replace();
+            } else {
+                document.querySelector("[data-feather='help-circle']").innerText = "?";
+            }
+            
+            if (typeof Sentry !== "undefined") {
+                Sentry.onLoad(() => {
+                    Sentry.init({
+                        release: "wordle-clone@1.0.8",
+                        beforeSend(event) {
+                            if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
+                                return null;
+                            }
+                            return event;
                         }
-                        return event;
-                    }
+                    });
                 });
-            });
+            }
         </script>
     </body>
 </html>
