@@ -181,6 +181,29 @@ describe("wordle clone", () => {
         for (let i = 2; i <= 6; i++) {
             cy.inputRowShouldBeEmpty(i);
         }
+
+        // Despite entering six letters, pressing backspace once should still remove the fifth letter since the sixth was rejected
+
+        cy.keyboardItem("backspace").click();
+
+        cy.inputRow(1).inputCell(1).inputLetter().should("have.text", "s");
+        cy.inputRow(1).inputCell(2).inputLetter().should("have.text", "p");
+        cy.inputRow(1).inputCell(3).inputLetter().should("have.text", "i");
+        cy.inputRow(1).inputCell(4).inputLetter().should("have.text", "c");
+        cy.inputRow(1).inputCell(5).inputLetter().should("be.empty");
+        for (let i = 2; i <= 6; i++) {
+            cy.inputRowShouldBeEmpty(i);
+        }
+
+        cy.inputRow(1).should("have.id", "current-input");
+        cy.inputRow(2).should("not.have.id", "current-input");
+
+        cy.keyboardItem("enter").click();
+
+        cy.contains("Not enough letters").should("be.visible");
+
+        cy.inputRow(1).should("have.id", "current-input");
+        cy.inputRow(2).should("not.have.id", "current-input");
     });
 
     it("handles player attempting to delete letters on an empty row", () => {
@@ -193,6 +216,27 @@ describe("wordle clone", () => {
         for (let i = 1; i <= 6; i++) {
             cy.inputRowShouldBeEmpty(i);
         }
+
+        // Despite pressing backspace one too many times, player should be able to type a full word and submit it
+
+        cy.keyboardItem("s").click();
+        cy.keyboardItem("p").click();
+        cy.keyboardItem("i").click();
+        cy.keyboardItem("c").click();
+        cy.keyboardItem("e").click();
+
+        cy.inputRowHasWord(1, "spice");
+        for (let i = 2; i <= 6; i++) {
+            cy.inputRowShouldBeEmpty(i);
+        }
+
+        cy.inputRow(1).should("have.id", "current-input");
+        cy.inputRow(2).should("not.have.id", "current-input");
+
+        cy.get("body").type("{enter}");
+
+        cy.inputRow(1).should("not.have.id", "current-input");
+        cy.inputRow(2).should("have.id", "current-input");
     });
 
     it("handles case where word entered was invalid", () => {
