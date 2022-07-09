@@ -59,7 +59,11 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
     }
     parentElem.appendChild(container);
 
-    feather.replace();
+    if (typeof feather !== "undefined") {
+        feather.replace();
+    } else {
+        document.querySelector("[data-feather='delete']").innerText = "←";
+    }
 
     return container;
 };
@@ -104,7 +108,11 @@ const renderDialog = (content, fadeIn, closable = true) => {
 
     overlayBackElem.style.display = "block";
 
-    feather.replace();
+    if (typeof feather !== "undefined") {
+        feather.replace();
+    } else {
+        document.querySelector("[data-feather='x']").innerText = "X";
+    }
 };
 
 const renderNotification = (msg) => {

@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         await initGame(eventHandler);
     } catch (e) {
-        if (Sentry) Sentry.captureException(e);
+        if (typeof Sentry !== "undefined") Sentry.captureException(e);
         const elem = createDialogContentFromTemplate("#error-dialog-content");
         const errorContent = elem.querySelector(".error-text");
         if (e instanceof WordListFetchError) {
