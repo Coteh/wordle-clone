@@ -169,6 +169,32 @@ describe("wordle clone", () => {
         cy.inputRow(2).should("not.have.id", "current-input");
     });
 
+    it("handles player attempting to enter more than five letters on a single row", () => {
+        cy.keyboardItem("s").click();
+        cy.keyboardItem("p").click();
+        cy.keyboardItem("i").click();
+        cy.keyboardItem("c").click();
+        cy.keyboardItem("e").click();
+        cy.keyboardItem("y").click();
+
+        cy.inputRowHasWord(1, "spice");
+        for (let i = 2; i <= 6; i++) {
+            cy.inputRowShouldBeEmpty(i);
+        }
+    });
+
+    it("handles player attempting to delete letters on an empty row", () => {
+        cy.keyboardItem("s").click();
+        cy.keyboardItem("p").click();
+        cy.keyboardItem("backspace").click();
+        cy.keyboardItem("backspace").click();
+        cy.keyboardItem("backspace").click();
+
+        for (let i = 1; i <= 6; i++) {
+            cy.inputRowShouldBeEmpty(i);
+        }
+    });
+
     it("handles case where word entered was invalid", () => {
         cy.keyboardItem("a").click();
         cy.keyboardItem("b").click();

@@ -91,7 +91,7 @@ describe("misc", () => {
         cy.contains("Not enough letters").should("be.visible");
 
         cy.get("body").type("{backspace}");
-        cy.get("body").type("{backspace}");
+        cy.get(".keyboard > .keyboard-row:last-child > .keyboard-item:last-child").click();
 
         cy.keyboardItem("t").click();
         cy.keyboardItem("e").click();
