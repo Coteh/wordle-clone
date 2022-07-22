@@ -63,6 +63,12 @@ describe("misc", () => {
         cy.reload();
         cy.waitForGameReady();
 
+        // TODO: Find a way to wait for all page resources to load
+        // It is possible that the "?" check can sometimes happen before the <script> tag in index.html loads (it contains code to place the "?" text in place of feather icon)
+        // The errors are the same compared to the failure on GH: "Timed out retrying after 4000ms: expected '<a.help-link>' to contain text '?', but the text was '\n                    \n                '"
+        // https://github.com/Coteh/wordle-clone/runs/7266691802?check_suite_focus=true
+        cy.wait(1000);
+
         // Can still make inputs
 
         cy.get("body").type("a");
