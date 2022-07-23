@@ -1200,7 +1200,9 @@ describe("wordle clone", () => {
                 cy.task("log", "Checking dialog placement...");
 
                 // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
-                cy.wait(500);
+                // TODO: Find a way to fix flake that occasionally happens when the dialog visibility check fails. Bumping the wait time by another 0.5s for now.
+                // https://github.com/Coteh/wordle-clone/runs/7174612853?check_suite_focus=true
+                cy.wait(1000);
 
                 cy.contains("You win!").should("be.visible");
                 cy.contains("Next Wordle").should("be.visible");
