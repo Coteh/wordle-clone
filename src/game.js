@@ -109,7 +109,7 @@ const getWord = async (wordListIndex, wordList) => {
     return wordList[wordListIndex];
 };
 
-const getDayIndex = () => {
+const getDayNumber = () => {
     return getCurrentDay() - FIRST_DAY;
 };
 
@@ -181,7 +181,7 @@ const initGame = async (_eventHandler) => {
 
     const wordListIndex = getCurrentDay() % wordList.length;
     word = await getWord(wordListIndex, wordList);
-    const day = getDayIndex();
+    const day = getDayNumber();
 
     gameState = initState();
 
