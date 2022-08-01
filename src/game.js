@@ -26,6 +26,9 @@ const WORD_NOT_PROVIDED_ERROR_ID = "WordNotProvided";
 const USER_RAN_OUT_OF_LIVES = "UserRanOutOfLives";
 const GAME_IS_OVER = "GameIsOver";
 
+// March 23 2022 - initial release date
+const FIRST_DAY = 19074;
+
 class WordListFetchError extends Error {
     constructor(e) {
         super(e);
@@ -99,11 +102,15 @@ const loadWordList = async () => {
     return text.trimEnd().split("\n");
 };
 
-const getWord = async (day, wordList) => {
-    if (day < 0 || day >= wordList.length) {
-        throw new Error("Day index out of bounds");
+const getWord = async (wordListIndex, wordList) => {
+    if (wordListIndex < 0 || wordListIndex >= wordList.length) {
+        throw new Error("Word list index out of bounds");
     }
-    return wordList[day];
+    return wordList[wordListIndex];
+};
+
+const getDayNumber = () => {
+    return getCurrentDay() - FIRST_DAY;
 };
 
 const checkForWord = (userInput, word, wordList) => {
@@ -172,8 +179,9 @@ const initGame = async (_eventHandler) => {
 
     if (debugEnabled) console.log(wordList);
 
-    const day = getCurrentDay() % wordList.length;
-    word = await getWord(day, wordList);
+    const wordListIndex = getCurrentDay() % wordList.length;
+    word = await getWord(wordListIndex, wordList);
+    const day = getDayNumber();
 
     gameState = initState();
 
