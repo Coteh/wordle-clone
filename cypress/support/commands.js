@@ -75,9 +75,7 @@ Cypress.Commands.add("waitForGameReady", () => {
 });
 
 Cypress.Commands.add("clearBrowserCache", () => {
-    // Call Chrome's API for clearing browser cache when running this test,
-    // certain requests such as username existence will not provide any data to Cypress when returned as a cached response
-    // due to how cy.intercept manages the browser request
+    // Call Chrome's API for clearing browser cache when running this test
     // https://stackoverflow.com/a/67858001
     Cypress.automation("remote:debugger:protocol", {
         command: "Network.clearBrowserCache",
@@ -118,3 +116,9 @@ Cypress.Commands.add("shouldBeInViewport", { prevSubject: true }, (subject) => {
     expect(rect.left).not.to.be.lessThan(0);
     expect(rect.right).not.to.be.lessThan(0);
 });
+
+// Extended cy.intercept to add a log when the request gets intercepted.
+// See https://glebbahmutov.com/blog/cypress-intercept-problems/
+Cypress.Commands.overwrite("intercept", (intercept, ...args) =>
+    cy.log("intercept", args).then(() => intercept(...args))
+);

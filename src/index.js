@@ -111,9 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentLetterIndex = 0;
             currentInput = "";
         },
-        renderDayText(day) {
-            document.querySelector(".day-text").innerText = `Day ${day + 1}`;
-        },
     };
 
     const eventHandler = (event, data) => {
@@ -126,7 +123,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 if (currentInputElem) currentInputElem.id = "current-input";
                 day = data.day;
-                wordleRenderer.renderDayText(day);
                 break;
             case "first_time":
                 renderDialog(createDialogContentFromTemplate("#how-to-play"), true);

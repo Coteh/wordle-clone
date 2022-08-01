@@ -328,11 +328,11 @@ describe("get word", () => {
     it("should handle out of bounds", async () => {
         await assert.rejects(getWord(10, wordList), {
             name: "Error",
-            message: "Day index out of bounds",
+            message: "Word list index out of bounds",
         });
         await assert.rejects(getWord(-1, wordList), {
             name: "Error",
-            message: "Day index out of bounds",
+            message: "Word list index out of bounds",
         });
     });
 });
