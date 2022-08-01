@@ -25,9 +25,11 @@ svg {
 }
 
 .top-menu {
-    background-color: rgb(87, 87, 87);
+    background-color: black;
+    border-bottom: 1px solid var(--standard-color);
     padding: 1rem;
     font-size: 1rem;
+    font-family: sans-serif;
     text-transform: uppercase;
     color: white;
     display: flex;
