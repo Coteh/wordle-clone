@@ -1,6 +1,6 @@
 {
   "name": "wordle-clone",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A clone of the popular Wordle game.",
   "private": true,
   "main": "index.js",
