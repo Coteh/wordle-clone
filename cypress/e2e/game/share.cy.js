@@ -53,7 +53,7 @@ describe("sharing results", () => {
 
         cy.window().then(async (win) => {
             const copiedText = await win.navigator.clipboard.readText();
-            expect(copiedText).to.eq(`Wordle Clone 2 2/6
+            expect(copiedText).to.eq(`Wordle Clone 1 2/6
 ⬛🟨⬛⬛🟨
 🟩🟩🟩🟩🟩`);
         });
@@ -100,7 +100,7 @@ describe("sharing results", () => {
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
-                expect(copiedText).to.eq(`Wordle Clone 8 2/6
+                expect(copiedText).to.eq(`Wordle Clone 7 2/6
 ⬛⬛🟩⬛🟨
 🟩🟩🟩🟩🟩`);
             });
@@ -117,7 +117,7 @@ describe("sharing results", () => {
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
-                expect(copiedText).to.eq(`Wordle Clone 101 2/6
+                expect(copiedText).to.eq(`Wordle Clone 100 2/6
 ⬛⬛⬛⬛⬛
 🟩🟩🟩🟩🟩`);
             });
@@ -136,7 +136,7 @@ describe("sharing results", () => {
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
-                expect(copiedText).to.eq(`Wordle Clone 1 2/6
+                expect(copiedText).to.eq(`Wordle Clone 0 2/6
 ⬛🟩🟨⬛⬛
 🟩🟩🟩🟩🟩`);
             });
@@ -155,7 +155,7 @@ describe("sharing results", () => {
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
-                expect(copiedText).to.eq(`Wordle Clone -4 2/6
+                expect(copiedText).to.eq(`Wordle Clone -5 2/6
 ⬛⬛⬛⬛⬛
 🟩🟩🟩🟩🟩`);
             });
@@ -172,7 +172,7 @@ describe("sharing results", () => {
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
-                expect(copiedText).to.eq(`Wordle Clone 0 2/6
+                expect(copiedText).to.eq(`Wordle Clone -1 2/6
 ⬛⬛⬛⬛⬛
 🟩🟩🟩🟩🟩`);
             });

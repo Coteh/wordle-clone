@@ -147,6 +147,6 @@ describe("share result", () => {
 🟩🟨🟨🟩⬛
 🟩🟨🟩🟩⬛
 🟩🟩🟩🟩🟩`;
-        assert.strictEqual(generateShareText(0, ATTEMPTS, 6), expected);
+        assert.strictEqual(generateShareText(1, ATTEMPTS, 6), expected);
     });
 });
