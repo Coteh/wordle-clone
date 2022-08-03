@@ -1,5 +1,5 @@
-const generateShareText = (dayIndex, attempts, maxAttempts) => {
-    let shareText = `Wordle Clone ${dayIndex + 1} ${attempts.length}/${maxAttempts}\n`;
+const generateShareText = (dayNumber, attempts, maxAttempts) => {
+    let shareText = `Wordle Clone ${dayNumber} ${attempts.length}/${maxAttempts}\n`;
     shareText += attempts
         .map((attempt) =>
             attempt
