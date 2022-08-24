@@ -111,7 +111,7 @@ const renderDialog = (content, fadeIn, closable = true) => {
     if (typeof feather !== "undefined") {
         feather.replace();
     } else {
-        document.querySelector("[data-feather='x']").innerText = "X";
+        document.querySelector(".dialog [data-feather='x']").innerText = "X";
     }
 };
 

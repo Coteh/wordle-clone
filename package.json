@@ -1,6 +1,6 @@
 {
   "name": "wordle-clone",
-  "version": "1.0.11",
+  "version": "1.1.0",
   "description": "A clone of the popular Wordle game.",
   "private": true,
   "main": "index.js",
@@ -19,6 +19,7 @@
     "cypress": "^10.3.0",
     "cypress-real-events": "^1.7.0",
     "mocha": "^9.1.4",
+    "mock-fs": "^5.1.4",
     "sinon": "^12.0.1"
   },
   "dependencies": {
@@ -26,7 +27,7 @@
   },
   "overrides": {
     "cypress-real-events": {
-      "cypress": "^10.0.3"
+      "cypress": "^10.3.0"
     }
   }
 }

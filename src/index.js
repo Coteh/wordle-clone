@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 if (currentInputElem) currentInputElem.id = "current-input";
                 day = data.day;
+                document.querySelector(".day-number").innerText = `Day #${day}`;
                 break;
             case "first_time":
                 renderDialog(createDialogContentFromTemplate("#how-to-play"), true);
@@ -189,11 +190,71 @@ document.addEventListener("DOMContentLoaded", async () => {
         helpLink.blur();
     });
 
+    const gamePane = document.querySelector(".game");
+    const settingsPane = document.querySelector(".settings");
+    const settingsLink = document.querySelector(".settings-link");
+
+    const toggleSettings = () => {
+        settingsLink.blur();
+        if (settingsPane.style.display === "none") {
+            gamePane.style.display = "none";
+            settingsPane.style.display = "flex";
+        } else {
+            gamePane.style.display = "flex";
+            settingsPane.style.display = "none";
+        }
+    };
+
+    settingsLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleSettings();
+    });
+
+    const settingsClose = settingsPane.querySelector(".close");
+    settingsClose.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggleSettings();
+    });
+
     const overlayBackElem = document.querySelector(".overlay-back");
     overlayBackElem.addEventListener("click", (e) => {
         const dialog = document.querySelector(".dialog");
         closeDialog(dialog, overlayBackElem);
     });
+
+    let lightMode = false;
+
+    const settings = document.querySelectorAll(".setting");
+    settings.forEach((setting) => {
+        setting.addEventListener("click", (e) => {
+            const elem = e.target;
+            let enabled = false;
+            if (elem.classList.contains("light-theme")) {
+                enabled = lightMode = !lightMode;
+                if (lightMode) {
+                    document.body.classList.add("light");
+                } else {
+                    document.body.classList.remove("light");
+                }
+                savePreferenceValue("theme", lightMode ? "light" : "dark");
+            }
+            const toggle = setting.querySelector(".toggle");
+            toggle.innerText = enabled ? "ON" : "OFF";
+        });
+    });
+
+    initPreferences();
+    if (getPreferenceValue("theme") === "light") {
+        lightMode = true;
+        const setting = document.querySelector(".setting.light-theme");
+        const toggle = setting.querySelector(".toggle");
+        toggle.innerText = "ON";
+        if (lightMode) {
+            document.body.classList.add("light");
+        } else {
+            document.body.classList.remove("light");
+        }
+    }
 
     try {
         await initGame(eventHandler);
