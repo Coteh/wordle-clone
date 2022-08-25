@@ -6,36 +6,76 @@
     --correct-color: green;
     --within-color: #eec039;
     --incorrect-color: #333;
+
+    --settings-item-border-color: 1px solid grey;
+
+    --background-color: #000;
+    --dialog-background-color: rgb(22, 22, 22);
+
+    --text-color: #fff;
+    --letter-text-color: #fff;
+    --letter-selected-text-color: #fff;
+}
+
+.light {
+    --standard-color: #aaa;
+    --standard-block-color: #fff;
+    --correct-color: green;
+    --within-color: #eec039;
+    --incorrect-color: #737373;
+
+    --background-color: #fff;
+    --dialog-background-color: rgb(202, 202, 202);
+
+    --text-color: #000;
+    --letter-text-color: #000;
+    --letter-selected-text-color: #fff;
 }
 
 /* Main Content */
 
 html {
     font-size: 125%;
+    font-family: sans-serif;
 }
 
 body {
-    background-color: black;
+    background-color: var(--background-color);
     margin: 0;
     overflow: hidden;
 }
 
 svg {
-    color: white;
+    color: var(--text-color);
 }
 
 .top-menu {
-    background-color: black;
+    position: relative;
+    background-color: var(--background-color);
     border-bottom: 1px solid var(--standard-color);
     padding: 1rem;
     font-size: 1rem;
     font-family: sans-serif;
     text-transform: uppercase;
-    color: white;
+    color: var(--text-color);
     display: flex;
     justify-content: space-between;
     height: 64px;
     box-sizing: border-box;
+}
+
+.top-menu > .icon-bar {
+    position: absolute;
+    right: 20px;
+}
+
+.top-menu > .icon-bar > a.link-icon {
+    text-decoration: none;
+    margin-right: 4px;
+}
+
+.top-menu > .icon-bar > a.link-icon:last-child {
+    margin-right: 0;
 }
 
 .wordle-rows {
@@ -73,7 +113,7 @@ svg {
     max-height: 3rem;
 }
 
-.game > .space {
+.pane > .space {
     flex: 1;
 }
 
@@ -83,7 +123,7 @@ svg {
     }
 }
 
-.game {
+.pane {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -91,6 +131,69 @@ svg {
     height: calc(100% - 64px);
     width: 100%;
     transform-origin: top;
+}
+
+.pane h1,
+h2,
+h3,
+h4,
+h5 {
+    color: var(--text-color);
+}
+
+.pane > .footer {
+    color: var(--text-color);
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button.close {
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--text-color);
+}
+
+/* Settings */
+
+.settings {
+    position: relative;
+}
+
+.settings > button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.settings > .settings-item-group {
+    width: 100%;
+}
+
+.settings .settings-item {
+    color: var(--text-color);
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    border-top: var(--settings-item-border-color);
+    border-bottom: none;
+    height: 2em;
+}
+
+.settings .settings-item:last-child {
+    border-bottom: var(--settings-item-border-color);
+}
+
+.settings .settings-item > * {
+    pointer-events: none;
 }
 
 /* Overlay Backdrop */
@@ -115,11 +218,11 @@ svg {
     bottom: 0;
     transform: translate(-50%, -50%);
 
-    background-color: rgb(22, 22, 22);
-    color: white;
+    background-color: var(--dialog-background-color);
+    color: var(--text-color);
     border: 1px solid black;
     width: 300px;
-    height: 300px;
+    height: auto;
 
     opacity: 1;
 
@@ -129,41 +232,52 @@ svg {
 .dialog > div.dialog-content {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     width: 100%;
+    height: 100%;
     padding: 2rem;
     box-sizing: border-box;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-.dialog button {
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    overflow: auto;
 }
 
 .dialog button > span {
     margin-left: 8px;
-    color: white;
+    color: var(--text-color);
 }
 
 .dialog button.close {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 1;
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: rgba(0, 0, 0, 0);
-    color: white;
 }
+
+/* Specific Dialogs */
 
 .dialog button.share-button {
     background-color: green;
+}
+
+.dialog button.share-button > * {
+    color: var(--letter-selected-text-color);
+}
+
+.dialog > .dialog-content > .how-to-play {
+    height: 100%;
+    top: -20px;
+    position: relative;
+}
+
+.dialog > .dialog-content > .how-to-play > div.sample,
+.dialog > .dialog-content > .how-to-play > div.meaning {
+    display: flex;
+}
+
+.dialog > .dialog-content > .how-to-play > div.meaning > span.text {
+    font-size: 0.75em;
 }
 
 /* Notification */
@@ -207,7 +321,7 @@ span.error-text {
 /* Text Content */
 
 a {
-    color: white;
+    color: var(--text-color);
 }
 
 /* Boxes */
@@ -238,7 +352,7 @@ a {
     font-weight: bold;
     font-family: sans-serif;
     text-transform: uppercase;
-    color: white;
+    color: var(--letter-text-color);
 }
 
 /* Keyboard */
@@ -261,12 +375,12 @@ a {
     position: relative;
     padding: 1em 0.5em;
     margin: 0.1em;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 0.25em;
     width: 5%;
     height: 1em;
     line-height: 1em;
-    color: white;
+    color: var(--letter-text-color);
     text-align: center;
 }
 
@@ -334,4 +448,13 @@ a {
 
 .incorrect {
     background-color: var(--incorrect-color);
+}
+
+.correct > .box-letter,
+.within > .box-letter,
+.incorrect > .box-letter,
+.keyboard > .keyboard-row > .correct.keyboard-item,
+.keyboard > .keyboard-row > .within.keyboard-item,
+.keyboard > .keyboard-row > .incorrect.keyboard-item {
+    color: var(--letter-selected-text-color);
 }
