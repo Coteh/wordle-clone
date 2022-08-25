@@ -20,6 +20,7 @@ const {
     ENDED_KEY,
     DAY_KEY,
     PLAYED_BEFORE_KEY,
+    PREFERENCES_KEY,
 } = require("../src/storage");
 const { STARTING_LIVES } = require("../src/consts");
 
@@ -172,16 +173,15 @@ describe("game storage - browser", () => {
             sinon.assert.calledWithMatch(getItemStub, DAY_KEY);
             assert(!isValid);
         });
-        it("should not be valid if day value in storage is not valid", () => {
+        it("should not be valid if day value in storage is absent", () => {
             getItemStub.withArgs(DAY_KEY).returns(null);
             sinon.assert.notCalled(getItemStub);
             let isValid = checkGameValidity();
             sinon.assert.calledOnce(getItemStub);
             sinon.assert.calledWithMatch(getItemStub, DAY_KEY);
             assert(!isValid);
-
-            getItemStub.reset();
-
+        });
+        it("should not be valid if day value in storage is not valid", () => {
             getItemStub.withArgs(DAY_KEY).returns("invalid");
             sinon.assert.notCalled(getItemStub);
             isValid = checkGameValidity();
@@ -201,35 +201,35 @@ describe("game storage - browser", () => {
             window.localStorage.getItem = origFunc;
         });
         it("should return true if 'played before' entry is not in storage", () => {
-            getItemStub.withArgs("played_before").returns(null);
+            getItemStub.withArgs(PLAYED_BEFORE_KEY).returns(null);
             sinon.assert.notCalled(getItemStub);
             const isFirstTime = checkFirstTime();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "played_before");
+            sinon.assert.calledWithMatch(getItemStub, PLAYED_BEFORE_KEY);
             assert(isFirstTime);
         });
         it("should return true if 'played before' entry is set to something besides boolean string in storage", () => {
-            getItemStub.withArgs("played_before").returns("test");
+            getItemStub.withArgs(PLAYED_BEFORE_KEY).returns("test");
             sinon.assert.notCalled(getItemStub);
             const isFirstTime = checkFirstTime();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "played_before");
+            sinon.assert.calledWithMatch(getItemStub, PLAYED_BEFORE_KEY);
             assert(isFirstTime);
         });
         it("should return true if 'played before' entry is set to false in storage", () => {
-            getItemStub.withArgs("played_before").returns("false");
+            getItemStub.withArgs(PLAYED_BEFORE_KEY).returns("false");
             sinon.assert.notCalled(getItemStub);
             const isFirstTime = checkFirstTime();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "played_before");
+            sinon.assert.calledWithMatch(getItemStub, PLAYED_BEFORE_KEY);
             assert(isFirstTime);
         });
         it("should return false if 'played before' entry is set to true in storage", () => {
-            getItemStub.withArgs("played_before").returns("true");
+            getItemStub.withArgs(PLAYED_BEFORE_KEY).returns("true");
             sinon.assert.notCalled(getItemStub);
             const isFirstTime = checkFirstTime();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "played_before");
+            sinon.assert.calledWithMatch(getItemStub, PLAYED_BEFORE_KEY);
             assert(!isFirstTime);
         });
     });
@@ -240,13 +240,13 @@ describe("game storage - browser", () => {
             sinon.assert.notCalled(stubbedLocalStorage.setItem);
             setPlayedBefore(true);
             sinon.assert.calledOnce(stubbedLocalStorage.setItem);
-            sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, "played_before", true);
+            sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, PLAYED_BEFORE_KEY, true);
         });
         it("should set 'played before' to false if false is passed", () => {
             sinon.assert.notCalled(stubbedLocalStorage.setItem);
             setPlayedBefore(false);
             sinon.assert.calledOnce(stubbedLocalStorage.setItem);
-            sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, "played_before", false);
+            sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, PLAYED_BEFORE_KEY, false);
         });
     });
 });
@@ -366,6 +366,33 @@ describe("game storage - CLI", () => {
 
             assert(!isValid);
         });
+        it("should not be valid if day value in storage is absent", () => {
+            mockFs({
+                "state.json": JSON.stringify({
+                    [ATTEMPTS_KEY]: ATTEMPTS,
+                    [LIVES_KEY]: LIVES,
+                    [ENDED_KEY]: true,
+                }),
+            });
+
+            const isValid = cliStorage.checkGameValidity();
+
+            assert(!isValid);
+        });
+        it("should not be valid if day value in storage is null", () => {
+            mockFs({
+                "state.json": JSON.stringify({
+                    [ATTEMPTS_KEY]: ATTEMPTS,
+                    [LIVES_KEY]: LIVES,
+                    [ENDED_KEY]: true,
+                    [DAY_KEY]: null,
+                }),
+            });
+
+            const isValid = cliStorage.checkGameValidity();
+
+            assert(!isValid);
+        });
         it("should not be valid if day value in storage is not valid", () => {
             mockFs({
                 "state.json": JSON.stringify({
@@ -376,20 +403,7 @@ describe("game storage - CLI", () => {
                 }),
             });
 
-            let isValid = cliStorage.checkGameValidity();
-
-            assert(!isValid);
-
-            mockFs({
-                "state.json": JSON.stringify({
-                    [ATTEMPTS_KEY]: ATTEMPTS,
-                    [LIVES_KEY]: LIVES,
-                    [ENDED_KEY]: true,
-                    [DAY_KEY]: null,
-                }),
-            });
-
-            isValid = cliStorage.checkGameValidity();
+            const isValid = cliStorage.checkGameValidity();
 
             assert(!isValid);
         });
@@ -512,7 +526,7 @@ describe("preferences storage - browser", () => {
         sinon.assert.calledOnce(stubbedLocalStorage.setItem);
         sinon.assert.calledWithMatch(
             stubbedLocalStorage.setItem,
-            "preferences",
+            PREFERENCES_KEY,
             JSON.stringify(preferences)
         );
     });
@@ -524,12 +538,12 @@ describe("preferences storage - browser", () => {
 
         const origFunc = window.localStorage.getItem;
         const getItemStub = (window.localStorage.getItem = sinon.stub());
-        getItemStub.withArgs("preferences").returns(JSON.stringify(preferences));
+        getItemStub.withArgs(PREFERENCES_KEY).returns(JSON.stringify(preferences));
         try {
             sinon.assert.notCalled(getItemStub);
             const loadedPreferences = loadPreferences();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "preferences");
+            sinon.assert.calledWithMatch(getItemStub, PREFERENCES_KEY);
             assert.deepStrictEqual(loadedPreferences, preferences);
         } finally {
             window.localStorage.getItem = origFunc;
@@ -540,21 +554,21 @@ describe("preferences storage - browser", () => {
         sinon.assert.notCalled(stubbedLocalStorage.removeItem);
         clearPreferences();
         sinon.assert.calledOnce(stubbedLocalStorage.removeItem);
-        sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, "preferences");
+        sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, PREFERENCES_KEY);
     });
 
     it("can handle loading state that is not an object", () => {
-        const preferences = "a string";
+        const preferences = '"a string"';
         const expected = {};
 
         const origFunc = window.localStorage.getItem;
         const getItemStub = (window.localStorage.getItem = sinon.stub());
-        getItemStub.withArgs("preferences").returns(JSON.stringify(preferences));
+        getItemStub.withArgs(PREFERENCES_KEY).returns(preferences);
         try {
             sinon.assert.notCalled(getItemStub);
             const loadedPreferences = loadPreferences();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "preferences");
+            sinon.assert.calledWithMatch(getItemStub, PREFERENCES_KEY);
             assert.deepStrictEqual(loadedPreferences, expected);
         } finally {
             window.localStorage.getItem = origFunc;
@@ -567,12 +581,12 @@ describe("preferences storage - browser", () => {
 
         const origFunc = window.localStorage.getItem;
         const getItemStub = (window.localStorage.getItem = sinon.stub());
-        getItemStub.withArgs("preferences").returns(preferences);
+        getItemStub.withArgs(PREFERENCES_KEY).returns(preferences);
         try {
             sinon.assert.notCalled(getItemStub);
             const loadedPreferences = loadPreferences();
             sinon.assert.calledOnce(getItemStub);
-            sinon.assert.calledWithMatch(getItemStub, "preferences");
+            sinon.assert.calledWithMatch(getItemStub, PREFERENCES_KEY);
             assert.deepStrictEqual(loadedPreferences, expected);
         } finally {
             window.localStorage.getItem = origFunc;
