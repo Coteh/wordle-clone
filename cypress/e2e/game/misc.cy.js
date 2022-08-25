@@ -79,6 +79,16 @@ describe("misc", () => {
 
             cy.get(".dialog button.close").should("contain.text", "X").click();
 
+            // Can still see Settings button and the close button inside it
+
+            cy.contains("Settings").should("not.be.visible");
+
+            cy.get(".settings-link").should("contain.text", "⚙").click();
+
+            cy.contains("Settings").should("be.visible");
+
+            cy.get(".settings button.close").should("contain.text", "X").click();
+
             // Can still play through the game
 
             cy.get("body").type("{enter}");

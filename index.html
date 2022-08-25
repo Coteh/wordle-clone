@@ -33,23 +33,48 @@
                 <span class="title">
                     Wordle Clone
                 </span>
-                <a class="help-link" href="#">
-                    <i data-feather="help-circle"></i>
-                </a>
+                <span class="space"></span>
+                <div class="icon-bar">
+                    <a class="help-link link-icon" href="#">
+                        <i data-feather="help-circle"></i>
+                    </a>
+                    <a class="settings-link link-icon" href="#">
+                        <i data-feather="settings"></i>
+                    </a>
+                </div>
             </nav>
-            <div class="game">
+            <div class="game pane">
                 <div class="space"></div>
                 <div id="middle" class="wordle-rows"></div>
                 <div class="space"></div>
                 <div id="bottom" class="keyboard-view"></div>
-                <script src="src/consts.js"></script>
-                <script src="src/render.js"></script>
-                <script src="src/datetime.js"></script>
-                <script src="src/game.js"></script>
-                <script src="src/storage/browser.js"></script>
-                <script charset="UTF-8" src="src/share/index.js"></script>
-                <script src="src/share/browser.js"></script>
-                <script src="src/index.js"></script>
+            </div>
+            <div class="settings pane" style="display:none">
+                <h1>Settings</h1>
+                <button class="close"><i data-feather="x"></i></button>
+                <div class="space"></div>
+                <div class="settings-item-group">
+                    <div class="settings-item setting light-theme">
+                        <span>Light Theme</span>
+                        <span class="toggle">OFF</span>
+                    </div>
+                </div>
+                <span class="space"></span>
+                <div class="settings-item-group">
+                    <div class="settings-item">
+                        <span>v1.1.0</span>
+                    </div>
+                    <div class="settings-item">
+                        <span class="day-number"></span>
+                    </div>
+                </div>
+                <div class="space"></div>
+                <div class="footer">
+                    <span>
+                        &copy 2022 James Cote
+                    </span>
+                </div>
+                <div class="space"></div>
             </div>
         </div>
         <div class="overlay-back"></div>
@@ -65,7 +90,7 @@
                 <div class="notification-content">
                     <span class="notification-message"></span>
                 </div>
-           </div> 
+            </div> 
         </template>
         <template id="win-dialog-content">
             <span>You win!</span>
@@ -88,11 +113,39 @@
             </div>
         </template>
         <template id="how-to-play">
-            <span>
-                How to play: Guess a five-letter word. Green letters mean they are in the correct place. Yellow letters mean that the letter is in the word but in the wrong place. Dark Gray means that the letter is not in the word. You have six attempts. Good luck!
-            </span>
-            <span>
-                &copy 2022 James Cote
+            <span class="how-to-play">
+                <h2>How to play</h2>
+                <span class="text">Guess a five-letter word.</span>
+                <div class="sample">
+                    <div class="box standard"><span class="box-letter">c</span></div>
+                    <div class="box standard"><span class="box-letter">l</span></div>
+                    <div class="box standard"><span class="box-letter">o</span></div>
+                    <div class="box standard"><span class="box-letter">n</span></div>
+                    <div class="box standard"><span class="box-letter">e</span></div>
+                </div>
+                <br/>
+                <div class="meaning">
+                    <span class="text">Green means the letter is in the correct place.</span>
+                    <div class="sample">
+                        <div class="box correct"><span class="box-letter">c</span></div>
+                    </div>
+                </div>
+                <br/>
+                <div class="meaning">
+                    <span class="text">Yellow means that the letter is in the word but in the wrong place.</span>
+                    <div class="sample">
+                        <div class="box within"><span class="box-letter">c</span></div>
+                    </div>
+                </div>
+                <br/>
+                <div class="meaning">
+                    <span class="text">Dark Gray means that the letter is not in the word.</span>
+                    <div class="sample">
+                        <div class="box incorrect"><span class="box-letter">c</span></div>
+                    </div>
+                </div>
+                <br/>
+                <span class="text">You have six attempts. Good luck!</span>
             </span>
         </template>
         <template id="error-dialog-content">
@@ -105,17 +158,29 @@
                 If this persists, please reach out to me on <a href="https://github.com/Coteh/wordle-clone/issues/new?assignees=&labels=&template=bug_report.md" target="_blank">GitHub</a> or <a href="mailto:james.cote.730@gmail.com" target="_blank">email</a> with more information and I'll take a look.
             </span>
         </template>
+        <script src="src/consts.js"></script>
+        <script src="src/render.js"></script>
+        <script src="src/datetime.js"></script>
+        <script src="src/game.js"></script>
+        <script src="src/storage/index.js"></script>
+        <script src="src/storage/browser.js"></script>
+        <script charset="UTF-8" src="src/share/index.js"></script>
+        <script src="src/share/browser.js"></script>
+        <script src="src/preferences.js"></script>
+        <script src="src/index.js"></script>
         <script>
             if (typeof feather !== "undefined") {
                 feather.replace();
             } else {
                 document.querySelector("[data-feather='help-circle']").innerText = "?";
+                document.querySelector("[data-feather='settings']").innerText = "⚙";
+                document.querySelector(".settings [data-feather='x']").innerText = "X";
             }
             
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.0.11",
+                        release: "wordle-clone@1.1.0",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;

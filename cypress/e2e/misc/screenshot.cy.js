@@ -47,7 +47,7 @@ describe("misc", () => {
             cy.wait(1000);
         }
 
-        cy.get(".close").click();
+        cy.get(".dialog > .close").click();
 
         cy.wait(3000);
     });

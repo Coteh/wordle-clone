@@ -1,4 +1,11 @@
-const { ATTEMPTS_KEY, LIVES_KEY, DAY_KEY, ENDED_KEY, PLAYED_BEFORE_KEY } = require("./index");
+const {
+    ATTEMPTS_KEY,
+    LIVES_KEY,
+    DAY_KEY,
+    ENDED_KEY,
+    PLAYED_BEFORE_KEY,
+    PREFERENCES_KEY,
+} = require("./index");
 const fs = require("fs");
 const { STARTING_LIVES } = require("../consts");
 const { getCurrentDay } = require("../datetime");
@@ -13,25 +20,50 @@ const saveGame = (attempts, lives, ended) => {
     fs.writeFileSync("state.json", jsonStr);
 };
 
+const savePreferences = (preferences) => {
+    fs.writeFileSync("preferences.json", JSON.stringify(preferences));
+};
+
 const loadGame = () => {
     if (fs.existsSync("state.json")) {
         const jsonStr = fs.readFileSync("state.json");
         const json = JSON.parse(jsonStr);
+        // NTS: "date" is saved to game state, but it's not needed besides checking validity, so this field will be omitted
         return {
-            attempts: json[ATTEMPTS_KEY],
-            lives: json[LIVES_KEY],
-            ended: json[ENDED_KEY],
+            [ATTEMPTS_KEY]: json[ATTEMPTS_KEY] || [],
+            [LIVES_KEY]: json[LIVES_KEY] ?? STARTING_LIVES,
+            [ENDED_KEY]: json[ENDED_KEY] || false,
         };
     }
     return {
-        attempts: [],
-        lives: STARTING_LIVES,
-        ended: false,
+        [ATTEMPTS_KEY]: [],
+        [LIVES_KEY]: STARTING_LIVES,
+        [ENDED_KEY]: false,
     };
+};
+
+const loadPreferences = () => {
+    if (fs.existsSync("preferences.json")) {
+        const jsonStr = fs.readFileSync("preferences.json");
+        try {
+            const json = JSON.parse(jsonStr);
+            if (typeof json !== "object") {
+                return {};
+            }
+            return json;
+        } catch (e) {
+            return {};
+        }
+    }
+    return {};
 };
 
 const clearGame = () => {
     fs.writeFileSync("state.json", "{}");
+};
+
+const clearPreferences = () => {
+    fs.writeFileSync("preferences.json", "{}");
 };
 
 const checkGameValidity = () => {
@@ -62,8 +94,11 @@ const setPlayedBefore = (status) => {
 if (typeof process !== "undefined") {
     module.exports = {
         saveGame,
+        savePreferences,
         loadGame,
+        loadPreferences,
         clearGame,
+        clearPreferences,
         checkGameValidity,
         checkFirstTime,
         setPlayedBefore,

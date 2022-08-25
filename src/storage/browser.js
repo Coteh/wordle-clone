@@ -1,8 +1,13 @@
-const ATTEMPTS_KEY = "attempts";
-const LIVES_KEY = "lives";
-const DAY_KEY = "day";
-const ENDED_KEY = "ended";
-const PLAYED_BEFORE_KEY = "played_before";
+if (typeof process !== "undefined") {
+    const storage = require("./index");
+    ATTEMPTS_KEY = storage.ATTEMPTS_KEY;
+    LIVES_KEY = storage.LIVES_KEY;
+    DAY_KEY = storage.DAY_KEY;
+    ENDED_KEY = storage.ENDED_KEY;
+    PLAYED_BEFORE_KEY = storage.PLAYED_BEFORE_KEY;
+    PREFERENCES_KEY = storage.PREFERENCES_KEY;
+    STARTING_LIVES = require("../consts").STARTING_LIVES;
+}
 
 const saveGame = (attempts, lives, ended) => {
     window.localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
@@ -11,9 +16,16 @@ const saveGame = (attempts, lives, ended) => {
     window.localStorage.setItem(DAY_KEY, getCurrentDay());
 };
 
+const savePreferences = (preferences) => {
+    window.localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+};
+
 const loadGame = () => {
     const attempts = JSON.parse(window.localStorage.getItem(ATTEMPTS_KEY) || "[]");
-    const lives = parseInt(window.localStorage.getItem(LIVES_KEY)) ?? STARTING_LIVES;
+    let lives = parseInt(window.localStorage.getItem(LIVES_KEY));
+    if (lives == null || isNaN(lives)) {
+        lives = STARTING_LIVES;
+    }
     const ended = JSON.parse(window.localStorage.getItem(ENDED_KEY) || "false");
     return {
         attempts,
@@ -22,10 +34,28 @@ const loadGame = () => {
     };
 };
 
+const loadPreferences = () => {
+    try {
+        const preferences = JSON.parse(window.localStorage.getItem(PREFERENCES_KEY));
+        if (!preferences || typeof preferences !== "object") {
+            return {};
+        }
+        return preferences;
+    } catch {
+        const fallback = {};
+        savePreferences(fallback);
+        return fallback;
+    }
+};
+
 const clearGame = () => {
     window.localStorage.removeItem(ATTEMPTS_KEY);
     window.localStorage.removeItem(LIVES_KEY);
     window.localStorage.removeItem(DAY_KEY);
+};
+
+const clearPreferences = () => {
+    window.localStorage.removeItem(PREFERENCES_KEY);
 };
 
 const checkGameValidity = () => parseInt(window.localStorage.getItem(DAY_KEY)) === getCurrentDay();
@@ -37,8 +67,11 @@ const setPlayedBefore = (status) => window.localStorage.setItem(PLAYED_BEFORE_KE
 if (typeof process !== "undefined") {
     module.exports = {
         saveGame,
+        savePreferences,
         loadGame,
+        loadPreferences,
         clearGame,
+        clearPreferences,
         checkGameValidity,
         checkFirstTime,
         setPlayedBefore,
