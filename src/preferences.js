@@ -1,8 +1,8 @@
 if (typeof process !== "undefined") {
     const storage = require("./storage");
-    const savePreferences = storage;
-    const loadPreferences = storage;
-    const clearPreferences = storage;
+    const savePreferences = storage.savePreferences;
+    const loadPreferences = storage.loadPreferences;
+    const clearPreferences = storage.clearPreferences;
 }
 
 let preferences = {};

@@ -7,7 +7,7 @@
     --within-color: #eec039;
     --incorrect-color: #333;
 
-    --settings-border: 1px solid grey;
+    --settings-item-border-color: 1px solid grey;
 
     --background-color: #000;
     --dialog-background-color: rgb(22, 22, 22);
@@ -183,13 +183,13 @@ button.close {
     width: 100%;
     justify-content: space-around;
     align-items: center;
-    border-top: var(--settings-border);
+    border-top: var(--settings-item-border-color);
     border-bottom: none;
     height: 2em;
 }
 
 .settings .settings-item:last-child {
-    border-bottom: var(--settings-border);
+    border-bottom: var(--settings-item-border-color);
 }
 
 .settings .settings-item > * {
@@ -255,11 +255,11 @@ button.close {
     right: 0;
 }
 
+/* Specific Dialogs */
+
 .dialog button.share-button {
     background-color: green;
 }
-
-/* Specific Dialogs */
 
 .dialog button.share-button > * {
     color: var(--letter-selected-text-color);
