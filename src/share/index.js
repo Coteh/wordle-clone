@@ -1,13 +1,24 @@
-const generateShareText = (dayNumber, attempts, maxAttempts) => {
+const generateShareText = (dayNumber, attempts, maxAttempts, options) => {
+    if (!options) {
+        options = {};
+    }
     let shareText = `Wordle Clone ${dayNumber} ${attempts.length}/${maxAttempts}\n`;
     shareText += attempts
         .map((attempt) =>
             attempt
                 .map((entry) => {
-                    if (entry.correct) {
-                        return "🟩";
-                    } else if (entry.within) {
-                        return "🟨";
+                    if (options.highContrastMode) {
+                        if (entry.correct) {
+                            return "🟧";
+                        } else if (entry.within) {
+                            return "🟦";
+                        }
+                    } else {
+                        if (entry.correct) {
+                            return "🟩";
+                        } else if (entry.within) {
+                            return "🟨";
+                        }
                     }
                     return "⬛";
                 })

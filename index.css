@@ -1,35 +1,53 @@
 /* Variables */
 
 :root {
-    --standard-color: #aaa;
-    --standard-block-color: #000;
-    --correct-color: green;
-    --within-color: #eec039;
-    --incorrect-color: #333;
+    --green: green;
+    --yellow: #eec039;
+    --orange: #f5793a;
+    --blue: #85c0f9;
+    --black: #000;
+    --white: #fff;
+    --gray-1: rgb(22, 22, 22);
+    --gray-2: #333;
+    --gray-3: #737373;
+    --gray-4: grey;
+    --gray-5: #aaa;
+    --gray-6: rgb(202, 202, 202);
 
-    --settings-item-border-color: 1px solid grey;
+    --standard-color: var(--gray-5);
+    --standard-block-color: var(--black);
+    --correct-color: var(--green);
+    --within-color: var(--yellow);
+    --incorrect-color: var(--gray-2);
 
-    --background-color: #000;
-    --dialog-background-color: rgb(22, 22, 22);
+    --settings-item-border-color: 1px solid var(--gray-4);
 
-    --text-color: #fff;
-    --letter-text-color: #fff;
-    --letter-selected-text-color: #fff;
+    --background-color: var(--black);
+    --dialog-background-color: var(--gray-1);
+
+    --text-color: var(--white);
+    --letter-text-color: var(--white);
+    --letter-selected-text-color: var(--white);
 }
 
 .light {
-    --standard-color: #aaa;
-    --standard-block-color: #fff;
-    --correct-color: green;
-    --within-color: #eec039;
-    --incorrect-color: #737373;
+    --standard-color: var(--gray-5);
+    --standard-block-color: var(--white);
+    --correct-color: var(--green);
+    --within-color: var(--yellow);
+    --incorrect-color: var(--gray-3);
 
-    --background-color: #fff;
-    --dialog-background-color: rgb(202, 202, 202);
+    --background-color: var(--white);
+    --dialog-background-color: var(--gray-6);
 
-    --text-color: #000;
-    --letter-text-color: #000;
-    --letter-selected-text-color: #fff;
+    --text-color: var(--black);
+    --letter-text-color: var(--black);
+    --letter-selected-text-color: var(--white);
+}
+
+.high-contrast {
+    --correct-color: var(--orange);
+    --within-color: var(--blue);
 }
 
 /* Main Content */
@@ -196,6 +214,16 @@ button.close {
     pointer-events: none;
 }
 
+.settings .settings-item .settings-item-column {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.settings .settings-item .settings-item-column:last-child {
+    width: 60%;
+}
+
 /* Overlay Backdrop */
 
 .overlay-back {
@@ -258,7 +286,7 @@ button.close {
 /* Specific Dialogs */
 
 .dialog button.share-button {
-    background-color: green;
+    background-color: var(--correct-color);
 }
 
 .dialog button.share-button > * {
