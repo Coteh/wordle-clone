@@ -1,6 +1,7 @@
 # wordle-clone
 
 [![Run Tests](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/Coteh/wordle-clone)
 
 ### [**Click here to play**](https://coteh.github.io/wordle-clone)
 
