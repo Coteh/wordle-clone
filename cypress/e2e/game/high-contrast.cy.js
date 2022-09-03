@@ -152,13 +152,16 @@ describe("high contrast mode", () => {
         cy.keyboardItem("e").click();
         cy.keyboardItem("enter").click();
 
+        cy.inputRow(1).inputCell(2).should("have.css", "background-color", "rgb(133, 192, 249)");
+        cy.keyboardItem("e").should("have.css", "background-color", "rgb(133, 192, 249)");
+
         for (let i = 0; i < word.length; i++) {
             cy.keyboardItem(word[i]).click();
         }
         cy.keyboardItem("enter").click();
 
-        cy.inputRow(1).inputCell(2).should("have.css", "background-color", "rgb(133, 192, 249)");
         cy.inputRow(2).inputCell(2).should("have.css", "background-color", "rgb(245, 121, 58)");
+        cy.keyboardItem("e").should("have.css", "background-color", "rgb(245, 121, 58)");
 
         cy.get(".share-button").should("have.css", "background-color", "rgb(245, 121, 58)").click();
 
