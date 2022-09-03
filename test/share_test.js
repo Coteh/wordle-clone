@@ -149,4 +149,18 @@ describe("share result", () => {
 🟩🟩🟩🟩🟩`;
         assert.strictEqual(generateShareText(1, ATTEMPTS, 6), expected);
     });
+    it("should generate share text for high contrast mode", () => {
+        const expected = `Wordle Clone 1 5/6
+⬛🟦🟦⬛⬛
+⬛🟦🟦⬛🟦
+🟧🟦🟦🟧⬛
+🟧🟦🟧🟧⬛
+🟧🟧🟧🟧🟧`;
+        assert.strictEqual(
+            generateShareText(1, ATTEMPTS, 6, {
+                highContrastMode: true,
+            }),
+            expected
+        );
+    });
 });

@@ -1,3 +1,16 @@
+const LIGHT_MODE = "light";
+const DARK_MODE = "dark";
+const HIGH_CONTRAST = "high-contrast";
+
+const THEME_PREFERENCE_NAME = "theme";
+const HIGH_CONTRAST_PREFERENCE_NAME = "high-contrast";
+
+const LIGHT_THEME_SETTING_NAME = "light-theme";
+const HIGH_CONTRAST_SETTING_NAME = "high-contrast";
+
+const SETTING_ENABLED = "enabled";
+const SETTING_DISABLED = "disabled";
+
 const linkEntryToLetterMap = (letterMap) => (entry) => {
     const currEntry = letterMap.get(entry.letter);
     if (entry.correct) {
@@ -78,7 +91,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
             winElem.querySelector(".share-button").addEventListener("click", (e) => {
                 e.preventDefault();
-                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES);
+                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                    highContrastMode,
+                });
                 copyShareText(shareText);
             });
             const nextDate = getNextDate();
@@ -223,20 +238,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     let lightMode = false;
+    let highContrastMode = false;
 
     const settings = document.querySelectorAll(".setting");
     settings.forEach((setting) => {
         setting.addEventListener("click", (e) => {
             const elem = e.target;
             let enabled = false;
-            if (elem.classList.contains("light-theme")) {
+            if (elem.classList.contains(LIGHT_THEME_SETTING_NAME)) {
                 enabled = lightMode = !lightMode;
                 if (lightMode) {
-                    document.body.classList.add("light");
+                    document.body.classList.add(LIGHT_MODE);
                 } else {
-                    document.body.classList.remove("light");
+                    document.body.classList.remove(LIGHT_MODE);
                 }
-                savePreferenceValue("theme", lightMode ? "light" : "dark");
+                savePreferenceValue(THEME_PREFERENCE_NAME, lightMode ? LIGHT_MODE : DARK_MODE);
+            } else if (elem.classList.contains(HIGH_CONTRAST_SETTING_NAME)) {
+                enabled = highContrastMode = !highContrastMode;
+                if (highContrastMode) {
+                    document.body.classList.add(HIGH_CONTRAST);
+                } else {
+                    document.body.classList.remove(HIGH_CONTRAST);
+                }
+                savePreferenceValue(
+                    HIGH_CONTRAST_PREFERENCE_NAME,
+                    highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
+                );
             }
             const toggle = setting.querySelector(".toggle");
             toggle.innerText = enabled ? "ON" : "OFF";
@@ -244,16 +271,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     initPreferences();
-    if (getPreferenceValue("theme") === "light") {
+    if (getPreferenceValue(THEME_PREFERENCE_NAME) === LIGHT_MODE) {
         lightMode = true;
         const setting = document.querySelector(".setting.light-theme");
         const toggle = setting.querySelector(".toggle");
         toggle.innerText = "ON";
-        if (lightMode) {
-            document.body.classList.add("light");
-        } else {
-            document.body.classList.remove("light");
-        }
+        document.body.classList.add(LIGHT_MODE);
+    }
+    if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
+        highContrastMode = true;
+        const setting = document.querySelector(".setting.high-contrast");
+        const toggle = setting.querySelector(".toggle");
+        toggle.innerText = "ON";
+        document.body.classList.add(HIGH_CONTRAST);
     }
 
     try {
