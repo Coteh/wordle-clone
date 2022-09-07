@@ -74,7 +74,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <span>v1.1.1</span>
+                        <span>v1.1.2</span>
                     </div>
                     <div class="settings-item">
                         <span class="day-number"></span>
@@ -127,37 +127,43 @@
         <template id="how-to-play">
             <span class="how-to-play">
                 <h2>How to play</h2>
-                <span class="text">Guess a five-letter word.</span>
-                <div class="sample">
-                    <div class="box standard"><span class="box-letter">c</span></div>
-                    <div class="box standard"><span class="box-letter">l</span></div>
-                    <div class="box standard"><span class="box-letter">o</span></div>
-                    <div class="box standard"><span class="box-letter">n</span></div>
-                    <div class="box standard"><span class="box-letter">e</span></div>
-                </div>
+                <span class="text">Guess a five-letter word in six tries.</span>
+                <hr/>
                 <br/>
                 <div class="meaning">
-                    <span class="text">Green means the letter is in the correct place.</span>
                     <div class="sample">
                         <div class="box correct"><span class="box-letter">c</span></div>
+                        <div class="box standard"><span class="box-letter">l</span></div>
+                        <div class="box standard"><span class="box-letter">o</span></div>
+                        <div class="box standard"><span class="box-letter">n</span></div>
+                        <div class="box standard"><span class="box-letter">e</span></div>
                     </div>
+                    <span class="text">The letter C is in the correct place.</span>
                 </div>
                 <br/>
                 <div class="meaning">
-                    <span class="text">Yellow means that the letter is in the word but in the wrong place.</span>
                     <div class="sample">
-                        <div class="box within"><span class="box-letter">c</span></div>
+                        <div class="box standard"><span class="box-letter">s</span></div>
+                        <div class="box within"><span class="box-letter">p</span></div>
+                        <div class="box standard"><span class="box-letter">i</span></div>
+                        <div class="box standard"><span class="box-letter">c</span></div>
+                        <div class="box standard"><span class="box-letter">e</span></div>
                     </div>
+                    <span class="text">The letter P is in the word but in the wrong place.</span>
                 </div>
                 <br/>
                 <div class="meaning">
-                    <span class="text">Dark Gray means that the letter is not in the word.</span>
                     <div class="sample">
-                        <div class="box incorrect"><span class="box-letter">c</span></div>
+                        <div class="box standard"><span class="box-letter">h</span></div>
+                        <div class="box standard"><span class="box-letter">e</span></div>
+                        <div class="box standard"><span class="box-letter">a</span></div>
+                        <div class="box incorrect"><span class="box-letter">r</span></div>
+                        <div class="box standard"><span class="box-letter">t</span></div>
                     </div>
+                    <span class="text">The letter R is not in the word in any place.</span>
                 </div>
                 <br/>
-                <span class="text">You have six attempts. Good luck!</span>
+                <span class="text">Good luck!</span>
             </span>
         </template>
         <template id="error-dialog-content">
@@ -192,7 +198,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.1.1",
+                        release: "wordle-clone@1.1.2",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;

@@ -299,8 +299,11 @@ button.close {
     position: relative;
 }
 
-.dialog > .dialog-content > .how-to-play > div.sample,
-.dialog > .dialog-content > .how-to-play > div.meaning {
+.dialog > .dialog-content > .how-to-play > h2 {
+    text-transform: uppercase;
+}
+
+.dialog > .dialog-content > .how-to-play div.sample {
     display: flex;
 }
 
