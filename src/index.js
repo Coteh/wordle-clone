@@ -247,10 +247,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             let enabled = false;
             if (elem.classList.contains(LIGHT_THEME_SETTING_NAME)) {
                 enabled = lightMode = !lightMode;
+                metaThemeColor = document.querySelector("meta[name='theme-color']");
                 if (lightMode) {
                     document.body.classList.add(LIGHT_MODE);
+                    metaThemeColor.content = "#fff";
                 } else {
                     document.body.classList.remove(LIGHT_MODE);
+                    metaThemeColor.content = "#000";
                 }
                 savePreferenceValue(THEME_PREFERENCE_NAME, lightMode ? LIGHT_MODE : DARK_MODE);
             } else if (elem.classList.contains(HIGH_CONTRAST_SETTING_NAME)) {
@@ -277,6 +280,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const toggle = setting.querySelector(".toggle");
         toggle.innerText = "ON";
         document.body.classList.add(LIGHT_MODE);
+        document.querySelector("meta[name='theme-color']").content = "#fff";
     }
     if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
         highContrastMode = true;
