@@ -5,6 +5,8 @@ const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 const FIRST_DAY = 19074;
 
+const KEY_HOLD_TIMEOUT_MS = 500;
+
 const KEYS_ARR = [
     "a",
     "b",
@@ -519,6 +521,363 @@ describe("gameplay", () => {
             cy.contains("Next Wordle: 12:00:00").should("be.visible");
             cy.tick(1000);
             cy.contains("Next Wordle: 11:59:59").should("be.visible");
+        });
+    });
+
+    describe("touchscreen keyboard press", () => {
+        ["touch", "mouse"].forEach((type) => {
+            describe(`when player presses down a key - ${type}`, () => {
+                beforeEach(() => {
+                    cy.keyboardItem("a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+                });
+
+                it("should change the key to pressed state", () => {
+                    cy.keyboardItem("a").should("have.class", "pressed");
+                    cy.keyboardItem("a").should("not.have.class", "held");
+
+                    cy.wait(100);
+                    cy.keyboardItem("a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+            });
+
+            describe(`when player holds down a key past threshold - ${type}`, () => {
+                beforeEach(() => {
+                    cy.keyboardItem("a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+                });
+
+                it("should change the key to held state", () => {
+                    cy.keyboardItem("a").should("have.class", "held");
+                    cy.keyboardItem("a").should("not.have.class", "pressed");
+                });
+            });
+
+            describe(`when player releases a key - ${type}`, () => {
+                beforeEach(() => {
+                    cy.keyboardItem("p").click();
+                    cy.keyboardItem("l").click();
+                    cy.keyboardItem("a").click();
+                    cy.keyboardItem("z").click();
+                    cy.keyboardItem("a").click();
+
+                    cy.keyboardItem("enter").click();
+
+                    cy.keyboardItem("p").should("have.class", "incorrect");
+                    cy.keyboardItem("l").should("have.class", "within");
+                    cy.keyboardItem("a").should("have.class", "correct");
+                    cy.keyboardItem("z").should("have.class", "incorrect");
+                });
+
+                it("should change the key back to normal state if it has no letter status", () => {
+                    cy.keyboardItem("d").as("d");
+
+                    cy.get("@d").should("have.class", "standard");
+                    cy.get("@d").should("not.have.class", "pressed");
+
+                    cy.get("@d").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@d").should("have.class", "pressed");
+                    cy.get("@d").should("not.have.class", "standard");
+
+                    cy.wait(100);
+                    cy.get("@d").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@d").should("have.class", "standard");
+                    cy.get("@d").should("not.have.class", "pressed");
+                });
+
+                it("should change the key back to correct state if the letter is correct", () => {
+                    cy.keyboardItem("a").as("a");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@a").should("have.class", "pressed");
+                    cy.get("@a").should("not.have.class", "correct");
+
+                    cy.wait(100);
+                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+                });
+
+                it("should change the key back to within status if the letter is within", () => {
+                    cy.keyboardItem("l").as("l");
+
+                    cy.get("@l").should("have.class", "within");
+                    cy.get("@l").should("not.have.class", "pressed");
+
+                    cy.get("@l").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@l").should("have.class", "pressed");
+                    cy.get("@l").should("not.have.class", "within");
+
+                    cy.wait(100);
+                    cy.get("@l").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@l").should("have.class", "within");
+                    cy.get("@l").should("not.have.class", "pressed");
+                });
+
+                it("should change the key back to incorrect state if the letter is incorrect", () => {
+                    cy.keyboardItem("p").as("p");
+
+                    cy.get("@p").should("have.class", "incorrect");
+                    cy.get("@p").should("not.have.class", "pressed");
+
+                    cy.get("@p").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@p").should("have.class", "pressed");
+                    cy.get("@p").should("not.have.class", "incorrect");
+
+                    cy.wait(100);
+                    cy.get("@p").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@p").should("have.class", "incorrect");
+                    cy.get("@p").should("not.have.class", "pressed");
+                });
+            });
+
+            describe(`when player presses down a key and game is over - ${type}`, () => {
+                beforeEach(() => {
+                    for (let i = 0; i < 6; i++) {
+                        cy.keyboardItem("p").click();
+                        cy.keyboardItem("l").click();
+                        cy.keyboardItem("a").click();
+                        cy.keyboardItem("z").click();
+                        cy.keyboardItem("a").click();
+
+                        cy.keyboardItem("enter").click();
+                    }
+
+                    cy.contains("You lose!").should("be.visible");
+
+                    cy.get(".dialog > .close").click();
+                });
+
+                it("should not change the key state", () => {
+                    cy.keyboardItem("a").as("a");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+            });
+
+            describe(`when player holds down a key past threshold and game is over - ${type}`, () => {
+                beforeEach(() => {
+                    for (let i = 0; i < 6; i++) {
+                        cy.keyboardItem("p").click();
+                        cy.keyboardItem("l").click();
+                        cy.keyboardItem("a").click();
+                        cy.keyboardItem("z").click();
+                        cy.keyboardItem("a").click();
+
+                        cy.keyboardItem("enter").click();
+                    }
+
+                    cy.contains("You lose!").should("be.visible");
+
+                    cy.get(".dialog > .close").click();
+                });
+
+                it("should not change the key state", () => {
+                    cy.keyboardItem("a").as("a");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "held");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "held");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "held");
+                });
+            });
+
+            describe(`when player releases a key and game is over - ${type}`, () => {
+                beforeEach(() => {
+                    for (let i = 0; i < 6; i++) {
+                        cy.keyboardItem("p").click();
+                        cy.keyboardItem("l").click();
+                        cy.keyboardItem("a").click();
+                        cy.keyboardItem("z").click();
+                        cy.keyboardItem("a").click();
+
+                        cy.keyboardItem("enter").click();
+                    }
+
+                    cy.contains("You lose!").should("be.visible");
+
+                    cy.get(".dialog > .close").click();
+                });
+
+                it("should not change the key state", () => {
+                    cy.keyboardItem("a").as("a");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+
+                    cy.get("@a").trigger(type === "mouse" ? "mousedown" : "touchstart");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+
+                    cy.wait(100);
+                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+
+                    cy.get("@a").should("have.class", "correct");
+                    cy.get("@a").should("not.have.class", "pressed");
+                });
+            });
+
+            describe(`when player holds backspace key and there's a row of input - ${type}`, () => {
+                beforeEach(() => {
+                    cy.keyboardItem("p").click();
+                    cy.keyboardItem("l").click();
+                    cy.keyboardItem("a").click();
+                    cy.keyboardItem("z").click();
+                    cy.keyboardItem("a").click();
+
+                    cy.inputRowHasWord(1, "plaza");
+
+                    cy.keyboardItem("backspace").trigger(
+                        type === "mouse" ? "mousedown" : "touchstart"
+                    );
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+                    cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
+                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+
+                it("should backspace all letters in the current row", () => {
+                    cy.inputRowShouldBeEmpty(1);
+
+                    cy.keyboardItem("p").click();
+                    cy.keyboardItem("l").click();
+                    cy.keyboardItem("a").click();
+                    cy.keyboardItem("z").click();
+                    cy.keyboardItem("a").click();
+
+                    cy.inputRowHasWord(1, "plaza");
+
+                    cy.inputRow(1).should("have.id", "current-input");
+                    cy.inputRow(2).should("not.have.id", "current-input");
+
+                    cy.keyboardItem("enter").click();
+
+                    cy.inputRow(1).should("not.have.id", "current-input");
+                    cy.inputRow(2).should("have.id", "current-input");
+                });
+            });
+
+            describe(`when player holds backspace key and half the row has letters - ${type}`, () => {
+                beforeEach(() => {
+                    cy.keyboardItem("p").click();
+                    cy.keyboardItem("l").click();
+                    cy.keyboardItem("a").click();
+
+                    cy.inputRow(1).inputCell(1).inputLetter().should("have.text", "p");
+                    cy.inputRow(1).inputCell(2).inputLetter().should("have.text", "l");
+                    cy.inputRow(1).inputCell(3).inputLetter().should("have.text", "a");
+
+                    cy.keyboardItem("backspace").trigger(
+                        type === "mouse" ? "mousedown" : "touchstart"
+                    );
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+                    cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
+                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+
+                it("should backspace all letters in the current row", () => {
+                    cy.inputRowShouldBeEmpty(1, "");
+                });
+            });
+
+            describe(`when player holds backspace key and game is over - ${type}`, () => {
+                beforeEach(() => {
+                    for (let i = 0; i < 6; i++) {
+                        cy.keyboardItem("p").click();
+                        cy.keyboardItem("l").click();
+                        cy.keyboardItem("a").click();
+                        cy.keyboardItem("z").click();
+                        cy.keyboardItem("a").click();
+
+                        cy.keyboardItem("enter").click();
+                    }
+
+                    cy.contains("You lose!").should("be.visible");
+
+                    cy.get(".dialog > .close").click();
+
+                    for (let i = 1; i <= 6; i++) {
+                        cy.inputRowHasWord(i, "plaza");
+                    }
+
+                    cy.keyboardItem("backspace").trigger(
+                        type === "mouse" ? "mousedown" : "touchstart"
+                    );
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+                    cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
+                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+
+                it("should not backspace anything", () => {
+                    for (let i = 1; i <= 6; i++) {
+                        cy.inputRowHasWord(i, "plaza");
+                    }
+                });
+            });
+
+            describe(`when player holds backspace key and there is no input - ${type}`, () => {
+                beforeEach(() => {
+                    for (let i = 0; i < 3; i++) {
+                        cy.keyboardItem("p").click();
+                        cy.keyboardItem("l").click();
+                        cy.keyboardItem("a").click();
+                        cy.keyboardItem("z").click();
+                        cy.keyboardItem("a").click();
+
+                        cy.keyboardItem("enter").click();
+                    }
+
+                    for (let i = 1; i <= 3; i++) {
+                        cy.inputRowHasWord(i, "plaza");
+                    }
+                    for (let i = 4; i <= 6; i++) {
+                        cy.inputRowShouldBeEmpty(i);
+                    }
+
+                    cy.keyboardItem("backspace").trigger(
+                        type === "mouse" ? "mousedown" : "touchstart"
+                    );
+                    cy.wait(KEY_HOLD_TIMEOUT_MS);
+                    cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
+                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                });
+
+                it("should not backspace anything", () => {
+                    for (let i = 1; i <= 3; i++) {
+                        cy.inputRowHasWord(i, "plaza");
+                    }
+                    for (let i = 4; i <= 6; i++) {
+                        cy.inputRowShouldBeEmpty(i);
+                    }
+                });
+            });
         });
     });
 });

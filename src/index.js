@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 attempt.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             });
             currentInputElem = inputRowElems[attempts.length];
-            renderKeyboard(bottomElem, letterMap, handleKeyInput);
+            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState);
         },
         renderCheckResults(results) {
             for (let i = 0; i < 5; i++) {
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ).className = `box ${getLetterColourClass(results, i)}`;
             }
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
-            renderKeyboard(bottomElem, letterMap, handleKeyInput);
+            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState);
         },
         renderCheckError(errorID) {
             renderNotification(getErrorMessage(errorID));
@@ -191,6 +191,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else if (key === "backspace" && currentLetterIndex > 0) {
             wordleRenderer.renderBackspace();
             currentInput = currentInput.slice(0, -1);
+        }
+    };
+
+    const handleHoldInput = (key) => {
+        if (gameState.ended) return;
+        if (key === "backspace") {
+            for (let i = 0; i < currentInput.length; i++) {
+                wordleRenderer.renderBackspace();
+            }
+            currentInput = "";
         }
     };
 
