@@ -19,6 +19,8 @@
     --correct-color: var(--green);
     --within-color: var(--yellow);
     --incorrect-color: var(--gray-2);
+    --pressed-color: var(--gray-4);
+    --held-color: var(--gray-6);
 
     --settings-item-border-color: 1px solid var(--gray-4);
 
@@ -481,6 +483,14 @@ a {
     background-color: var(--incorrect-color);
 }
 
+.pressed {
+    background-color: var(--pressed-color);
+}
+
+.held {
+    background-color: var(--held-color);
+}
+
 .correct > .box-letter,
 .within > .box-letter,
 .incorrect > .box-letter,
@@ -488,4 +498,6 @@ a {
 .keyboard > .keyboard-row > .within.keyboard-item,
 .keyboard > .keyboard-row > .incorrect.keyboard-item {
     color: var(--letter-selected-text-color);
+    user-select: none;
+    -webkit-user-select: none;
 }

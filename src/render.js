@@ -1,3 +1,5 @@
+const KEY_HOLD_TIMEOUT_MS = 500;
+
 let notificationTimeout;
 
 const renderInputRow = (parentElem, numberOfLetters) => {
@@ -18,7 +20,7 @@ const renderInputRow = (parentElem, numberOfLetters) => {
     return container;
 };
 
-const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
+const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, gameState) => {
     const rows = [
         ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
         ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
@@ -43,6 +45,42 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput) => {
             itemElem.addEventListener("click", (e) => {
                 e.preventDefault();
                 handleKeyInput(item);
+            });
+            let downTime, timeout;
+            const handleDown = () => {
+                if (gameState.ended) return;
+                downTime = Date.now();
+                itemElem.classList.remove(letterStatus || "standard");
+                itemElem.classList.add("pressed");
+                timeout = setTimeout(() => {
+                    itemElem.classList.remove("pressed");
+                    itemElem.classList.add("held");
+                }, KEY_HOLD_TIMEOUT_MS);
+            };
+            const handleUp = () => {
+                if (gameState.ended) return;
+                if (Date.now() - downTime >= KEY_HOLD_TIMEOUT_MS) {
+                    handleHoldInput(item);
+                }
+                itemElem.classList.remove("pressed");
+                itemElem.classList.remove("held");
+                itemElem.classList.add(letterStatus || "standard");
+                clearTimeout(timeout);
+            };
+            itemElem.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                handleDown();
+            });
+            itemElem.addEventListener("touchend", (e) => {
+                e.preventDefault();
+                handleUp();
+                handleKeyInput(item);
+            });
+            itemElem.addEventListener("mousedown", (e) => {
+                handleDown();
+            });
+            itemElem.addEventListener("mouseup", (e) => {
+                handleUp();
             });
             const letterElem = document.createElement("div");
             letterElem.innerHTML =
