@@ -694,18 +694,18 @@ describe("gameplay", () => {
                     cy.keyboardItem("a").as("a");
 
                     cy.get("@a").should("have.class", "correct");
-                    cy.get("@a").should("not.have.class", "pressed");
+                    cy.get("@a").should("not.have.class", "held");
 
                     cy.get("@a").trigger(type === "mouse" ? "mousedown" : "touchstart");
                     cy.wait(KEY_HOLD_TIMEOUT_MS);
 
                     cy.get("@a").should("have.class", "correct");
-                    cy.get("@a").should("not.have.class", "pressed");
+                    cy.get("@a").should("not.have.class", "held");
 
                     cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
 
                     cy.get("@a").should("have.class", "correct");
-                    cy.get("@a").should("not.have.class", "pressed");
+                    cy.get("@a").should("not.have.class", "held");
                 });
             });
 
@@ -764,7 +764,23 @@ describe("gameplay", () => {
                 });
 
                 it("should backspace all letters in the current row", () => {
-                    cy.inputRowShouldBeEmpty(1, "");
+                    cy.inputRowShouldBeEmpty(1);
+
+                    cy.keyboardItem("p").click();
+                    cy.keyboardItem("l").click();
+                    cy.keyboardItem("a").click();
+                    cy.keyboardItem("z").click();
+                    cy.keyboardItem("a").click();
+
+                    cy.inputRowHasWord(1, "plaza");
+
+                    cy.inputRow(1).should("have.id", "current-input");
+                    cy.inputRow(2).should("not.have.id", "current-input");
+
+                    cy.keyboardItem("enter").click();
+
+                    cy.inputRow(1).should("not.have.id", "current-input");
+                    cy.inputRow(2).should("have.id", "current-input");
                 });
             });
 
