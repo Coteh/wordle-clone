@@ -1,3 +1,5 @@
+const KEY_HOLD_TIMEOUT_MS = 500;
+
 let notificationTimeout;
 
 const renderInputRow = (parentElem, numberOfLetters) => {
@@ -53,11 +55,11 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 timeout = setTimeout(() => {
                     itemElem.classList.remove("pressed");
                     itemElem.classList.add("held");
-                }, 500);
+                }, KEY_HOLD_TIMEOUT_MS);
             };
             const handleUp = () => {
                 if (gameState.ended) return;
-                if (Date.now() - downTime >= 500) {
+                if (Date.now() - downTime >= KEY_HOLD_TIMEOUT_MS) {
                     handleHoldInput(item);
                 }
                 itemElem.classList.remove("pressed");
