@@ -62,6 +62,8 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 if (Date.now() - downTime >= KEY_HOLD_TIMEOUT_MS) {
                     handleHoldInput(item);
                 }
+            };
+            const handleRelease = () => {
                 itemElem.classList.remove("pressed");
                 itemElem.classList.remove("held");
                 itemElem.classList.add(letterStatus || "standard");
@@ -74,13 +76,18 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
             itemElem.addEventListener("touchend", (e) => {
                 e.preventDefault();
                 handleUp();
+                handleRelease();
                 handleKeyInput(item);
+            });
+            itemElem.addEventListener("touchcancel", (e) => {
+                handleRelease();
             });
             itemElem.addEventListener("mousedown", (e) => {
                 handleDown();
             });
             itemElem.addEventListener("mouseup", (e) => {
                 handleUp();
+                handleRelease();
             });
             const letterElem = document.createElement("div");
             letterElem.innerHTML =
