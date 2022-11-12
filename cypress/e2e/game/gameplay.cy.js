@@ -879,5 +879,38 @@ describe("gameplay", () => {
                 });
             });
         });
+
+        describe("when player holds down a key then it gets cancelled", () => {
+            it("should change the key back to its previous state", () => {
+                cy.keyboardItem("p").click();
+                cy.keyboardItem("l").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("z").click();
+                cy.keyboardItem("a").click();
+
+                cy.keyboardItem("enter").click();
+
+                cy.keyboardItem("p").should("have.class", "incorrect");
+                cy.keyboardItem("l").should("have.class", "within");
+                cy.keyboardItem("a").should("have.class", "correct");
+                cy.keyboardItem("z").should("have.class", "incorrect");
+
+                cy.keyboardItem("p").as("p");
+
+                cy.get("@p").should("have.class", "incorrect");
+                cy.get("@p").should("not.have.class", "pressed");
+
+                cy.get("@p").trigger("touchstart");
+
+                cy.get("@p").should("have.class", "pressed");
+                cy.get("@p").should("not.have.class", "incorrect");
+
+                cy.wait(100);
+                cy.get("@p").trigger("touchcancel");
+
+                cy.get("@p").should("have.class", "incorrect");
+                cy.get("@p").should("not.have.class", "pressed");
+            });
+        });
     });
 });
