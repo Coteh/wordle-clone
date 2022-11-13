@@ -9,6 +9,7 @@
     "wordle-clone": "./cli.js"
   },
   "scripts": {
+    "build": "./scripts/build.sh",
     "test": "NODE_ENV=test mocha",
     "cypress": "cypress"
   },
