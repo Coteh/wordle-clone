@@ -5,6 +5,8 @@ const FIRST_DAY_MS = 1647993600000;
 
 const MOBILE_DEVICE_USER_AGENT =
     "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+const DESKTOP_USER_AGENT =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0";
 
 describe("misc", () => {
     beforeEach(() => {
@@ -39,6 +41,9 @@ describe("misc", () => {
 
     describe("landscape overlay", function () {
         it("should show the overlay when screen is rotated in landscape mode", function () {
+            // Set the screen orientation to portrait
+            cy.viewport("iphone-6", "portrait");
+
             // set the user agent for the current test
             cy.visit("/", {
                 onBeforeLoad: (win) => {
@@ -84,6 +89,29 @@ describe("misc", () => {
             }); // visit the page again
             cy.get("#landscape-overlay") // get the rotate device overlay element
                 .should("not.be.visible"); // assert that the overlay is not visible
+        });
+
+        it("should not display the rotate device overlay when in desktop mode", function () {
+            cy.viewport(768, 1024); // set the viewport to 768x1024
+
+            // Check that the overlay is hidden
+            cy.get("#landscape-overlay")
+                .should("not.be.visible")
+                .and("have.css", "display", "none");
+
+            cy.viewport(1024, 768); // set the viewport to 1024x768
+
+            // Check that the overlay is hidden
+            cy.get("#landscape-overlay")
+                .should("not.be.visible")
+                .and("have.css", "display", "none");
+
+            cy.viewport(768, 1024); // set the viewport to 768x1024
+
+            // Check that the overlay is hidden
+            cy.get("#landscape-overlay")
+                .should("not.be.visible")
+                .and("have.css", "display", "none");
         });
     });
 
