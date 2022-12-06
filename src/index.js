@@ -303,7 +303,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
     const checkForOrientation = (mediaQueryEvent) => {
-        if (mediaQueryEvent.matches) {
+        const md = new MobileDetect(window.navigator.userAgent);
+        if (mediaQueryEvent.matches && md.mobile()) {
             document.getElementById("landscape-overlay").style.display = "block";
         } else {
             document.getElementById("landscape-overlay").style.display = "none";
