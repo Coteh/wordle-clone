@@ -300,6 +300,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.classList.add(HIGH_CONTRAST);
     }
 
+    const landscapeQuery = window.matchMedia("(orientation: landscape)");
+
+    const checkForOrientation = (mediaQueryEvent) => {
+        const md = new MobileDetect(window.navigator.userAgent);
+        if (mediaQueryEvent.matches && md.mobile()) {
+            document.getElementById("landscape-overlay").style.display = "block";
+        } else {
+            document.getElementById("landscape-overlay").style.display = "none";
+        }
+    };
+
+    landscapeQuery.addEventListener("change", function (event) {
+        checkForOrientation(event);
+    });
+
+    checkForOrientation(landscapeQuery);
+
     try {
         await initGame(eventHandler);
     } catch (e) {

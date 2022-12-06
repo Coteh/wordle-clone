@@ -15,6 +15,7 @@
             src="https://js.sentry-cdn.com/ff7ad2773fc84f6694b683181248006a.min.js"
             crossorigin="anonymous"
         ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
         <script src="https://unpkg.com/feather-icons"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3QNNES1C4Y"></script>
@@ -90,6 +91,12 @@
             </div>
         </div>
         <div class="overlay-back"></div>
+        <div id="landscape-overlay" style="display:none">
+            <div class="overlay-content">
+                <p>Please rotate your device to portrait mode to play the game.</p>
+                <img src="/images/rotate-device.png" alt="Rotate device">
+            </div>
+        </div>
         <template id="dialog">
             <div class="dialog">
                 <button class="close"><i data-feather="x"></i></button>
