@@ -1,7 +1,7 @@
 tasks:
   - init: |
-      ./gen_word_list.sh
-      python -m http.server 8080
+      ./scripts/gen_word_list.sh
+      python -m http.server 8080 &
 
 ports:
   - port: 8080
