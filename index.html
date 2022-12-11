@@ -75,7 +75,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <span class="version-number">v1.1.5</span>
+                        <span class="version-number">v1.1.6</span>
                     </div>
                     <div class="settings-item">
                         <span class="day-number"></span>
@@ -205,7 +205,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.1.5",
+                        release: "wordle-clone@1.1.6",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;
