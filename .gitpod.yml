@@ -2,6 +2,7 @@ tasks:
   - init: |
       ./scripts/gen_word_list.sh
       python -m http.server 8080 &
+      git update-index --assume-unchanged words.txt
 
 ports:
   - port: 8080
