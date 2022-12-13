@@ -13,7 +13,7 @@ cp src/storage/index.js $OUTPUT_DIR/src/storage
 cp src/storage/browser.js $OUTPUT_DIR/src/storage
 cp src/share/index.js $OUTPUT_DIR/src/share
 cp src/share/browser.js $OUTPUT_DIR/src/share
-cp images/* $OUTPUT_DIR/images
+cp images/*.png $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR
 cp icon*.png $OUTPUT_DIR
 cp manifest.json $OUTPUT_DIR
