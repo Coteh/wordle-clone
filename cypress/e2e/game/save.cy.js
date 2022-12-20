@@ -323,7 +323,7 @@ describe("retrieving saved progress", () => {
             }
 
             cy.contains("You lose!").should("not.exist");
-            cy.contains("word was leafy").should("not.exist");
+            cy.contains(`word was ${expectedWord}`).should("not.exist");
 
             // Next day's word should be available
             for (let i = 1; i <= 6; i++) {
