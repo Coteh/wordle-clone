@@ -11,6 +11,8 @@ const HIGH_CONTRAST_SETTING_NAME = "high-contrast";
 const SETTING_ENABLED = "enabled";
 const SETTING_DISABLED = "disabled";
 
+const letterMap = new Map();
+
 const linkEntryToLetterMap = (letterMap) => (entry) => {
     const currEntry = letterMap.get(entry.letter);
     if (entry.correct) {
@@ -46,7 +48,6 @@ const setCountdownInterval = (nextDate) => {
 document.addEventListener("DOMContentLoaded", async () => {
     const middleElem = document.querySelector("#middle");
     const bottomElem = document.querySelector("#bottom");
-    const input = document.querySelector("input[name='word']");
 
     let currentLetterIndex = 0;
     let inputRowElems = [];
