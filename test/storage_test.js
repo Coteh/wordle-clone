@@ -23,6 +23,7 @@ const {
     PREFERENCES_KEY,
 } = require("../src/storage");
 const { STARTING_LIVES } = require("../src/consts");
+const { getCurrentDay } = require("../src/datetime");
 
 global.window = {};
 
@@ -79,7 +80,7 @@ describe("game storage - browser", () => {
 
     it("should save progress", () => {
         sinon.assert.notCalled(stubbedLocalStorage.setItem);
-        saveGame(ATTEMPTS, LIVES, true);
+        saveGame(ATTEMPTS, LIVES, true, getCurrentDay());
         sinon.assert.callCount(stubbedLocalStorage.setItem, 4);
         sinon.assert.calledWithMatch(
             stubbedLocalStorage.setItem,
@@ -271,7 +272,7 @@ describe("game storage - CLI", () => {
             [DAY_KEY]: FAKE_DAY,
         };
 
-        cliStorage.saveGame(ATTEMPTS, LIVES, true);
+        cliStorage.saveGame(ATTEMPTS, LIVES, true, getCurrentDay());
 
         let stateContents = fs.readFileSync("state.json", {
             encoding: "utf-8",

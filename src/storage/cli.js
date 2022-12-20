@@ -10,12 +10,12 @@ const fs = require("fs");
 const { STARTING_LIVES } = require("../consts");
 const { getCurrentDay } = require("../datetime");
 
-const saveGame = (attempts, lives, ended) => {
+const saveGame = (attempts, lives, ended, day) => {
     const jsonStr = JSON.stringify({
         [ATTEMPTS_KEY]: attempts,
         [LIVES_KEY]: lives,
         [ENDED_KEY]: ended,
-        [DAY_KEY]: getCurrentDay(),
+        [DAY_KEY]: day,
     });
     fs.writeFileSync("state.json", jsonStr);
 };
