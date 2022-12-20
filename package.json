@@ -19,7 +19,7 @@
   "devDependencies": {
     "cypress": "^10.3.0",
     "cypress-real-events": "^1.7.4",
-    "mocha": "^9.1.4",
+    "mocha": "^10.2.0",
     "mock-fs": "^5.2.0",
     "sinon": "^15.0.1"
   },
