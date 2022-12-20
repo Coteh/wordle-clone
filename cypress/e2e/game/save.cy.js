@@ -276,6 +276,70 @@ describe("retrieving saved progress", () => {
         cy.contains("You lose!").should("be.visible");
     });
 
+    // Test for one day ahead, and two days ahead
+    [{
+        dayDiff: 1,
+        expectedWord: "teach",
+    }, {
+        dayDiff: 2,
+        expectedWord: "wrath",
+    }].forEach(({ dayDiff, expectedWord }) => {
+        it(`should clear saved progress on reload if game was completed on a different day than when it was received - ${dayDiff} days ahead`, () => {
+            // Reset the clock
+            cy.clock().then((clock) => {
+                clock.restore();
+            });
+            cy.clock(FIRST_DAY_MS + DAY_MS * 1 + (DAY_MS * 1) / 2, ["Date"]);
+
+            // Reload the page
+            cy.reload();
+            cy.waitForGameReady();
+
+            // Move forward dayDiff day
+            cy.clock().then((clock) => {
+                clock.restore();
+            });
+            cy.clock(FIRST_DAY_MS + DAY_MS * (1 + dayDiff) + (DAY_MS * 1) / 2, ["Date"]);
+
+            // Lose
+            for (let i = 1; i <= 4; i++) {
+                cy.keyboardItem("s").click();
+                cy.keyboardItem("p").click();
+                cy.keyboardItem("i").click();
+                cy.keyboardItem("c").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("enter").click();
+            }
+
+            cy.contains("You lose!").should("be.visible");
+            cy.contains("word was leafy").should("be.visible");
+
+            // Reload the page, should be reset
+            cy.reload();
+            cy.waitForGameReady();
+
+            for (let i = 1; i <= 6; i++) {
+                cy.inputRowShouldBeEmpty(i);
+            }
+
+            cy.contains("You lose!").should("not.exist");
+            cy.contains(`word was ${expectedWord}`).should("not.exist");
+
+            // Next day's word should be available
+            for (let i = 1; i <= 6; i++) {
+                cy.keyboardItem("s").click();
+                cy.keyboardItem("p").click();
+                cy.keyboardItem("i").click();
+                cy.keyboardItem("c").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("enter").click();
+            }
+
+            cy.contains("You lose!").should("be.visible");
+            cy.contains(`word was ${expectedWord}`).should("be.visible");
+        });
+    });
+
     // TODO implement a more sophisticated method for checking validity of a game state
     // if the state is invalid, depending on what type of state corruption it is, give an error instead of reinitializing state
     // so that the players don't potentially lose their stats
