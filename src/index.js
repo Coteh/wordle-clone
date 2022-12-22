@@ -325,8 +325,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
     const checkForOrientation = (mediaQueryEvent) => {
-        const md = new MobileDetect(window.navigator.userAgent);
-        if (mediaQueryEvent.matches && md.mobile()) {
+        const md =
+            typeof MobileDetect !== "undefined" && new MobileDetect(window.navigator.userAgent);
+        if (md && mediaQueryEvent.matches && md.mobile()) {
             document.getElementById("landscape-overlay").style.display = "block";
             document.body.classList.add(LANDSCAPE_CLASS_NAME);
         } else {
