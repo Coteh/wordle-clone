@@ -59,9 +59,9 @@ const getErrorMessage = (errorID, userInput) => {
 
 let gameState = {};
 let wordList = [];
-let letterMap = new Map();
 let word = "";
-let eventHandler = () => {};
+let eventHandler = () => { };
+const currentDay = getCurrentDay();
 
 const newState = () => {
     return {
@@ -110,7 +110,7 @@ const getWord = async (wordListIndex, wordList) => {
 };
 
 const getDayNumber = () => {
-    return getCurrentDay() - FIRST_DAY;
+    return currentDay - FIRST_DAY;
 };
 
 const checkForWord = (userInput, word, wordList) => {
@@ -179,7 +179,7 @@ const initGame = async (_eventHandler) => {
 
     if (debugEnabled) console.log(wordList);
 
-    const wordListIndex = getCurrentDay() % wordList.length;
+    const wordListIndex = currentDay % wordList.length;
     word = await getWord(wordListIndex, wordList);
     const day = getDayNumber();
 
@@ -230,7 +230,7 @@ const submitWord = (gameState, currentInput) => {
             eventHandler("lose_life");
         }
     }
-    saveGame(gameState.attempts, gameState.lives, gameState.ended);
+    saveGame(gameState.attempts, gameState.lives, gameState.ended, currentDay);
 };
 
 if (typeof process !== "undefined") {

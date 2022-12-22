@@ -9,11 +9,11 @@ if (typeof process !== "undefined") {
     STARTING_LIVES = require("../consts").STARTING_LIVES;
 }
 
-const saveGame = (attempts, lives, ended) => {
+const saveGame = (attempts, lives, ended, day) => {
     window.localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
     window.localStorage.setItem(LIVES_KEY, lives);
     window.localStorage.setItem(ENDED_KEY, ended);
-    window.localStorage.setItem(DAY_KEY, getCurrentDay());
+    window.localStorage.setItem(DAY_KEY, day);
 };
 
 const savePreferences = (preferences) => {
