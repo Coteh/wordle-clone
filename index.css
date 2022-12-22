@@ -25,6 +25,8 @@
     --settings-item-border-color: 1px solid var(--gray-4);
 
     --background-color: var(--black);
+    --fallback-background-color: var(--background-color);
+    --item-background-color: rgba(0, 0, 0, 0);
     --dialog-background-color: var(--gray-1);
 
     --text-color: var(--white);
@@ -47,6 +49,13 @@
     --letter-selected-text-color: var(--white);
 }
 
+.snow {
+    --background-color: linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
+    --fallback-background-color: rgb(2, 0, 36);
+
+    --standard-block-color: rgba(0, 0, 0, 0);
+}
+
 .high-contrast {
     --correct-color: var(--orange);
     --within-color: var(--blue);
@@ -60,7 +69,8 @@ html {
 }
 
 body {
-    background-color: var(--background-color);
+    background: var(--fallback-background-color);
+    background: var(--background-color);
     margin: 0;
     overflow: hidden;
 }
@@ -71,7 +81,7 @@ svg {
 
 .top-menu {
     position: relative;
-    background-color: var(--background-color);
+    background-color: var(--item-background-color);
     border-bottom: 1px solid var(--standard-color);
     padding: 1rem;
     font-size: 1rem;
@@ -163,6 +173,7 @@ h5 {
 
 .pane > .footer {
     color: var(--text-color);
+    text-align: center;
 }
 
 button {
@@ -224,6 +235,10 @@ button.close {
 
 .settings .settings-item .settings-item-column:last-child {
     width: 60%;
+}
+
+.settings .settings-item .settings-item-column > .toggle {
+    text-transform: capitalize;
 }
 
 /* Overlay Backdrop */
@@ -527,4 +542,24 @@ a {
     color: var(--letter-selected-text-color);
     user-select: none;
     -webkit-user-select: none;
+}
+
+/* Special */
+
+.embedim-snow {
+    pointer-events: none;
+}
+
+body.landscape .embedim-snow {
+    display: none;
+}
+
+body .footer > .snow-theme-credits {
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.snow .footer > .snow-theme-credits {
+    opacity: 1;
+    pointer-events: initial;
 }

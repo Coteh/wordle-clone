@@ -1,15 +1,18 @@
 const LIGHT_MODE = "light";
 const DARK_MODE = "dark";
+const SNOW_THEME = "snow";
 const HIGH_CONTRAST = "high-contrast";
 
 const THEME_PREFERENCE_NAME = "theme";
 const HIGH_CONTRAST_PREFERENCE_NAME = "high-contrast";
 
-const LIGHT_THEME_SETTING_NAME = "light-theme";
+const THEME_SETTING_NAME = "theme-switch";
 const HIGH_CONTRAST_SETTING_NAME = "high-contrast";
 
 const SETTING_ENABLED = "enabled";
 const SETTING_DISABLED = "disabled";
+
+const LANDSCAPE_CLASS_NAME = "landscape";
 
 const letterMap = new Map();
 
@@ -248,25 +251,49 @@ document.addEventListener("DOMContentLoaded", async () => {
         closeDialog(dialog, overlayBackElem);
     });
 
-    let lightMode = false;
+    let snowEmbed = document.getElementById("embedim--snow");
+    if (snowEmbed) snowEmbed.style.display = "none";
+
+    let selectedTheme = DARK_MODE;
     let highContrastMode = false;
+
+    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME];
+
+    const switchTheme = (theme) => {
+        if (!theme || !selectableThemes.includes(theme)) {
+            theme = "dark";
+        }
+        document.body.classList.remove(selectedTheme);
+        if (theme !== "dark") {
+            document.body.classList.add(theme);
+        }
+        let themeColor = "#000";
+        if (snowEmbed) snowEmbed.style.display = "none";
+        switch (theme) {
+            case LIGHT_MODE:
+                themeColor = "#FFF";
+                break;
+            case SNOW_THEME:
+                themeColor = "#020024";
+                if (snowEmbed) snowEmbed.style.display = "initial";
+                break;
+        }
+        document.querySelector("meta[name='theme-color']").content = themeColor;
+        selectedTheme = theme;
+    };
 
     const settings = document.querySelectorAll(".setting");
     settings.forEach((setting) => {
         setting.addEventListener("click", (e) => {
             const elem = e.target;
+            const toggle = setting.querySelector(".toggle");
             let enabled = false;
-            if (elem.classList.contains(LIGHT_THEME_SETTING_NAME)) {
-                enabled = lightMode = !lightMode;
-                metaThemeColor = document.querySelector("meta[name='theme-color']");
-                if (lightMode) {
-                    document.body.classList.add(LIGHT_MODE);
-                    metaThemeColor.content = "#fff";
-                } else {
-                    document.body.classList.remove(LIGHT_MODE);
-                    metaThemeColor.content = "#000";
-                }
-                savePreferenceValue(THEME_PREFERENCE_NAME, lightMode ? LIGHT_MODE : DARK_MODE);
+            if (elem.classList.contains(THEME_SETTING_NAME)) {
+                const themeIndex = selectableThemes.indexOf(selectedTheme);
+                const nextTheme = selectableThemes[(themeIndex + 1) % selectableThemes.length];
+                switchTheme(nextTheme);
+                savePreferenceValue(THEME_PREFERENCE_NAME, nextTheme);
+                toggle.innerText = nextTheme;
             } else if (elem.classList.contains(HIGH_CONTRAST_SETTING_NAME)) {
                 enabled = highContrastMode = !highContrastMode;
                 if (highContrastMode) {
@@ -278,21 +305,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     HIGH_CONTRAST_PREFERENCE_NAME,
                     highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
                 );
+                toggle.innerText = enabled ? "ON" : "OFF";
             }
-            const toggle = setting.querySelector(".toggle");
-            toggle.innerText = enabled ? "ON" : "OFF";
         });
     });
 
     initPreferences();
-    if (getPreferenceValue(THEME_PREFERENCE_NAME) === LIGHT_MODE) {
-        lightMode = true;
-        const setting = document.querySelector(".setting.light-theme");
-        const toggle = setting.querySelector(".toggle");
-        toggle.innerText = "ON";
-        document.body.classList.add(LIGHT_MODE);
-        document.querySelector("meta[name='theme-color']").content = "#fff";
-    }
+    switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
+    const themeSetting = document.querySelector(".setting.theme-switch");
+    themeSetting.querySelector(".toggle").innerText = selectedTheme;
     if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
         highContrastMode = true;
         const setting = document.querySelector(".setting.high-contrast");
@@ -304,17 +325,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
     const checkForOrientation = (mediaQueryEvent) => {
-        const md = new MobileDetect(window.navigator.userAgent);
-        if (mediaQueryEvent.matches && md.mobile()) {
+        const md =
+            typeof MobileDetect !== "undefined" && new MobileDetect(window.navigator.userAgent);
+        if (md && mediaQueryEvent.matches && md.mobile()) {
             document.getElementById("landscape-overlay").style.display = "block";
+            document.body.classList.add(LANDSCAPE_CLASS_NAME);
         } else {
             document.getElementById("landscape-overlay").style.display = "none";
+            document.body.classList.remove(LANDSCAPE_CLASS_NAME);
         }
     };
 
-    landscapeQuery.addEventListener("change", function (event) {
-        checkForOrientation(event);
-    });
+    if (landscapeQuery.addEventListener) {
+        landscapeQuery.addEventListener("change", function (event) {
+            checkForOrientation(event);
+        });
+    } else {
+        // Support for older browsers, addListener is deprecated
+        landscapeQuery.addListener(checkForOrientation);
+    }
 
     checkForOrientation(landscapeQuery);
 

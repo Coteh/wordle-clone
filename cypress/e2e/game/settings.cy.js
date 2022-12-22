@@ -62,18 +62,18 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".settings-item.light-theme").should("contain.text", "OFF");
+        cy.get(".settings-item.high-contrast").should("contain.text", "OFF");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
 
-        cy.get(".settings-item.light-theme").click();
+        cy.get(".settings-item.high-contrast").click();
 
-        cy.get(".settings-item.light-theme").should("contain.text", "ON");
+        cy.get(".settings-item.high-contrast").should("contain.text", "ON");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
-                    theme: "light",
+                    ["high-contrast"]: "enabled",
                 })
             );
         });
@@ -83,7 +83,7 @@ describe("settings", () => {
         window.localStorage.setItem(
             "preferences",
             JSON.stringify({
-                theme: "light",
+                ["high-contrast"]: "enabled",
             })
         );
 
@@ -93,7 +93,7 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".settings-item.light-theme").should("contain.text", "ON");
+        cy.get(".settings-item.high-contrast").should("contain.text", "ON");
     });
 
     it("should show version number at the bottom of the settings pane", () => {
@@ -108,6 +108,24 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
         cy.contains(/© .* James Cote/i).should("be.visible");
+    });
+
+    it("should show credits for snow effect at the bottom of the settings pane if snow theme is enabled", () => {
+        cy.get(".settings-link").click();
+
+        cy.contains("Settings").should("be.visible");
+        cy.contains("embed.im").should("not.be.visible");
+
+        cy.get(".setting.theme-switch").click();
+        cy.get(".setting.theme-switch").click();
+
+        cy.get("body").should("have.class", "snow");
+        cy.contains("embed.im").should("be.visible");
+
+        cy.get(".setting.theme-switch").click();
+
+        cy.get("body").should("not.have.class", "snow");
+        cy.contains("embed.im").should("not.be.visible");
     });
 
     it("should show day number at the bottom of the settings pane", () => {

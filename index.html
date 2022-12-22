@@ -55,12 +55,12 @@
                 <button class="close"><i data-feather="x"></i></button>
                 <div class="space"></div>
                 <div class="settings-item-group">
-                    <div class="settings-item setting light-theme">
+                    <div class="settings-item setting theme-switch">
                         <div class="settings-item-column">
-                            <span>Light Theme</span>
+                            <span>Theme</span>
                         </div>
                         <div class="settings-item-column">
-                            <span class="toggle">OFF</span>
+                            <span class="toggle">Dark</span>
                         </div>
                     </div>
                     <div class="settings-item setting high-contrast">
@@ -85,6 +85,9 @@
                 <div class="footer">
                     <span>
                         &copy 2022 James Cote
+                    </span><br/>
+                    <span class="snow-theme-credits">
+                        Snow effect from <a href="https://embed.im/snow/" target="_blank">embed.im</a>
                     </span>
                 </div>
                 <div class="space"></div>
@@ -193,6 +196,7 @@
         <script src="src/share/browser.js"></script>
         <script src="src/preferences.js"></script>
         <script src="src/index.js"></script>
+        <script src="vendor/snow.js" defer></script>
         <script>
             if (typeof feather !== "undefined") {
                 feather.replace();
