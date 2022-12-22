@@ -52,7 +52,6 @@
 .snow {
     --background-color: linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
     --fallback-background-color: rgb(2, 0, 36);
-    --item-background-color: rgba(0, 0, 0, 0);
 
     --standard-block-color: rgba(0, 0, 0, 0);
 }
