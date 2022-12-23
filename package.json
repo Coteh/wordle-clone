@@ -28,7 +28,7 @@
   },
   "overrides": {
     "cypress-real-events": {
-      "cypress": "^10.3.0"
+      "cypress": "^12.2.0"
     }
   }
 }
