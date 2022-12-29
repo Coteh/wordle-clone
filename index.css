@@ -559,3 +559,7 @@ body.snow .footer > .snow-theme-credits {
     opacity: 1;
     pointer-events: initial;
 }
+
+body .footer a.author-link {
+    text-decoration: none;
+}
