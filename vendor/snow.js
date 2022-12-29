@@ -8,6 +8,10 @@
     that when the page is refreshed in landscape mode and the orientation is switched back to portrait, 
     some snowflakes are locked in place and some snowflakes end up falling at a slow rate.
     By re-randomizing the positions as well, this issue is fixed as well.
+- Set the snowfall to be invisible (using display: none) by default, since the player may not
+    have the snow theme enabled. After the page loads, the theme settings will either make it
+    visible or invisible depending on whether snow theme is set. This will prevent the snowfall
+    from appearing briefly upon page load for players who don't have snow theme enabled.
 */
 var embedimSnow = document.getElementById("embedim--snow");
 if (!embedimSnow) {
@@ -83,6 +87,7 @@ if (!embedimSnow) {
 
     embedimSnow = document.createElement("div");
     embedimSnow.id = "embedim--snow";
+    embedimSnow.style.display = "none";
     setSnowElementInnerHTML();
     
     document.body.appendChild(embedimSnow);
