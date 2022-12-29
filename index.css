@@ -550,10 +550,6 @@ a {
     pointer-events: none;
 }
 
-body.landscape .embedim-snow {
-    display: none;
-}
-
 body .footer > .snow-theme-credits {
     opacity: 0;
     pointer-events: none;
