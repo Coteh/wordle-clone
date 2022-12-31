@@ -550,10 +550,6 @@ a {
     pointer-events: none;
 }
 
-body.landscape .embedim-snow {
-    display: none;
-}
-
 body .footer > .snow-theme-credits {
     opacity: 0;
     pointer-events: none;
@@ -562,4 +558,8 @@ body .footer > .snow-theme-credits {
 body.snow .footer > .snow-theme-credits {
     opacity: 1;
     pointer-events: initial;
+}
+
+body .footer a.author-link {
+    text-decoration: none;
 }
