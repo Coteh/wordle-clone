@@ -18,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "cypress": "^12.2.0",
-    "cypress-real-events": "^1.7.4",
+    "cypress-real-events": "^1.7.6",
     "mocha": "^10.2.0",
     "mock-fs": "^5.2.0",
     "sinon": "^15.0.1"
