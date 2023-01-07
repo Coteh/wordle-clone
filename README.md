@@ -59,6 +59,8 @@ It's also a good idea to scramble the words when working on the project, to prev
 ./scripts/gen_word_list.sh
 ```
 
+(Note: If you're on Windows, run the script in WSL)
+
 The following will make it so that git doesn't detect that `words.txt` changed:
 
 ```
@@ -68,6 +70,12 @@ git update-index --assume-unchanged words.txt
 At this point, you can run a local web server on the project directory, and the game should render when navigating to the port of the server from your browser.
 
 ## Testing
+
+Run the following to launch unit tests:
+
+```
+npm run test
+```
 
 Cypress tests can be accessed by running the following:
 
