@@ -113,6 +113,101 @@ describe("misc", () => {
                 .should("not.be.visible")
                 .and("have.css", "display", "none");
         });
+
+        it("should not show any game element", () => {
+            cy.viewport(1024, 768); // set the viewport to 1024x768
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    Object.defineProperty(win.navigator, "userAgent", {
+                        value: MOBILE_DEVICE_USER_AGENT,
+                    });
+                    window.localStorage.setItem("played_before", false);
+                },
+            }); // visit the page
+            cy.get("#landscape-overlay") // get the rotate device overlay element
+                .should("be.visible"); // assert that the overlay is visible
+            cy.waitForGameReady();
+            
+            // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
+            // TODO: Find a way to fix flake that occasionally happens when the dialog visibility check fails. Bumping the wait time by another 0.5s for now.
+            // https://github.com/Coteh/wordle-clone/runs/7174612853?check_suite_focus=true
+            // Calling `.click()` before checking visibility can also make Cypress wait for the element to finish transition
+            // but when the landscape overlay is appearing on top of the element as expected, the element can't be clicked on anymore,
+            // so this timeout is needed for now until I find a better solution.
+            cy.wait(1000);
+            
+            cy.contains("How to play").should("not.be.visible");
+        });
+
+        it("should show the snowflakes when activated while snow theme enabled", () => {
+            // Set the screen orientation to landscape
+            cy.viewport("iphone-6", "landscape");
+
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    Object.defineProperty(win.navigator, "userAgent", {
+                        value: MOBILE_DEVICE_USER_AGENT,
+                    });
+                    window.localStorage.setItem(
+                        "preferences",
+                        JSON.stringify({
+                            theme: "snow",
+                        })
+                    );
+                },
+            });
+
+            cy.get("#landscape-overlay") // get the rotate device overlay element
+                .should("be.visible"); // assert that the overlay is visible
+
+            cy.waitForGameReady();
+            // Cypress checks if element is interactive when doing visibility check
+            // This is a workaround to have Cypress see that it's visible.
+            cy.get("#embedim--snow").invoke("css", "pointer-events", "auto");
+            cy.get("#embedim--snow").should("be.visible");
+
+            // Set the screen orientation back to portrait
+            cy.viewport("iphone-6", "portrait");
+
+            cy.get("#landscape-overlay") // get the rotate device overlay element
+                .should("not.be.visible"); // assert that the overlay is not visible
+            
+            cy.waitForGameReady();
+            
+            cy.get("#embedim--snow").should("be.visible");
+        });
+
+        it("should not show snowflakes if snow theme is not enabled", () => {
+            // Set the screen orientation to landscape
+            cy.viewport("iphone-6", "landscape");
+
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    Object.defineProperty(win.navigator, "userAgent", {
+                        value: MOBILE_DEVICE_USER_AGENT,
+                    });
+                },
+            });
+
+            cy.get("#landscape-overlay") // get the rotate device overlay element
+                .should("be.visible"); // assert that the overlay is visible
+
+            cy.waitForGameReady();
+            // Cypress checks if element is interactive when doing visibility check
+            // This is a workaround to have Cypress see that it's visible.
+            cy.get("#embedim--snow").invoke("css", "pointer-events", "auto");
+            cy.get("#embedim--snow").should("not.be.visible");
+
+            // Set the screen orientation back to portrait
+            cy.viewport("iphone-6", "portrait");
+
+            cy.get("#landscape-overlay") // get the rotate device overlay element
+                .should("not.be.visible"); // assert that the overlay is not visible
+
+            cy.waitForGameReady();
+
+            cy.get("#embedim--snow").should("not.be.visible");
+        })
     });
 
     describe("cache-less tests", () => {
