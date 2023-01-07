@@ -12,7 +12,12 @@
     have the snow theme enabled. After the page loads, the theme settings will either make it
     visible or invisible depending on whether snow theme is set. This will prevent the snowfall
     from appearing briefly upon page load for players who don't have snow theme enabled.
+- z-index is set so that it's underneath the overlay elements of the game
+    (which have z-index of 100 or over)
+    This will allow the snow elements to be dimmed alongside the rest of the elements
+    underneath the overlay when it appears.
 */
+const zIndex = -10;
 var embedimSnow = document.getElementById("embedim--snow");
 if (!embedimSnow) {
     function embRand(a, b) {
@@ -76,7 +81,7 @@ if (!embedimSnow) {
     }
     const setSnowElementInnerHTML = () => {
         embedimSnow.innerHTML =
-            "<style>#embedim--snow{position:fixed;left:0;top:0;bottom:0;width:100vw;height:100vh;overflow:hidden;z-index:9999999;pointer-events:none}" +
+            `<style>#embedim--snow{position:fixed;left:0;top:0;bottom:0;width:100vw;height:100vh;overflow:hidden;z-index:${zIndex};pointer-events:none}` +
             baseEmbCSS + snowElements.css +
             "</style>" +
             snowElements.html;

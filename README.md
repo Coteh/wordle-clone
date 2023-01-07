@@ -45,6 +45,44 @@ wordle
 - Share functionality
 - Countdown to next day's Wordle
 
+## Development
+
+Clone this repository, then run the following:
+
+```
+npm install
+```
+
+It's also a good idea to scramble the words when working on the project, to prevent spoilers:
+
+```
+./scripts/gen_word_list.sh
+```
+
+The following will make it so that git doesn't detect that `words.txt` changed:
+
+```
+git update-index --assume-unchanged words.txt
+```
+
+At this point, you can run a local web server on the project directory, and the game should render when navigating to the port of the server from your browser.
+
+## Testing
+
+Cypress tests can be accessed by running the following:
+
+```
+npm run cypress open
+```
+
+This will launch the tests in the Cypress UI. 
+
+Alternatively, you can run the tests directly on CLI:
+
+```
+npm run cypress run
+```
+
 ## Future Additions
 
 - Hard Mode
