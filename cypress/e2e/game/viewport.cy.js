@@ -87,16 +87,9 @@ describe("viewport", () => {
         it(`should be playable on a ${def.name}`, () => {
             cy.viewport(def.width, def.height);
 
-            for (let i = 0; i < KEYS_ARR.length; i++) {
-                cy.keyboardItem(KEYS_ARR[i]).shouldBeInViewport();
-            }
-            for (let i = 1; i <= 6; i++) {
-                for (let j = 1; j <= 5; j++) {
-                    cy.inputRow(i).inputCell(j).shouldBeInViewport();
-                }
-            }
-            cy.contains("Wordle Clone").shouldBeInViewport();
-            cy.get(".help-link").shouldBeInViewport();
+            cy.get(".game").should("be.visible").shouldBeInViewport();
+            cy.contains("Wordle Clone").should("be.visible").shouldBeInViewport();
+            cy.get(".help-link").should("be.visible").shouldBeInViewport();
 
             cy.keyboardItem("b").click();
             cy.keyboardItem("a").click();
@@ -120,16 +113,11 @@ describe("viewport", () => {
 
             cy.task("log", "Checking dialog placement...");
 
-            // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
-            // TODO: Find a way to fix flake that occasionally happens when the dialog visibility check fails. Bumping the wait time by another 0.5s for now.
-            // https://github.com/Coteh/wordle-clone/runs/7174612853?check_suite_focus=true
-            cy.wait(1000);
+            cy.waitUntilDialogAppears();
+            cy.get(".dialog").should("be.visible").shouldBeInViewport();
 
-            cy.contains("You win!").should("be.visible");
-            cy.contains("Next Wordle").should("be.visible");
-
-            cy.contains("You win!").shouldBeInViewport();
-            cy.contains("Next Wordle").shouldBeInViewport();
+            cy.contains("You win!").should("be.visible").shouldBeInViewport();
+            cy.contains("Next Wordle").should("be.visible").shouldBeInViewport();
         });
     });
 });

@@ -39,6 +39,30 @@ describe("misc", () => {
         cy.contains("The following error occurred:").should("be.visible");
     });
 
+    describe("notification", () => {
+        it("should display notification(s) if things happen", () => {
+            cy.contains("Input not provided").should("not.exist");
+            cy.contains("Not enough letters").should("not.exist");
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Input not provided").should("be.visible");
+            cy.contains("Not enough letters").should("not.exist");
+
+            cy.get("body").type("a");
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Not enough letters").should("be.visible");
+
+            cy.waitUntil(() =>
+                cy.document().then(doc => doc.querySelector(".notification") == null)
+            );
+
+            cy.contains("Input not provided").should("not.exist");
+            cy.contains("Not enough letters").should("not.exist");
+        });
+    });
+
     describe("landscape overlay", function () {
         it("should show the overlay when screen is rotated in landscape mode", function () {
             // Set the screen orientation to portrait
@@ -128,13 +152,7 @@ describe("misc", () => {
                 .should("be.visible"); // assert that the overlay is visible
             cy.waitForGameReady();
             
-            // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
-            // TODO: Find a way to fix flake that occasionally happens when the dialog visibility check fails. Bumping the wait time by another 0.5s for now.
-            // https://github.com/Coteh/wordle-clone/runs/7174612853?check_suite_focus=true
-            // Calling `.click()` before checking visibility can also make Cypress wait for the element to finish transition
-            // but when the landscape overlay is appearing on top of the element as expected, the element can't be clicked on anymore,
-            // so this timeout is needed for now until I find a better solution.
-            cy.wait(1000);
+            cy.waitUntilDialogAppears();
             
             cy.contains("How to play").should("not.be.visible");
         });

@@ -13,6 +13,7 @@
     --gray-4: grey;
     --gray-5: #aaa;
     --gray-6: rgb(202, 202, 202);
+    --gray-7: lightgrey;
 
     --standard-color: var(--gray-5);
     --standard-block-color: var(--black);
@@ -32,6 +33,9 @@
     --text-color: var(--white);
     --letter-text-color: var(--white);
     --letter-selected-text-color: var(--white);
+
+    --notification-background-color: var(--gray-7);
+    --notification-text-color: var(--black);
 }
 
 .light {
@@ -47,6 +51,9 @@
     --text-color: var(--black);
     --letter-text-color: var(--black);
     --letter-selected-text-color: var(--white);
+
+    --notification-background-color: var(--black);
+    --notification-text-color: var(--white);
 }
 
 .snow {
@@ -332,35 +339,35 @@ button.close {
 
 /* Notification */
 
-.notification {
+.notification-area {
     position: fixed;
-    top: 5%;
+    top: 10%;
     left: 50%;
-    right: 0;
-    bottom: 0;
     z-index: 101;
     transform: translate(-50%, 0);
 
-    background-color: lightgrey;
-    border: 1px solid black;
-    width: 300px;
-    height: 150px;
-
-    opacity: 1;
-
-    transition: top 0.5s, opacity 0.5s;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    width: 60%;
 }
 
-.notification > div.notification-content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 2rem;
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.notification-area > div.notification {
+    background-color: var(--notification-background-color);
+    border: 1px solid var(--notification-background-color);
+    border-radius: 0.25rem;
+    margin: 0.2rem;
+
+    text-align: center;
+
+    opacity: 1;
+    transition: opacity 0.25s;
+}
+
+.notification-area > div.notification > div.notification-content {
+    padding: 1rem 1.5rem;
+    font-weight: bold;
+    color: var(--notification-text-color);
 }
 
 /* Landscape Overlay */

@@ -106,15 +106,20 @@ Cypress.Commands.add("shouldBeInViewport", { prevSubject: true }, (subject) => {
     const right = window.width();
     const rect = subject[0].getBoundingClientRect();
 
-    expect(rect.top).not.to.be.greaterThan(bottom);
-    expect(rect.bottom).not.to.be.greaterThan(bottom);
-    expect(rect.top).not.to.be.lessThan(0);
-    expect(rect.bottom).not.to.be.lessThan(0);
+    expect(rect.top).not.to.be.greaterThan(bottom).and.not.to.be.lessThan(0);
+    expect(rect.bottom).not.to.be.greaterThan(bottom).and.not.to.be.lessThan(0);
+    expect(rect.left).not.to.be.greaterThan(right).and.not.to.be.lessThan(0);
+    expect(rect.right).not.to.be.greaterThan(right).and.not.to.be.lessThan(0);
+});
 
-    expect(rect.left).not.to.be.greaterThan(right);
-    expect(rect.right).not.to.be.greaterThan(right);
-    expect(rect.left).not.to.be.lessThan(0);
-    expect(rect.right).not.to.be.lessThan(0);
+Cypress.Commands.add("waitUntilDialogAppears", () => {
+    cy.waitUntil(() =>
+        cy.window().then(win => {
+            cy.get(".dialog").then(dialog =>
+                parseInt(win.getComputedStyle(dialog[0]).top) <= win.innerHeight / 2
+            )
+        })
+    );
 });
 
 // Extended cy.intercept to add a log when the request gets intercepted.
