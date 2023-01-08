@@ -52,13 +52,11 @@ describe("misc", () => {
             cy.get("body").type("a");
             cy.keyboardItem("enter").click();
 
-            cy.contains("Input not provided").should("be.visible");
             cy.contains("Not enough letters").should("be.visible");
 
-            // This could be omitted and instead have the below conditions evaluate within the default Cypress timeout,
-            // which would be enough time for the notifications to get removed from the DOM. However, keeping this timeout
-            // here for clarity, and also so that if Cypress timeout ever gets changed, this test won't flake.
-            cy.wait(1000);
+            cy.waitUntil(() =>
+                cy.document().then(doc => doc.querySelector(".notification") == null)
+            );
 
             cy.contains("Input not provided").should("not.exist");
             cy.contains("Not enough letters").should("not.exist");

@@ -59,6 +59,9 @@ describe("sharing results", () => {
         });
     });
 
+    // NOTE: This test and the one after it have flaked before
+    // https://github.com/Coteh/wordle-clone/actions/runs/3864885869/jobs/6588015395
+    // TODO: If it happens again, or if it happens more often, look into a fix.
     it("should show a message when results have been copied", () => {
         performAction("leafy");
 
