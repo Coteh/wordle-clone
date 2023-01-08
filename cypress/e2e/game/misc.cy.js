@@ -154,13 +154,7 @@ describe("misc", () => {
                 .should("be.visible"); // assert that the overlay is visible
             cy.waitForGameReady();
             
-            // The dialog should appear in center of screen after 0.5s because that's the duration of the CSS transition
-            // TODO: Find a way to fix flake that occasionally happens when the dialog visibility check fails. Bumping the wait time by another 0.5s for now.
-            // https://github.com/Coteh/wordle-clone/runs/7174612853?check_suite_focus=true
-            // Calling `.click()` before checking visibility can also make Cypress wait for the element to finish transition
-            // but when the landscape overlay is appearing on top of the element as expected, the element can't be clicked on anymore,
-            // so this timeout is needed for now until I find a better solution.
-            cy.wait(1000);
+            cy.waitUntilDialogAppears();
             
             cy.contains("How to play").should("not.be.visible");
         });
