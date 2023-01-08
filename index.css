@@ -251,6 +251,7 @@ button.close {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
+    z-index: 100;
 }
 
 /* Dialog Window */
@@ -261,6 +262,7 @@ button.close {
     left: 50%;
     right: 0;
     bottom: 0;
+    z-index: 101;
     transform: translate(-50%, -50%);
 
     background-color: var(--dialog-background-color);
@@ -336,6 +338,7 @@ button.close {
     left: 50%;
     right: 0;
     bottom: 0;
+    z-index: 101;
     transform: translate(-50%, 0);
 
     background-color: lightgrey;
