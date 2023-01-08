@@ -39,6 +39,32 @@ describe("misc", () => {
         cy.contains("The following error occurred:").should("be.visible");
     });
 
+    describe("notification", () => {
+        it("should display notification(s) if things happen", () => {
+            cy.contains("Input not provided").should("not.exist");
+            cy.contains("Not enough letters").should("not.exist");
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Input not provided").should("be.visible");
+            cy.contains("Not enough letters").should("not.exist");
+
+            cy.get("body").type("a");
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Input not provided").should("be.visible");
+            cy.contains("Not enough letters").should("be.visible");
+
+            // This could be omitted and instead have the below conditions evaluate within the default Cypress timeout,
+            // which would be enough time for the notifications to get removed from the DOM. However, keeping this timeout
+            // here for clarity, and also so that if Cypress timeout ever gets changed, this test won't flake.
+            cy.wait(1000);
+
+            cy.contains("Input not provided").should("not.exist");
+            cy.contains("Not enough letters").should("not.exist");
+        });
+    });
+
     describe("landscape overlay", function () {
         it("should show the overlay when screen is rotated in landscape mode", function () {
             // Set the screen orientation to portrait
