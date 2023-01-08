@@ -161,27 +161,23 @@ const renderDialog = (content, fadeIn, closable = true) => {
 };
 
 const renderNotification = (msg) => {
-    // Close any currently existing notifications
-    const notificationElem = document.querySelector(".notification");
-    if (notificationElem) notificationElem.remove();
-    // Clear existing notification timeout
-    if (notificationTimeout) {
-        clearTimeout(notificationTimeout);
-    }
-
     const template = document.querySelector("#notification");
     const clone = template.content.cloneNode(true);
 
     const message = clone.querySelector(".notification-message");
     message.innerText = msg;
 
-    document.body.appendChild(clone);
+    const notificationArea = document.querySelector(".notification-area");
+    notificationArea.appendChild(clone);
+
+    // The original reference is a DocumentFragment, need to find the notification element in the DOM tree to continue using it
+    const notificationList = notificationArea.querySelectorAll(
+        ".notification-area > .notification"
+    );
+    const notification = notificationList[notificationList.length - 1];
 
     notificationTimeout = setTimeout(() => {
-        const notification = document.querySelector(".notification");
-
         notification.style.opacity = 0;
-        notification.style.top = "-10%";
 
         setTimeout(() => {
             notification.remove();
