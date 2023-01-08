@@ -330,9 +330,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (md && mediaQueryEvent.matches && md.mobile()) {
             document.getElementById("landscape-overlay").style.display = "block";
             document.body.classList.add(LANDSCAPE_CLASS_NAME);
+            // Have the snow element appear on top of the landscape overlay
+            // (will only be visible if the "display" attribute is set, though)
+            if (snowEmbed) snowEmbed.style.zIndex = "99999";
         } else {
             document.getElementById("landscape-overlay").style.display = "none";
             document.body.classList.remove(LANDSCAPE_CLASS_NAME);
+            if (snowEmbed) snowEmbed.style.zIndex = "";
         }
     };
 

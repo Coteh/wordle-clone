@@ -75,7 +75,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <span class="version-number">v1.1.9</span>
+                        <span class="version-number">v1.1.10</span>
                     </div>
                     <div class="settings-item">
                         <span class="day-number"></span>
@@ -84,7 +84,7 @@
                 <div class="space"></div>
                 <div class="footer">
                     <span>
-                        &copy 2022 <a class="author-link" href="https://www.jamescote.ca/" target="_blank">James Cote</a>
+                        &copy 2022-2023 <a class="author-link" href="https://www.jamescote.ca/" target="_blank">James Cote</a>
                     </span><br/>
                     <span class="snow-theme-credits">
                         Snow effect from <a href="https://embed.im/snow/" target="_blank">embed.im</a>
@@ -93,6 +93,7 @@
                 <div class="space"></div>
             </div>
         </div>
+        <div class="notification-area"></div>
         <div class="overlay-back"></div>
         <div id="landscape-overlay" style="display:none">
             <div class="overlay-content">
@@ -108,11 +109,11 @@
             </div>
         </template>
         <template id="notification">
-           <div class="notification">
+            <div class="notification">
                 <div class="notification-content">
                     <span class="notification-message"></span>
                 </div>
-            </div> 
+            </div>
         </template>
         <template id="win-dialog-content">
             <span>You win!</span>
@@ -209,7 +210,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.1.9",
+                        release: "wordle-clone@1.1.10",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;

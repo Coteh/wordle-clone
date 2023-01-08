@@ -47,7 +47,7 @@ const getErrorMessage = (errorID, userInput) => {
         case NOT_IN_WORD_LIST_ERROR_ID:
             return "Not in word list";
         case USER_INPUT_NOT_PROVIDED_ERROR_ID:
-            return "User input not provided";
+            return "Input not provided";
         case WORD_NOT_PROVIDED_ERROR_ID:
             return "Word not provided to check against (this should not happen, post an issue on GitHub)";
         case USER_RAN_OUT_OF_LIVES:
@@ -60,7 +60,7 @@ const getErrorMessage = (errorID, userInput) => {
 let gameState = {};
 let wordList = [];
 let word = "";
-let eventHandler = () => { };
+let eventHandler = () => {};
 const currentDay = getCurrentDay();
 
 const newState = () => {
