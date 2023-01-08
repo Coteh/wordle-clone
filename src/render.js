@@ -1,7 +1,5 @@
 const KEY_HOLD_TIMEOUT_MS = 500;
 
-let notificationTimeout;
-
 const renderInputRow = (parentElem, numberOfLetters) => {
     const container = document.createElement("div");
     container.className = "input-row";
@@ -176,7 +174,7 @@ const renderNotification = (msg) => {
     );
     const notification = notificationList[notificationList.length - 1];
 
-    notificationTimeout = setTimeout(() => {
+    setTimeout(() => {
         notification.style.opacity = 0;
 
         setTimeout(() => {
