@@ -181,4 +181,34 @@ describe("sharing results", () => {
             });
         });
     });
+
+    it("should add asterisk if hard mode is enabled", () => {
+        window.localStorage.setItem(
+            "preferences",
+            JSON.stringify({
+                ["hard-mode"]: "enabled",
+            })
+        );
+
+        cy.reload();
+
+        const PREV_COPIED_TEXT =
+            "This text should not be in clipboard when the copy button is clicked";
+
+        cy.window().then(async (win) => {
+            win.focus();
+            await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(PREV_COPIED_TEXT);
+        });
+
+        performAction("leafy");
+
+        cy.window().then(async (win) => {
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(`Wordle Clone 1 2/6*
+⬛🟨⬛⬛🟨
+🟩🟩🟩🟩🟩`);
+        });
+    });
 });

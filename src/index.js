@@ -8,6 +8,7 @@ const HIGH_CONTRAST_PREFERENCE_NAME = "high-contrast";
 
 const THEME_SETTING_NAME = "theme-switch";
 const HIGH_CONTRAST_SETTING_NAME = "high-contrast";
+const HARD_MODE_PREFERENCE_NAME = "hard-mode";
 
 const SETTING_ENABLED = "enabled";
 const SETTING_DISABLED = "disabled";
@@ -88,8 +89,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState);
         },
-        renderCheckError(errorID) {
-            renderNotification(getErrorMessage(errorID));
+        renderCheckError(error) {
+            renderNotification(getErrorMessage(error));
         },
         renderWin() {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
@@ -97,6 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 e.preventDefault();
                 const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
                     highContrastMode,
+                    hardMode,
                 });
                 copyShareText(shareText);
             });
@@ -188,7 +190,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         if (key === "enter") {
-            submitWord(gameState, currentInput);
+            submitWord(
+                gameState,
+                currentInput,
+                hardMode && gameState.attempts.length > 0
+                    ? gameState.attempts[gameState.attempts.length - 1]
+                    : null
+            );
         } else if (key.length === 1 && key >= "a" && key <= "z" && currentLetterIndex < 5) {
             wordleRenderer.renderInput(key);
             currentInput = currentInput + key.toLowerCase();
@@ -256,6 +264,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let selectedTheme = DARK_MODE;
     let highContrastMode = false;
+    let hardMode = false;
 
     const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME];
 
@@ -306,6 +315,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
                 );
                 toggle.innerText = enabled ? "ON" : "OFF";
+            } else if (elem.classList.contains(HARD_MODE_PREFERENCE_NAME)) {
+                if (!hardMode && gameState.attempts.length > 0) {
+                    return renderNotification(
+                        "Hard mode can only be enabled at the start of a round"
+                    );
+                }
+                hardMode = !hardMode;
+                savePreferenceValue(
+                    HARD_MODE_PREFERENCE_NAME,
+                    hardMode ? SETTING_ENABLED : SETTING_DISABLED
+                );
+                toggle.innerText = hardMode ? "ON" : "OFF";
             }
         });
     });
@@ -320,6 +341,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const toggle = setting.querySelector(".toggle");
         toggle.innerText = "ON";
         document.body.classList.add(HIGH_CONTRAST);
+    }
+    if (getPreferenceValue(HARD_MODE_PREFERENCE_NAME) === SETTING_ENABLED) {
+        hardMode = true;
+        const setting = document.querySelector(".setting.hard-mode");
+        const toggle = setting.querySelector(".toggle");
+        toggle.innerText = "ON";
     }
 
     const landscapeQuery = window.matchMedia("(orientation: landscape)");
