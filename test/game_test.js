@@ -467,6 +467,12 @@ describe("hard mode", () => {
                 ["first", "second", "third", "fourth", "fifth"]
             );
         });
+        it("should generate fallback texts for values out of expected range", () => {
+            assert.deepEqual(
+                [-1, 6, 100, "a string", NaN, undefined, null].map((v) => getPositionWord(v)),
+                ["-1", "6", "100", "a string", "NaN", "undefined", "undefined"]
+            );
+        });
     });
 
     describe("getHardModeErrorMessage", () => {

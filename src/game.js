@@ -50,7 +50,7 @@ const getPositionWord = (pos) => {
         case 4:
             return "fifth";
         default:
-            return pos.toString();
+            return pos?.toString() || "undefined";
     }
 };
 
