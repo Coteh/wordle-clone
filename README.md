@@ -44,6 +44,7 @@ wordle
     - CLI version
 - Share functionality
 - Countdown to next day's Wordle
+- Hard Mode
 
 ## Development
 
@@ -93,7 +94,6 @@ npm run cypress run
 
 ## Future Additions
 
-- Hard Mode
 - Player Statistics
 - Archive
 - Animations

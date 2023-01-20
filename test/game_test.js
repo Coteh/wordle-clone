@@ -5,6 +5,9 @@ const {
     NOT_IN_WORD_LIST_ERROR_ID,
     WORD_NOT_PROVIDED_ERROR_ID,
     USER_INPUT_NOT_PROVIDED_ERROR_ID,
+    PREV_STATE_NOT_MATCHING_ERROR_ID,
+    getPositionWord,
+    getHardModeErrorMessage,
 } = require("../src/game");
 const assert = require("assert");
 const fs = require("fs");
@@ -24,7 +27,11 @@ const assertEntry = (actual, expected, index) => {
     }
 };
 
-const wordList = [...fs.readFileSync("words.txt").toString("utf-8").trimEnd().split("\n"), "tests"];
+const wordList = [
+    ...fs.readFileSync("words.txt").toString("utf-8").trimEnd().split("\n"),
+    "solos",
+    "tests",
+];
 
 describe("core game logic", () => {
     it("should determine letter correctness (basic test)", () => {
@@ -305,6 +312,197 @@ describe("core game logic", () => {
         const result = checkForWord("asdfg", "codes");
         result.results.forEach((entry, i) => {
             assertEntry(entry, expected[i], i);
+        });
+    });
+});
+
+describe("hard mode", () => {
+    it("should fail word check if it doesn't match previous state, if one is passed in", () => {
+        const previous = [
+            {
+                letter: "g",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "r",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "a",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "i",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "n",
+                correct: false,
+                within: false,
+            },
+        ];
+        const result = checkForWord("total", "robot", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "r",
+        });
+    });
+
+    it("should report the position of a letter if it was correct previously but not correct anymore", () => {
+        const previous = [
+            {
+                letter: "c",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "o",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "d",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "c",
+                correct: false,
+                within: false,
+            },
+        ];
+        const result = checkForWord("clone", "robot", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "o",
+            position: 1,
+        });
+    });
+
+    it("should report the position of a missing letter if it was correct in one place previously, but still correct in another spot in the next attempt", () => {
+        const previous = [
+            {
+                letter: "g",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "h",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "o",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "s",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "t",
+                correct: false,
+                within: false,
+            },
+        ];
+        const result = checkForWord("solos", "swoop", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "o",
+            position: 2,
+        });
+    });
+
+    it("should report the position of a missing letter if it was correct in one place previously, but not present in the next attempt", () => {
+        const previous = [
+            {
+                letter: "g",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "h",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "o",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "s",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "t",
+                correct: false,
+                within: false,
+            },
+        ];
+        const result = checkForWord("start", "swoop", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "o",
+            position: 2,
+        });
+    });
+
+    describe("getPositionWord", () => {
+        it("should generate texts for each of the word positions", () => {
+            assert.deepEqual(
+                new Array(5).fill(0).map((_, i) => getPositionWord(i)),
+                ["first", "second", "third", "fourth", "fifth"]
+            );
+        });
+        it("should generate fallback texts for values out of expected range", () => {
+            assert.deepEqual(
+                [-1, 6, 100, "a string", NaN, undefined, null].map((v) => getPositionWord(v)),
+                ["-1", "6", "100", "a string", "NaN", "undefined", "undefined"]
+            );
+        });
+    });
+
+    describe("getHardModeErrorMessage", () => {
+        it("should generate a message for within misses", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                }),
+                "Letter 'o' must be present"
+            );
+        });
+
+        it("should generate a message for correct misses", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    position: 2,
+                }),
+                "Letter 'o' must be in third position"
+            );
+        });
+
+        it("should generate a message for correct miss if it was in first position", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    position: 0,
+                }),
+                "Letter 'o' must be in first position"
+            );
         });
     });
 });

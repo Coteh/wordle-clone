@@ -163,4 +163,33 @@ describe("share result", () => {
             expected
         );
     });
+    it("should generate share text for hard mode", () => {
+        const expected = `Wordle Clone 1 5/6*
+⬛🟨🟨⬛⬛
+⬛🟨🟨⬛🟨
+🟩🟨🟨🟩⬛
+🟩🟨🟩🟩⬛
+🟩🟩🟩🟩🟩`;
+        assert.strictEqual(
+            generateShareText(1, ATTEMPTS, 6, {
+                hardMode: true,
+            }),
+            expected
+        );
+    });
+    it("should generate share text for both high contrast and hard mode enabled at the same time", () => {
+        const expected = `Wordle Clone 1 5/6*
+⬛🟦🟦⬛⬛
+⬛🟦🟦⬛🟦
+🟧🟦🟦🟧⬛
+🟧🟦🟧🟧⬛
+🟧🟧🟧🟧🟧`;
+        assert.strictEqual(
+            generateShareText(1, ATTEMPTS, 6, {
+                highContrastMode: true,
+                hardMode: true,
+            }),
+            expected
+        );
+    });
 });

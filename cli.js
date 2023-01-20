@@ -6,16 +6,21 @@ const { stdin: input, stdout: output } = require("process");
 const { generateShareText } = require("./src/share");
 const { STARTING_LIVES } = require("./src/consts");
 const { getCountdownString, getNextDate } = require("./src/datetime");
+const { version } = require("./package");
+const { loadPreferences, savePreferences } = require("./src/storage/cli");
 
 const rl = readline.createInterface({
     input,
     output,
 });
+const difficultyFlags = ["--hard", "--easy"];
 
 let gameState;
 let isWinner = false;
+let hardMode = false;
 let day;
 let lastSubmission;
+let preferences;
 
 // https://stackoverflow.com/a/41407246
 FgBlack = "\x1b[30m";
@@ -96,7 +101,30 @@ const prompt = async (message = "> ") => {
 };
 
 const runGame = async () => {
+    // Initialize game
     await initGame(eventHandler);
+    // Load preferences
+    preferences = loadPreferences();
+    hardMode = preferences.hardMode;
+    // Load difficulty setting from CLI args, otherwise uses the difficulty from preferences
+    const mode = process.argv[2];
+    if (mode) {
+        if (!difficultyFlags.includes(mode)) {
+            console.error("Not a valid difficulty (--hard|--easy)");
+        } else if (!hardMode && gameState.attempts.length > 0) {
+            console.error("Cannot switch difficulty while game is in progress");
+        } else {
+            hardMode = mode === "--hard";
+            savePreferences({
+                hardMode,
+            });
+            if (hardMode) {
+                console.log("hard mode enabled");
+            } else {
+                console.log("easy mode enabled");
+            }
+        }
+    }
     while (!gameState.ended) {
         const answer = await prompt();
         if (answer === "quit" || answer === "q" || answer === "exit") {
@@ -104,7 +132,13 @@ const runGame = async () => {
             return;
         }
         lastSubmission = answer;
-        submitWord(gameState, answer);
+        submitWord(
+            gameState,
+            answer,
+            hardMode && gameState.attempts.length > 0
+                ? gameState.attempts[gameState.attempts.length - 1]
+                : null
+        );
     }
     if (isWinner) {
         const answer = await prompt("Would you like to share your results? [Y/n]");
@@ -120,4 +154,5 @@ const runGame = async () => {
     console.log(`Next Wordle: ${getCountdownString(getNextDate())}`);
 };
 
+console.log("wordle-clone", `v${version}`);
 runGame().finally(() => rl.close());

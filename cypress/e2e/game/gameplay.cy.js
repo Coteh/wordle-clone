@@ -913,4 +913,223 @@ describe("gameplay", () => {
             });
         });
     });
+
+    describe("hard mode", () => {
+        beforeEach(() => {
+            // Add hard mode config and reload page
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "preferences",
+                        JSON.stringify({
+                            ["hard-mode"]: "enabled",
+                        })
+                    );
+                },
+            });
+        });
+
+        it("should prevent player from making a guess that does not follow conditions of the previous guess", () => {
+            // First guess can be anything
+            cy.keyboardItem("p").click();
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("z").click();
+            cy.keyboardItem("a").click();
+
+            cy.inputRow(1).should("have.id", "current-input");
+            cy.inputRow(2).should("not.have.id", "current-input");
+
+            cy.keyboardItem("enter").click();
+
+            cy.inputRow(1).inputCell(1).should("have.class", "incorrect");
+            cy.inputRow(1).inputCell(2).should("have.class", "within");
+            cy.inputRow(1).inputCell(3).should("have.class", "correct");
+            cy.inputRow(1).inputCell(4).should("have.class", "incorrect");
+            cy.inputRow(1).inputCell(5).should("have.class", "incorrect");
+
+            cy.inputRow(2).should("have.id", "current-input");
+            cy.inputRow(3).should("not.have.id", "current-input");
+
+            // Second guess must match conditions of the last guess
+            cy.keyboardItem("s").click();
+            cy.keyboardItem("h").click();
+            cy.keyboardItem("o").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("l").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Letter 'a' must be in third position").should("be.visible");
+
+            cy.inputRow(2).should("have.id", "current-input");
+            cy.inputRow(3).should("not.have.id", "current-input");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            cy.keyboardItem("g").click();
+            cy.keyboardItem("o").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("t").click();
+            cy.keyboardItem("s").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Letter 'l' must be present").should("be.visible");
+
+            cy.inputRow(2).should("have.id", "current-input");
+            cy.inputRow(3).should("not.have.id", "current-input");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("s").click();
+            cy.keyboardItem("e").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.get(".notification").should("not.exist");
+
+            cy.inputRow(2).inputCell(1).should("have.class", "correct");
+            cy.inputRow(2).inputCell(2).should("have.class", "correct");
+            cy.inputRow(2).inputCell(3).should("have.class", "correct");
+            cy.inputRow(2).inputCell(4).should("have.class", "incorrect");
+            cy.inputRow(2).inputCell(5).should("have.class", "incorrect");
+
+            cy.inputRow(3).should("have.id", "current-input");
+            cy.inputRow(4).should("not.have.id", "current-input");
+
+            // Next guesses must match the conditions of the previous guess as well
+
+            for (let i = 3; i <= 5; i++) {
+                cy.keyboardItem("p").click();
+                cy.keyboardItem("l").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("i").click();
+                cy.keyboardItem("t").click();
+
+                cy.keyboardItem("enter").click();
+
+                cy.contains("Letter 'l' must be in first position").should("be.visible");
+
+                cy.inputRow(i).should("have.id", "current-input");
+                cy.inputRow(i + 1).should("not.have.id", "current-input");
+
+                for (let i = 0; i < 5; i++) {
+                    cy.keyboardItem("backspace").click();
+                }
+
+                cy.keyboardItem("l").click();
+                cy.keyboardItem("o").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("n").click();
+                cy.keyboardItem("s").click();
+
+                cy.keyboardItem("enter").click();
+
+                cy.contains("Letter 'e' must be in second position").should("be.visible");
+
+                cy.inputRow(i).should("have.id", "current-input");
+                cy.inputRow(i + 1).should("not.have.id", "current-input");
+
+                for (let i = 0; i < 5; i++) {
+                    cy.keyboardItem("backspace").click();
+                }
+
+                cy.keyboardItem("l").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("v").click();
+                cy.keyboardItem("e").click();
+
+                cy.keyboardItem("enter").click();
+
+                cy.get(".notification").should("not.exist");
+
+                cy.inputRow(i).inputCell(1).should("have.class", "correct");
+                cy.inputRow(i).inputCell(2).should("have.class", "correct");
+                cy.inputRow(i).inputCell(3).should("have.class", "correct");
+                cy.inputRow(i).inputCell(4).should("have.class", "incorrect");
+                cy.inputRow(i).inputCell(5).should("have.class", "incorrect");
+
+                cy.inputRow(i + 1).should("have.id", "current-input");
+                if (i < 5) cy.inputRow(i + 2).should("not.have.id", "current-input");
+            }
+
+            // Last guess must match conditions of previous guess as well
+
+            cy.keyboardItem("p").click();
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("i").click();
+            cy.keyboardItem("t").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Letter 'l' must be in first position").should("be.visible");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("o").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("n").click();
+            cy.keyboardItem("s").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Letter 'e' must be in second position").should("be.visible");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            // Other errors can be displayed before the hard mode error, such as not enough letters or word not in list
+
+            cy.keyboardItem("t").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("s").click();
+            cy.keyboardItem("t").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Not enough letters").should("be.visible");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("b").click();
+            cy.keyboardItem("c").click();
+            cy.keyboardItem("d").click();
+            cy.keyboardItem("e").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("Not in word list").should("be.visible");
+
+            for (let i = 0; i < 5; i++) {
+                cy.keyboardItem("backspace").click();
+            }
+
+            cy.keyboardItem("l").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("f").click();
+            cy.keyboardItem("y").click();
+
+            cy.keyboardItem("enter").click();
+
+            cy.contains("You win!").should("be.visible");
+        });
+    });
 });
