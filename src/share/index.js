@@ -2,7 +2,9 @@ const generateShareText = (dayNumber, attempts, maxAttempts, options) => {
     if (!options) {
         options = {};
     }
-    let shareText = `Wordle Clone ${dayNumber} ${attempts.length}/${maxAttempts}\n`;
+    let shareText = `Wordle Clone ${dayNumber} ${attempts.length}/${maxAttempts}${
+        options.hardMode ? "*" : ""
+    }\n`;
     shareText += attempts
         .map((attempt) =>
             attempt
