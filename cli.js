@@ -111,7 +111,7 @@ const runGame = async () => {
     if (mode) {
         if (!difficultyFlags.includes(mode)) {
             console.error("Not a valid difficulty (--hard|--easy)");
-        } else if (gameState.attempts.length > 0) {
+        } else if (!hardMode && gameState.attempts.length > 0) {
             console.error("Cannot switch difficulty while game is in progress");
         } else {
             hardMode = mode === "--hard";
