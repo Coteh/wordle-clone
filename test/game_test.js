@@ -380,7 +380,7 @@ describe("hard mode", () => {
                 within: false,
             },
         ];
-        const result = checkForWord("grain", "robot", wordList, previous);
+        const result = checkForWord("clone", "robot", wordList, previous);
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "o",
