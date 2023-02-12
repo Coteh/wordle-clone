@@ -22,9 +22,9 @@
         <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+        gtag("js", new Date());
 
-        gtag('config', 'G-3QNNES1C4Y');
+        gtag("config", "G-3QNNES1C4Y");
         </script>
     </head>
     <body>
@@ -83,7 +83,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <span class="version-number">v1.2.0</span>
+                        <span class="version-number">v1.2.1</span>
                     </div>
                     <div class="settings-item">
                         <span class="day-number"></span>
@@ -218,7 +218,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.2.0",
+                        release: "wordle-clone@1.2.1",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;
@@ -228,6 +228,10 @@
                     });
                 });
             }
+
+            gtag("event", "game_open", {
+                "version": "1.2.1",
+            });
         </script>
     </body>
 </html>
