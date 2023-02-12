@@ -236,7 +236,7 @@ describe("core game logic", () => {
             assertEntry(entry, expected[i], i);
         });
     });
-    it("should not show a hint if letter is already matched", () => {
+    it("should not show a hint if letter is already matched (after the guess)", () => {
         const expected = [
             {
                 letter: "t",
@@ -265,6 +265,39 @@ describe("core game logic", () => {
             },
         ];
         const result = checkForWord("tests", "grams", wordList);
+        result.results.forEach((entry, i) => {
+            assertEntry(entry, expected[i], i);
+        });
+    });
+    it("should not show a hint if letter is already matched (before the guess)", () => {
+        const expected = [
+            {
+                letter: "r",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "o",
+                correct: true,
+                within: false,
+            },
+            {
+                letter: "b",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "o",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "t",
+                correct: false,
+                within: false,
+            },
+        ];
+        const result = checkForWord("robot", "novel", wordList);
         result.results.forEach((entry, i) => {
             assertEntry(entry, expected[i], i);
         });
