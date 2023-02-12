@@ -460,6 +460,76 @@ describe("hard mode", () => {
         });
     });
 
+    it("should report that a letter should be present, even if another instance of that letter is before it in the word and in the correct place", () => {
+        const previous = [
+            {
+                letter: "f",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "l",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "a",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "i",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "l",
+                correct: false,
+                within: true,
+            },
+        ];
+        const result = checkForWord("slate", "llama", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "l",
+        });
+    });
+
+    it("should report that a letter should be present, even if another instance of that letter is after it in the word and in the correct place", () => {
+        const previous = [
+            {
+                letter: "s",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "r",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "s",
+                correct: true,
+                within: true,
+            },
+        ];
+        const result = checkForWord("desks", "floss", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "s",
+        });
+    });
+
     describe("getPositionWord", () => {
         it("should generate texts for each of the word positions", () => {
             assert.deepEqual(
