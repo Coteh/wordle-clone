@@ -460,6 +460,109 @@ describe("hard mode", () => {
         });
     });
 
+    it("should report that a given letter should be present if it previously occurred after another instance of that letter that was in the correct place", () => {
+        const previous = [
+            {
+                letter: "f",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "l",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "a",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "i",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "l",
+                correct: false,
+                within: true,
+            },
+        ];
+        const result = checkForWord("slate", "llama", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "l",
+        });
+    });
+
+    it("should report that a given letter should be present if it previously occurred before another instance of that letter that was in the correct place", () => {
+        const previous = [
+            {
+                letter: "s",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "r",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "s",
+                correct: true,
+                within: true,
+            },
+        ];
+        const result = checkForWord("blues", "floss", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "s",
+        });
+    });
+
+    it("should pass if there's two instances of the same letter, one is within and one is correct", () => {
+        const previous = [
+            {
+                letter: "s",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "r",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "s",
+                correct: true,
+                within: true,
+            },
+        ];
+        const result = checkForWord("desks", "floss", wordList, previous);
+        assert(result.error == null);
+        assert(result.results);
+    });
+
     describe("getPositionWord", () => {
         it("should generate texts for each of the word positions", () => {
             assert.deepEqual(
