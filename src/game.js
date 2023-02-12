@@ -164,12 +164,12 @@ const compareAttempts = (currAttempt, previousAttempt) => {
     // Now that the letters that were correct are known, check the withins
     for (let i = 0; i < previousAttempt.length; i++) {
         const letterAttempt = previousAttempt[i];
-        if (letterAttempt.within) {
+        if (letterAttempt.within && !letterAttempt.correct) {
             // Check if the letter is also within in the current attempt
             let inCurrAttempt = false;
             for (let j = 0; j < currAttempt.length; j++) {
                 const currLetterAttempt = currAttempt[j];
-                if (letterAttempt.letter === currLetterAttempt.letter && !correctPosArr[i]) {
+                if (letterAttempt.letter === currLetterAttempt.letter && !correctPosArr[j]) {
                     inCurrAttempt = true;
                 }
             }
