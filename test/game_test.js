@@ -600,7 +600,7 @@ describe("hard mode", () => {
         it("should generate texts for each of the word positions", () => {
             assert.deepEqual(
                 new Array(5).fill(0).map((_, i) => getPositionWord(i)),
-                ["first", "second", "third", "fourth", "fifth"]
+                ["1st", "2nd", "3rd", "4th", "5th"]
             );
         });
         it("should generate fallback texts for values out of expected range", () => {
@@ -617,7 +617,7 @@ describe("hard mode", () => {
                 getHardModeErrorMessage({
                     letter: "o",
                 }),
-                "Letter 'o' must be present"
+                "Guess must contain O"
             );
         });
 
@@ -627,7 +627,7 @@ describe("hard mode", () => {
                     letter: "o",
                     position: 2,
                 }),
-                "Letter 'o' must be in third position"
+                "3rd letter must be O"
             );
         });
 
@@ -637,7 +637,7 @@ describe("hard mode", () => {
                     letter: "o",
                     position: 0,
                 }),
-                "Letter 'o' must be in first position"
+                "1st letter must be O"
             );
         });
     });

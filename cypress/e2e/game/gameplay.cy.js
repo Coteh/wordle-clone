@@ -960,7 +960,7 @@ describe("gameplay", () => {
 
             cy.keyboardItem("enter").click();
 
-            cy.contains("Letter 'a' must be in third position").should("be.visible");
+            cy.contains("3rd letter must be A").should("be.visible");
 
             cy.inputRow(2).should("have.id", "current-input");
             cy.inputRow(3).should("not.have.id", "current-input");
@@ -977,7 +977,7 @@ describe("gameplay", () => {
 
             cy.keyboardItem("enter").click();
 
-            cy.contains("Letter 'l' must be present").should("be.visible");
+            cy.contains("Guess must contain L").should("be.visible");
 
             cy.inputRow(2).should("have.id", "current-input");
             cy.inputRow(3).should("not.have.id", "current-input");
@@ -1016,7 +1016,7 @@ describe("gameplay", () => {
 
                 cy.keyboardItem("enter").click();
 
-                cy.contains("Letter 'l' must be in first position").should("be.visible");
+                cy.contains("1st letter must be L").should("be.visible");
 
                 cy.inputRow(i).should("have.id", "current-input");
                 cy.inputRow(i + 1).should("not.have.id", "current-input");
@@ -1033,7 +1033,7 @@ describe("gameplay", () => {
 
                 cy.keyboardItem("enter").click();
 
-                cy.contains("Letter 'e' must be in second position").should("be.visible");
+                cy.contains("2nd letter must be E").should("be.visible");
 
                 cy.inputRow(i).should("have.id", "current-input");
                 cy.inputRow(i + 1).should("not.have.id", "current-input");
@@ -1072,7 +1072,7 @@ describe("gameplay", () => {
 
             cy.keyboardItem("enter").click();
 
-            cy.contains("Letter 'l' must be in first position").should("be.visible");
+            cy.contains("1st letter must be L").should("be.visible");
 
             for (let i = 0; i < 5; i++) {
                 cy.keyboardItem("backspace").click();
@@ -1086,7 +1086,7 @@ describe("gameplay", () => {
 
             cy.keyboardItem("enter").click();
 
-            cy.contains("Letter 'e' must be in second position").should("be.visible");
+            cy.contains("2nd letter must be E").should("be.visible");
 
             for (let i = 0; i < 5; i++) {
                 cy.keyboardItem("backspace").click();
