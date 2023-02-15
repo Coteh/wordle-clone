@@ -23,6 +23,9 @@
     --pressed-color: var(--gray-4);
     --held-color: var(--gray-6);
 
+    --box-border-color: var(--gray-3);
+    --box-border-color-highlighted: var(--gray-5);
+
     --settings-item-border-color: 1px solid var(--gray-4);
 
     --background-color: var(--black);
@@ -44,6 +47,9 @@
     --correct-color: var(--green);
     --within-color: var(--yellow);
     --incorrect-color: var(--gray-3);
+
+    --box-border-color: var(--gray-7);
+    --box-border-color-highlighted: var(--gray-5);
 
     --background-color: var(--white);
     --dialog-background-color: var(--gray-6);
@@ -520,7 +526,14 @@ a {
 
 .box {
     background-color: var(--standard-block-color);
-    border: 1px solid var(--standard-color);
+    border: 1px solid var(--box-border-color);
+}
+
+.box.filled,
+.box.incorrect,
+.box.correct,
+.box.within {
+    border: 1px solid var(--box-border-color-highlighted);
 }
 
 .correct {

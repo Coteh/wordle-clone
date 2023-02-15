@@ -116,14 +116,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderDialog(loseElem, true);
         },
         renderInput(key) {
-            document.querySelector(
+            const elem = document.querySelector(
                 `#current-input > div:nth-child(${currentLetterIndex++ + 1}) > span`
-            ).innerText = key.toLowerCase();
+            );
+            elem.innerText = key.toLowerCase();
+            elem.parentElement.classList.add("filled");
         },
         renderBackspace() {
-            document.querySelector(
+            const elem = document.querySelector(
                 `#current-input > div:nth-child(${--currentLetterIndex + 1}) > span`
-            ).innerText = "";
+            );
+            elem.innerText = "";
+            elem.parentElement.classList.remove("filled");
         },
         renderLifeDecrease(lives) {
             currentInputElem.id = "";
