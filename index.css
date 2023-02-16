@@ -529,11 +529,14 @@ a {
     border: 1px solid var(--box-border-color);
 }
 
-.box.filled,
+.box.filled {
+    border: 2px solid var(--box-border-color-highlighted);
+}
+
 .box.incorrect,
 .box.correct,
 .box.within {
-    border: 1px solid var(--box-border-color-highlighted);
+    border: 1px solid rgba(0,0,0,0);
 }
 
 .correct {
