@@ -40,15 +40,15 @@ class WordListFetchError extends Error {
 const getPositionWord = (pos) => {
     switch (pos) {
         case 0:
-            return "first";
+            return "1st";
         case 1:
-            return "second";
+            return "2nd";
         case 2:
-            return "third";
+            return "3rd";
         case 3:
-            return "fourth";
+            return "4th";
         case 4:
-            return "fifth";
+            return "5th";
         default:
             return pos?.toString() || "undefined";
     }
@@ -56,11 +56,11 @@ const getPositionWord = (pos) => {
 
 const getHardModeErrorMessage = (letterAttempt) => {
     if (letterAttempt.position >= 0) {
-        return `Letter '${letterAttempt.letter}' must be in ${getPositionWord(
+        return `${getPositionWord(
             letterAttempt.position
-        )} position`;
+        )} letter must be ${letterAttempt.letter.toUpperCase()}`;
     }
-    return `Letter '${letterAttempt.letter}' must be present`;
+    return `Guess must contain ${letterAttempt.letter.toUpperCase()}`;
 };
 
 const getErrorMessage = (error, userInput) => {
