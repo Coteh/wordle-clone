@@ -49,6 +49,11 @@
                 <div id="middle" class="wordle-rows"></div>
                 <div class="space"></div>
                 <div id="bottom" class="keyboard-view"></div>
+                <noscript>
+                    <div class="pane-overlay">
+                        <h3>Please enable JavaScript to play this game.</h3>
+                    </div>
+                </noscript>
             </div>
             <div class="settings pane" style="display:none">
                 <h1>Settings</h1>
@@ -83,7 +88,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <span class="version-number">v1.2.2</span>
+                        <span class="version-number">v1.2.3</span>
                     </div>
                     <div class="settings-item">
                         <span class="day-number"></span>
@@ -218,7 +223,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.2.2",
+                        release: "wordle-clone@1.2.3",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;
@@ -230,7 +235,7 @@
             }
 
             gtag("event", "game_open", {
-                "version": "1.2.2",
+                "version": "1.2.3",
             });
         </script>
     </body>
