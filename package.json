@@ -17,12 +17,12 @@
   "author": "James Cote (Coteh)",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^12.5.1",
-    "cypress-real-events": "^1.7.6",
+    "cypress": "^12.17.2",
+    "cypress-real-events": "^1.9.1",
     "cypress-wait-until": "^1.7.2",
     "mocha": "^10.2.0",
     "mock-fs": "^5.2.0",
-    "sinon": "^15.0.1"
+    "sinon": "^15.2.0"
   },
   "dependencies": {
     "clipboardy": "^3.0.0"
