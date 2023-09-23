@@ -5,46 +5,52 @@ const {
     ENDED_KEY,
     PLAYED_BEFORE_KEY,
     PREFERENCES_KEY,
+    WON_HARD_MODE_KEY,
 } = require("./index");
 const fs = require("fs");
 const { STARTING_LIVES } = require("../consts");
 const { getCurrentDay } = require("../datetime");
 
-const saveGame = (attempts, lives, ended, day) => {
-    const jsonStr = JSON.stringify({
+const STATE_JSON_FILENAME = "state.json";
+const PREFERENCES_JSON_FILENAME = "preferences.json";
+
+const saveGame = (attempts, lives, ended, day, wonHardMode) => {
+    overwriteState({
         [ATTEMPTS_KEY]: attempts,
         [LIVES_KEY]: lives,
         [ENDED_KEY]: ended,
         [DAY_KEY]: day,
+        [WON_HARD_MODE_KEY]: wonHardMode,
     });
-    fs.writeFileSync("state.json", jsonStr);
 };
 
 const savePreferences = (preferences) => {
-    fs.writeFileSync("preferences.json", JSON.stringify(preferences));
+    fs.writeFileSync(PREFERENCES_JSON_FILENAME, JSON.stringify(preferences));
 };
 
 const loadGame = () => {
-    if (fs.existsSync("state.json")) {
-        const jsonStr = fs.readFileSync("state.json");
+    if (fs.existsSync(STATE_JSON_FILENAME)) {
+        const jsonStr = fs.readFileSync(STATE_JSON_FILENAME);
         const json = JSON.parse(jsonStr);
         // NTS: "date" is saved to game state, but it's not needed besides checking validity, so this field will be omitted
         return {
-            [ATTEMPTS_KEY]: json[ATTEMPTS_KEY] || [],
-            [LIVES_KEY]: json[LIVES_KEY] ?? STARTING_LIVES,
-            [ENDED_KEY]: json[ENDED_KEY] || false,
+            attempts: json[ATTEMPTS_KEY] || [],
+            lives: json[LIVES_KEY] ?? STARTING_LIVES,
+            ended: json[ENDED_KEY] || false,
+            wonHardMode: json[WON_HARD_MODE_KEY] || false,
         };
     }
     return {
-        [ATTEMPTS_KEY]: [],
-        [LIVES_KEY]: STARTING_LIVES,
-        [ENDED_KEY]: false,
+        attempts: [],
+        lives: STARTING_LIVES,
+        ended: false,
+        wonHardMode: false,
     };
 };
 
 const loadPreferences = () => {
-    if (fs.existsSync("preferences.json")) {
-        const jsonStr = fs.readFileSync("preferences.json");
+    if (fs.existsSync(PREFERENCES_JSON_FILENAME)) {
+        const jsonStr = fs.readFileSync(PREFERENCES_JSON_FILENAME);
         try {
             const json = JSON.parse(jsonStr);
             if (typeof json !== "object") {
@@ -59,16 +65,16 @@ const loadPreferences = () => {
 };
 
 const clearGame = () => {
-    fs.writeFileSync("state.json", "{}");
+    fs.writeFileSync(STATE_JSON_FILENAME, "{}");
 };
 
 const clearPreferences = () => {
-    fs.writeFileSync("preferences.json", "{}");
+    fs.writeFileSync(PREFERENCES_JSON_FILENAME, "{}");
 };
 
 const checkGameValidity = () => {
-    if (fs.existsSync("state.json")) {
-        const jsonStr = fs.readFileSync("state.json");
+    if (fs.existsSync(STATE_JSON_FILENAME)) {
+        const jsonStr = fs.readFileSync(STATE_JSON_FILENAME);
         const json = JSON.parse(jsonStr);
         return json[DAY_KEY] === getCurrentDay();
     }
@@ -76,8 +82,8 @@ const checkGameValidity = () => {
 };
 
 const checkFirstTime = () => {
-    if (fs.existsSync("playedbefore.json")) {
-        const jsonStr = fs.readFileSync("playedbefore.json");
+    if (fs.existsSync(STATE_JSON_FILENAME)) {
+        const jsonStr = fs.readFileSync(STATE_JSON_FILENAME);
         const json = JSON.parse(jsonStr);
         return json[PLAYED_BEFORE_KEY] !== true;
     }
@@ -85,14 +91,28 @@ const checkFirstTime = () => {
 };
 
 const setPlayedBefore = (status) => {
-    const jsonStr = JSON.stringify({
+    overwriteState({
         [PLAYED_BEFORE_KEY]: status,
     });
-    fs.writeFileSync("playedbefore.json", jsonStr);
+};
+
+const overwriteState = (newState) => {
+    let json;
+    if (fs.existsSync(STATE_JSON_FILENAME)) {
+        const jsonStr = fs.readFileSync(STATE_JSON_FILENAME);
+        json = JSON.parse(jsonStr);
+    } else {
+        json = {};
+    }
+    json = Object.assign(json, newState);
+    const jsonStr = JSON.stringify(json);
+    fs.writeFileSync(STATE_JSON_FILENAME, jsonStr);
 };
 
 if (typeof process !== "undefined") {
     module.exports = {
+        STATE_JSON_FILENAME,
+        PREFERENCES_JSON_FILENAME,
         saveGame,
         savePreferences,
         loadGame,
