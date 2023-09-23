@@ -97,6 +97,7 @@ const newState = () => {
         lives: STARTING_LIVES,
         attempts: [],
         ended: false,
+        wonHardMode: false,
     };
 };
 
@@ -291,7 +292,7 @@ const initGame = async (_eventHandler) => {
     }
 };
 
-const submitWord = (gameState, currentInput, previousAttempt) => {
+const submitWord = (gameState, currentInput, previousAttempt, hardMode) => {
     if (gameState.lives <= 0) {
         return eventHandler("error", USER_RAN_OUT_OF_LIVES_ERROR_ID);
     }
@@ -307,6 +308,9 @@ const submitWord = (gameState, currentInput, previousAttempt) => {
     if (result.results.every((entry) => entry.correct)) {
         eventHandler("win");
         gameState.ended = true;
+        // If the player won on hard mode, then the game should still indicate
+        // that they won on hard mode, even if they switch difficulty after, and vice versa.
+        gameState.wonHardMode = hardMode;
     } else {
         gameState.lives--;
         if (gameState.lives === 0) {
@@ -316,7 +320,13 @@ const submitWord = (gameState, currentInput, previousAttempt) => {
             eventHandler("lose_life");
         }
     }
-    saveGame(gameState.attempts, gameState.lives, gameState.ended, currentDay);
+    saveGame(
+        gameState.attempts,
+        gameState.lives,
+        gameState.ended,
+        currentDay,
+        gameState.wonHardMode
+    );
 };
 
 if (typeof process !== "undefined") {
