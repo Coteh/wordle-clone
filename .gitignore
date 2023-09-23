@@ -2,7 +2,6 @@ node_modules
 build
 
 state.json
-playedbefore.json
 preferences.json
 
 # Cypress output

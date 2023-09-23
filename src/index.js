@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 e.preventDefault();
                 const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
                     highContrastMode,
-                    hardMode,
+                    hardMode: gameState.wonHardMode,
                 });
                 copyShareText(shareText);
             });
@@ -199,7 +199,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 currentInput,
                 hardMode && gameState.attempts.length > 0
                     ? gameState.attempts[gameState.attempts.length - 1]
-                    : null
+                    : null,
+                hardMode
             );
         } else if (key.length === 1 && key >= "a" && key <= "z" && currentLetterIndex < 5) {
             wordleRenderer.renderInput(key);
@@ -320,7 +321,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 toggle.innerText = enabled ? "ON" : "OFF";
             } else if (elem.classList.contains(HARD_MODE_PREFERENCE_NAME)) {
-                if (!hardMode && gameState.attempts.length > 0) {
+                if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
                     return renderNotification(
                         "Hard mode can only be enabled at the start of a round"
                     );

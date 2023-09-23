@@ -252,4 +252,98 @@ describe("settings", () => {
             );
         });
     });
+
+    it("should be able to toggle hard mode if game is over", () => {
+        cy.keyboardItem("w").click();
+        cy.keyboardItem("r").click();
+        cy.keyboardItem("a").click();
+        cy.keyboardItem("t").click();
+        cy.keyboardItem("h").click();
+
+        cy.keyboardItem("enter").click();
+
+        cy.keyboardItem("d").click();
+        cy.keyboardItem("u").click();
+        cy.keyboardItem("c").click();
+        cy.keyboardItem("t").click();
+        cy.keyboardItem("s").click();
+
+        cy.keyboardItem("enter").click();
+
+        cy.get(".dialog > .close").click();
+
+        cy.get(".settings-link").click();
+
+        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.window().then((win) => {
+            expect(win.localStorage.getItem("preferences")).to.be.null;
+        });
+
+        cy.get(".settings-item.hard-mode").click();
+
+        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.window().then((win) => {
+            expect(win.localStorage.getItem("preferences")).to.be.eql(
+                JSON.stringify({
+                    ["hard-mode"]: "enabled",
+                })
+            );
+        });
+    });
+
+    it("should be able to toggle easy mode if game is over", () => {
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "enabled",
+                    })
+                );
+            },
+        });
+
+        cy.keyboardItem("w").click();
+        cy.keyboardItem("r").click();
+        cy.keyboardItem("a").click();
+        cy.keyboardItem("t").click();
+        cy.keyboardItem("h").click();
+
+        cy.keyboardItem("enter").click();
+
+        cy.keyboardItem("d").click();
+        cy.keyboardItem("u").click();
+        cy.keyboardItem("c").click();
+        cy.keyboardItem("t").click();
+        cy.keyboardItem("s").click();
+
+        cy.keyboardItem("enter").click();
+
+        cy.get(".dialog > .close").click();
+
+        cy.get(".settings-link").click();
+
+        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.window().then((win) => {
+            expect(win.localStorage.getItem("preferences")).to.be.eql(
+                JSON.stringify({
+                    ["hard-mode"]: "enabled",
+                })
+            );
+        });
+
+        cy.get(".settings-item.hard-mode").click();
+
+        cy.contains("Hard mode can only be enabled at the start of a round").should("not.exist");
+
+        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.window().then((win) => {
+            expect(win.localStorage.getItem("preferences")).to.be.eql(
+                JSON.stringify({
+                    ["hard-mode"]: "disabled",
+                })
+            );
+        });
+    });
 });

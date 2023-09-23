@@ -55,7 +55,7 @@ describe("misc", () => {
             cy.contains("Not enough letters").should("be.visible");
 
             cy.waitUntil(() =>
-                cy.document().then(doc => doc.querySelector(".notification") == null)
+                cy.document().then((doc) => doc.querySelector(".notification") == null)
             );
 
             cy.contains("Input not provided").should("not.exist");
@@ -151,9 +151,9 @@ describe("misc", () => {
             cy.get("#landscape-overlay") // get the rotate device overlay element
                 .should("be.visible"); // assert that the overlay is visible
             cy.waitForGameReady();
-            
+
             cy.waitUntilDialogAppears();
-            
+
             cy.contains("How to play").should("not.be.visible");
         });
 
@@ -189,9 +189,9 @@ describe("misc", () => {
 
             cy.get("#landscape-overlay") // get the rotate device overlay element
                 .should("not.be.visible"); // assert that the overlay is not visible
-            
+
             cy.waitForGameReady();
-            
+
             cy.get("#embedim--snow").should("be.visible");
         });
 
@@ -225,7 +225,16 @@ describe("misc", () => {
             cy.waitForGameReady();
 
             cy.get("#embedim--snow").should("not.be.visible");
-        })
+        });
+    });
+
+    describe("noscript", () => {
+        // It's unreasonably difficult in Cypress atm to disable JS for one test, shouldn't have to manipulate the parent iframe just to do it.
+        // Putting the open issue URL here in case I want to revisit it: https://github.com/cypress-io/cypress/issues/1611
+        // Instead, I'll test for the inverse for now since this isn't critical.
+        it("should not display a message telling player to enable JS if it's enabled", () => {
+            cy.contains("Please enable JavaScript to play this game.").should("not.be.visible");
+        });
     });
 
     describe("cache-less tests", () => {

@@ -183,14 +183,16 @@ describe("sharing results", () => {
     });
 
     it("should add asterisk if hard mode is enabled", () => {
-        window.localStorage.setItem(
-            "preferences",
-            JSON.stringify({
-                ["hard-mode"]: "enabled",
-            })
-        );
-
-        cy.reload();
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "enabled",
+                    })
+                );
+            },
+        });
 
         const PREV_COPIED_TEXT =
             "This text should not be in clipboard when the copy button is clicked";
@@ -203,6 +205,81 @@ describe("sharing results", () => {
         });
 
         performAction("leafy");
+
+        cy.window().then(async (win) => {
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(`Wordle Clone 1 2/6*
+⬛🟨⬛⬛🟨
+🟩🟩🟩🟩🟩`);
+        });
+    });
+
+    it("should not add asterisk if hard mode is enabled after ending the game on easy", () => {
+        const PREV_COPIED_TEXT =
+            "This text should not be in clipboard when the copy button is clicked";
+
+        cy.window().then(async (win) => {
+            win.focus();
+            await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(PREV_COPIED_TEXT);
+        });
+
+        performAction("leafy");
+
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "enabled",
+                    })
+                );
+            },
+        });
+
+        cy.window().then(async (win) => {
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(`Wordle Clone 1 2/6
+⬛🟨⬛⬛🟨
+🟩🟩🟩🟩🟩`);
+        });
+    });
+
+    it("should keep asterisk if hard mode is disabled after ending the game on hard", () => {
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "enabled",
+                    })
+                );
+            },
+        });
+
+        const PREV_COPIED_TEXT =
+            "This text should not be in clipboard when the copy button is clicked";
+
+        cy.window().then(async (win) => {
+            win.focus();
+            await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(copiedText).to.eq(PREV_COPIED_TEXT);
+        });
+
+        performAction("leafy");
+
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "disabled",
+                    })
+                );
+            },
+        });
 
         cy.window().then(async (win) => {
             const copiedText = await win.navigator.clipboard.readText();

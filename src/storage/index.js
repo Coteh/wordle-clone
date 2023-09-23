@@ -4,6 +4,7 @@ const DAY_KEY = "day";
 const ENDED_KEY = "ended";
 const PLAYED_BEFORE_KEY = "played_before";
 const PREFERENCES_KEY = "preferences";
+const WON_HARD_MODE_KEY = "won_hard_mode";
 
 if (typeof process !== "undefined") {
     module.exports = {
@@ -13,5 +14,6 @@ if (typeof process !== "undefined") {
         ENDED_KEY,
         PLAYED_BEFORE_KEY,
         PREFERENCES_KEY,
+        WON_HARD_MODE_KEY,
     };
 }

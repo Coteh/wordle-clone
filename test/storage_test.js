@@ -12,6 +12,7 @@ const {
     setPlayedBefore,
 } = require("../src/storage/browser");
 const cliStorage = require("../src/storage/cli");
+const { STATE_JSON_FILENAME, PREFERENCES_JSON_FILENAME } = cliStorage;
 const mockFs = require("mock-fs");
 const fs = require("fs");
 const {
@@ -21,6 +22,7 @@ const {
     DAY_KEY,
     PLAYED_BEFORE_KEY,
     PREFERENCES_KEY,
+    WON_HARD_MODE_KEY,
 } = require("../src/storage");
 const { STARTING_LIVES } = require("../src/consts");
 const { getCurrentDay } = require("../src/datetime");
@@ -80,8 +82,8 @@ describe("game storage - browser", () => {
 
     it("should save progress", () => {
         sinon.assert.notCalled(stubbedLocalStorage.setItem);
-        saveGame(ATTEMPTS, LIVES, true, getCurrentDay());
-        sinon.assert.callCount(stubbedLocalStorage.setItem, 4);
+        saveGame(ATTEMPTS, LIVES, true, getCurrentDay(), true);
+        sinon.assert.callCount(stubbedLocalStorage.setItem, 5);
         sinon.assert.calledWithMatch(
             stubbedLocalStorage.setItem,
             ATTEMPTS_KEY,
@@ -90,6 +92,7 @@ describe("game storage - browser", () => {
         sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, LIVES_KEY, 5);
         sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, DAY_KEY, Math.floor(FAKE_DAY));
         sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, ENDED_KEY, true);
+        sinon.assert.calledWithMatch(stubbedLocalStorage.setItem, WON_HARD_MODE_KEY, true);
     });
 
     it("should load progress", () => {
@@ -98,16 +101,19 @@ describe("game storage - browser", () => {
         getItemStub.withArgs(ATTEMPTS_KEY).returns(JSON.stringify(ATTEMPTS));
         getItemStub.withArgs(LIVES_KEY).returns(LIVES);
         getItemStub.withArgs(ENDED_KEY).returns("true");
+        getItemStub.withArgs(WON_HARD_MODE_KEY).returns("true");
         try {
             sinon.assert.notCalled(getItemStub);
             const state = loadGame();
-            sinon.assert.calledThrice(getItemStub);
+            sinon.assert.callCount(getItemStub, 4);
             sinon.assert.calledWithMatch(getItemStub, ATTEMPTS_KEY);
             sinon.assert.calledWithMatch(getItemStub, LIVES_KEY);
             sinon.assert.calledWithMatch(getItemStub, ENDED_KEY);
+            sinon.assert.calledWithMatch(getItemStub, WON_HARD_MODE_KEY);
             assert.deepStrictEqual(state.attempts, ATTEMPTS);
             assert.strictEqual(state.lives, 5);
             assert.strictEqual(state.ended, true);
+            assert.strictEqual(state.wonHardMode, true);
         } finally {
             window.localStorage.getItem = origFunc;
         }
@@ -116,34 +122,32 @@ describe("game storage - browser", () => {
     it("should clear progress", () => {
         sinon.assert.notCalled(stubbedLocalStorage.removeItem);
         clearGame();
-        sinon.assert.calledThrice(stubbedLocalStorage.removeItem);
+        sinon.assert.callCount(stubbedLocalStorage.removeItem, 4);
         sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, ATTEMPTS_KEY);
         sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, LIVES_KEY);
         sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, DAY_KEY);
+        sinon.assert.calledWithMatch(stubbedLocalStorage.removeItem, WON_HARD_MODE_KEY);
     });
 
     it("should load default values if no previous state was stored", () => {
-        const expectedState = {
-            [ATTEMPTS_KEY]: [],
-            [LIVES_KEY]: STARTING_LIVES,
-            [ENDED_KEY]: false,
-        };
-
         const origFunc = window.localStorage.getItem;
         const getItemStub = (window.localStorage.getItem = sinon.stub());
         getItemStub.withArgs(ATTEMPTS_KEY).returns(null);
         getItemStub.withArgs(LIVES_KEY).returns(null);
         getItemStub.withArgs(ENDED_KEY).returns(null);
+        getItemStub.withArgs(WON_HARD_MODE_KEY).returns(null);
         try {
             sinon.assert.notCalled(getItemStub);
             const state = loadGame();
-            sinon.assert.calledThrice(getItemStub);
+            sinon.assert.callCount(getItemStub, 4);
             sinon.assert.calledWithMatch(getItemStub, ATTEMPTS_KEY);
             sinon.assert.calledWithMatch(getItemStub, LIVES_KEY);
             sinon.assert.calledWithMatch(getItemStub, ENDED_KEY);
+            sinon.assert.calledWithMatch(getItemStub, WON_HARD_MODE_KEY);
             assert.deepStrictEqual(state.attempts, []);
             assert.strictEqual(state.lives, STARTING_LIVES);
             assert.strictEqual(state.ended, false);
+            assert.strictEqual(state.wonHardMode, false);
         } finally {
             window.localStorage.getItem = origFunc;
         }
@@ -255,7 +259,7 @@ describe("game storage - browser", () => {
 describe("game storage - CLI", () => {
     beforeEach(() => {
         mockFs({
-            "state.json": JSON.stringify({}),
+            [STATE_JSON_FILENAME]: JSON.stringify({}),
         });
         stubbedDateNow = sinon.stub(Date, "now").returns(FAKE_TIMESTAMP);
     });
@@ -270,11 +274,12 @@ describe("game storage - CLI", () => {
             [LIVES_KEY]: LIVES,
             [ENDED_KEY]: true,
             [DAY_KEY]: FAKE_DAY,
+            [WON_HARD_MODE_KEY]: true,
         };
 
-        cliStorage.saveGame(ATTEMPTS, LIVES, true, getCurrentDay());
+        cliStorage.saveGame(ATTEMPTS, LIVES, true, getCurrentDay(), true);
 
-        let stateContents = fs.readFileSync("state.json", {
+        let stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
             encoding: "utf-8",
         });
 
@@ -283,13 +288,19 @@ describe("game storage - CLI", () => {
 
     it("should load progress", () => {
         const expectedState = {
-            [ATTEMPTS_KEY]: ATTEMPTS,
-            [LIVES_KEY]: LIVES,
-            [ENDED_KEY]: true,
+            attempts: ATTEMPTS,
+            lives: LIVES,
+            ended: true,
+            wonHardMode: true,
         };
 
         mockFs({
-            "state.json": JSON.stringify(expectedState),
+            [STATE_JSON_FILENAME]: JSON.stringify({
+                [ATTEMPTS_KEY]: ATTEMPTS,
+                [LIVES_KEY]: LIVES,
+                [ENDED_KEY]: true,
+                [WON_HARD_MODE_KEY]: true,
+            }),
         });
 
         const state = cliStorage.loadGame();
@@ -299,17 +310,19 @@ describe("game storage - CLI", () => {
 
     it("should clear progress", () => {
         const expectedState = {
-            [ATTEMPTS_KEY]: [],
-            [LIVES_KEY]: STARTING_LIVES,
-            [ENDED_KEY]: false,
+            attempts: [],
+            lives: STARTING_LIVES,
+            ended: false,
+            wonHardMode: false,
         };
 
         mockFs({
-            "state.json": JSON.stringify({
+            [STATE_JSON_FILENAME]: JSON.stringify({
                 [ATTEMPTS_KEY]: ATTEMPTS,
                 [LIVES_KEY]: LIVES,
                 [ENDED_KEY]: true,
                 [DAY_KEY]: FAKE_DAY,
+                [WON_HARD_MODE_KEY]: true,
             }),
         });
 
@@ -324,11 +337,42 @@ describe("game storage - CLI", () => {
         assert.deepStrictEqual(state, expectedState);
     });
 
+    it("should not affect other state values if game progress is saved", () => {
+        mockFs({
+            [STATE_JSON_FILENAME]: JSON.stringify({
+                [PLAYED_BEFORE_KEY]: true,
+                [ATTEMPTS_KEY]: ATTEMPTS,
+                [LIVES_KEY]: LIVES,
+                [ENDED_KEY]: true,
+                [DAY_KEY]: FAKE_DAY,
+                [WON_HARD_MODE_KEY]: true,
+            }),
+        });
+
+        const expectedState = {
+            [PLAYED_BEFORE_KEY]: true,
+            [ATTEMPTS_KEY]: ATTEMPTS,
+            [LIVES_KEY]: 3,
+            [ENDED_KEY]: true,
+            [DAY_KEY]: FAKE_DAY,
+            [WON_HARD_MODE_KEY]: true,
+        };
+
+        cliStorage.saveGame(ATTEMPTS, 3, true, getCurrentDay(), true);
+
+        let stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
+            encoding: "utf-8",
+        });
+
+        assert.deepStrictEqual(JSON.parse(stateContents), expectedState);
+    });
+
     it("should load default values if no previous state was stored", () => {
         const expectedState = {
-            [ATTEMPTS_KEY]: [],
-            [LIVES_KEY]: STARTING_LIVES,
-            [ENDED_KEY]: false,
+            attempts: [],
+            lives: STARTING_LIVES,
+            ended: false,
+            wonHardMode: false,
         };
 
         mockFs();
@@ -341,7 +385,7 @@ describe("game storage - CLI", () => {
     describe("stored progress validity check", () => {
         it("should be valid if created on the same day", () => {
             mockFs({
-                "state.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [ATTEMPTS_KEY]: ATTEMPTS,
                     [LIVES_KEY]: LIVES,
                     [ENDED_KEY]: true,
@@ -355,7 +399,7 @@ describe("game storage - CLI", () => {
         });
         it("should not be valid if created on a different day", () => {
             mockFs({
-                "state.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [ATTEMPTS_KEY]: ATTEMPTS,
                     [LIVES_KEY]: LIVES,
                     [ENDED_KEY]: true,
@@ -369,7 +413,7 @@ describe("game storage - CLI", () => {
         });
         it("should not be valid if day value in storage is absent", () => {
             mockFs({
-                "state.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [ATTEMPTS_KEY]: ATTEMPTS,
                     [LIVES_KEY]: LIVES,
                     [ENDED_KEY]: true,
@@ -382,7 +426,7 @@ describe("game storage - CLI", () => {
         });
         it("should not be valid if day value in storage is null", () => {
             mockFs({
-                "state.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [ATTEMPTS_KEY]: ATTEMPTS,
                     [LIVES_KEY]: LIVES,
                     [ENDED_KEY]: true,
@@ -396,7 +440,7 @@ describe("game storage - CLI", () => {
         });
         it("should not be valid if day value in storage is not valid", () => {
             mockFs({
-                "state.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [ATTEMPTS_KEY]: ATTEMPTS,
                     [LIVES_KEY]: LIVES,
                     [ENDED_KEY]: true,
@@ -420,7 +464,7 @@ describe("game storage - CLI", () => {
         });
         it("should return true if 'played before' entry is set to something besides boolean in storage", () => {
             mockFs({
-                "playedbefore.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [PLAYED_BEFORE_KEY]: "something",
                 }),
             });
@@ -431,7 +475,7 @@ describe("game storage - CLI", () => {
         });
         it("should return true if 'played before' entry is set to false in storage", () => {
             mockFs({
-                "playedbefore.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [PLAYED_BEFORE_KEY]: false,
                 }),
             });
@@ -442,7 +486,7 @@ describe("game storage - CLI", () => {
         });
         it("should return false if 'played before' entry is set to true in storage", () => {
             mockFs({
-                "playedbefore.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [PLAYED_BEFORE_KEY]: true,
                 }),
             });
@@ -456,12 +500,12 @@ describe("game storage - CLI", () => {
     describe("setting 'played before' status", () => {
         it("should set 'played before' to true if true is passed", () => {
             mockFs({
-                "playedbefore.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [PLAYED_BEFORE_KEY]: false,
                 }),
             });
 
-            let stateContents = fs.readFileSync("playedbefore.json", {
+            let stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
                 encoding: "utf-8",
             });
 
@@ -471,7 +515,7 @@ describe("game storage - CLI", () => {
 
             cliStorage.setPlayedBefore(true);
 
-            stateContents = fs.readFileSync("playedbefore.json", {
+            stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
                 encoding: "utf-8",
             });
 
@@ -481,12 +525,12 @@ describe("game storage - CLI", () => {
         });
         it("should set 'played before' to false if false is passed", () => {
             mockFs({
-                "playedbefore.json": JSON.stringify({
+                [STATE_JSON_FILENAME]: JSON.stringify({
                     [PLAYED_BEFORE_KEY]: true,
                 }),
             });
 
-            let stateContents = fs.readFileSync("playedbefore.json", {
+            let stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
                 encoding: "utf-8",
             });
 
@@ -496,13 +540,40 @@ describe("game storage - CLI", () => {
 
             cliStorage.setPlayedBefore(false);
 
-            stateContents = fs.readFileSync("playedbefore.json", {
+            stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
                 encoding: "utf-8",
             });
 
             assert.deepStrictEqual(JSON.parse(stateContents), {
                 [PLAYED_BEFORE_KEY]: false,
             });
+        });
+        it("should not affect game state if it's set", () => {
+            mockFs({
+                [STATE_JSON_FILENAME]: JSON.stringify({
+                    [PLAYED_BEFORE_KEY]: false,
+                    [ATTEMPTS_KEY]: ATTEMPTS,
+                    [LIVES_KEY]: LIVES,
+                    [ENDED_KEY]: true,
+                    [DAY_KEY]: FAKE_DAY,
+                }),
+            });
+
+            const expectedState = {
+                [PLAYED_BEFORE_KEY]: true,
+                [ATTEMPTS_KEY]: ATTEMPTS,
+                [LIVES_KEY]: LIVES,
+                [ENDED_KEY]: true,
+                [DAY_KEY]: FAKE_DAY,
+            };
+
+            cliStorage.setPlayedBefore(true);
+
+            let stateContents = fs.readFileSync(STATE_JSON_FILENAME, {
+                encoding: "utf-8",
+            });
+
+            assert.deepStrictEqual(JSON.parse(stateContents), expectedState);
         });
     });
 });
@@ -598,7 +669,7 @@ describe("preferences storage - browser", () => {
 describe("preferences storage - CLI", () => {
     beforeEach(() => {
         mockFs({
-            "preferences.json": JSON.stringify({}),
+            [PREFERENCES_JSON_FILENAME]: JSON.stringify({}),
         });
     });
     afterEach(() => {
@@ -612,7 +683,7 @@ describe("preferences storage - CLI", () => {
 
         cliStorage.savePreferences(preferences);
 
-        const preferencesFileContents = fs.readFileSync("preferences.json", {
+        const preferencesFileContents = fs.readFileSync(PREFERENCES_JSON_FILENAME, {
             encoding: "utf-8",
         });
 
@@ -625,7 +696,7 @@ describe("preferences storage - CLI", () => {
         };
 
         mockFs({
-            "preferences.json": JSON.stringify(expectedPreferences),
+            [PREFERENCES_JSON_FILENAME]: JSON.stringify(expectedPreferences),
         });
 
         preferences = cliStorage.loadPreferences();
@@ -639,10 +710,10 @@ describe("preferences storage - CLI", () => {
         };
 
         mockFs({
-            "preferences.json": JSON.stringify(expectedPreferences),
+            [PREFERENCES_JSON_FILENAME]: JSON.stringify(expectedPreferences),
         });
 
-        let preferencesFileContents = fs.readFileSync("preferences.json", {
+        let preferencesFileContents = fs.readFileSync(PREFERENCES_JSON_FILENAME, {
             encoding: "utf-8",
         });
 
@@ -650,7 +721,7 @@ describe("preferences storage - CLI", () => {
 
         cliStorage.clearPreferences();
 
-        preferencesFileContents = fs.readFileSync("preferences.json", {
+        preferencesFileContents = fs.readFileSync(PREFERENCES_JSON_FILENAME, {
             encoding: "utf-8",
         });
 
@@ -661,7 +732,7 @@ describe("preferences storage - CLI", () => {
         const expectedPreferences = {};
 
         mockFs({
-            "preferences.json": '"a string"',
+            [PREFERENCES_JSON_FILENAME]: '"a string"',
         });
 
         preferences = cliStorage.loadPreferences();
@@ -673,7 +744,7 @@ describe("preferences storage - CLI", () => {
         const expectedPreferences = {};
 
         mockFs({
-            "preferences.json": "invalid state",
+            [PREFERENCES_JSON_FILENAME]: "invalid state",
         });
 
         preferences = cliStorage.loadPreferences();

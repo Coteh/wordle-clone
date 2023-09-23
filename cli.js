@@ -111,7 +111,7 @@ const runGame = async () => {
     if (mode) {
         if (!difficultyFlags.includes(mode)) {
             console.error("Not a valid difficulty (--hard|--easy)");
-        } else if (!hardMode && gameState.attempts.length > 0) {
+        } else if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
             console.error("Cannot switch difficulty while game is in progress");
         } else {
             hardMode = mode === "--hard";
@@ -137,7 +137,8 @@ const runGame = async () => {
             answer,
             hardMode && gameState.attempts.length > 0
                 ? gameState.attempts[gameState.attempts.length - 1]
-                : null
+                : null,
+            hardMode
         );
     }
     if (isWinner) {
@@ -145,7 +146,9 @@ const runGame = async () => {
         if (answer.toLowerCase() === "y" || answer.toLowerCase() === "yes") {
             import("clipboardy").then((clipboard) => {
                 clipboard.default.writeSync(
-                    generateShareText(day, gameState.attempts, STARTING_LIVES)
+                    generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                        hardMode: gameState.wonHardMode,
+                    })
                 );
                 console.log("Copied to clipboard");
             });
