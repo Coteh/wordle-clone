@@ -97,6 +97,7 @@ const newState = () => {
         lives: STARTING_LIVES,
         attempts: [],
         ended: false,
+        wonHardMode: false,
     };
 };
 
