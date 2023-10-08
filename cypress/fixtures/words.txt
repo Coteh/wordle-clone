@@ -17,7 +17,7 @@ cobra
 dorms
 glide
 hexes
-olden
+breed
 hears
 mayor
 missy
@@ -38,14 +38,14 @@ teach
 wrath
 dairy
 purge
-decaf
+creed
 chief
-ditty
+dread
 barge
 nodes
 lease
 lodge
-rifle
+deeds
 saber
 chops
 loans
@@ -64,7 +64,7 @@ sniff
 small
 urban
 staff
-spins
+bread
 eager
 youth
 booty

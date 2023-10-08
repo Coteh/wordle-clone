@@ -382,6 +382,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "r",
+            unique: true,
         });
     });
 
@@ -525,6 +526,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "l",
+            unique: false,
         });
     });
 
@@ -560,6 +562,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "s",
+            unique: false,
         });
     });
 
@@ -638,6 +641,27 @@ describe("hard mode", () => {
                     position: 0,
                 }),
                 "1st letter must be O"
+            );
+        });
+
+        it("should generate a message for a within miss that already exists elsewhere in the word", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    unique: false,
+                }),
+                "Guess must contain another O"
+            );
+        });
+
+        it("should generate a message for correct miss that already exists elsewhere in the word", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    position: 2,
+                    unique: false,
+                }),
+                "3rd letter must be O"
             );
         });
     });
