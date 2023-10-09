@@ -382,6 +382,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "r",
+            unique: true,
         });
     });
 
@@ -525,6 +526,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "l",
+            unique: false,
         });
     });
 
@@ -560,6 +562,7 @@ describe("hard mode", () => {
         assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
         assert.deepEqual(result.expected, {
             letter: "s",
+            unique: false,
         });
     });
 
@@ -594,6 +597,78 @@ describe("hard mode", () => {
         const result = checkForWord("desks", "floss", wordList, previous);
         assert(result.error == null);
         assert(result.results);
+    });
+
+    it("should report that a given letter should be present if there were multiple instances of the letter that were within in the previous attempt but less in the current attempt", () => {
+        const previous = [
+            {
+                letter: "l",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: true,
+            },
+            {
+                letter: "a",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "s",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "e",
+                correct: false,
+                within: true,
+            },
+        ];
+        const result = checkForWord("blame", "creed", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "e",
+            unique: false,
+        });
+    });
+
+    it("should report position of a given letter if there were multiple instances of the letter that were correct in the previous attempt but less in the current attempt", () => {
+        const previous = [
+            {
+                letter: "b",
+                correct: false,
+                within: false,
+            },
+            {
+                letter: "r",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "e",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "e",
+                correct: true,
+                within: true,
+            },
+            {
+                letter: "d",
+                correct: true,
+                within: true,
+            },
+        ];
+        const result = checkForWord("dread", "creed", wordList, previous);
+        assert(result.error === PREV_STATE_NOT_MATCHING_ERROR_ID);
+        assert.deepEqual(result.expected, {
+            letter: "e",
+            position: 3,
+        });
     });
 
     describe("getPositionWord", () => {
@@ -638,6 +713,27 @@ describe("hard mode", () => {
                     position: 0,
                 }),
                 "1st letter must be O"
+            );
+        });
+
+        it("should generate a message for a within miss that already exists elsewhere in the word", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    unique: false,
+                }),
+                "Guess must contain another O"
+            );
+        });
+
+        it("should generate a message for correct miss that already exists elsewhere in the word", () => {
+            assert.strictEqual(
+                getHardModeErrorMessage({
+                    letter: "o",
+                    position: 2,
+                    unique: false,
+                }),
+                "3rd letter must be O"
             );
         });
     });
