@@ -55,12 +55,16 @@ const getPositionWord = (pos) => {
 };
 
 const getHardModeErrorMessage = (letterAttempt) => {
+    if (letterAttempt.unique == null) {
+        letterAttempt.unique = true;
+    }
+    const anotherText = letterAttempt.unique ? "" : "another ";
     if (letterAttempt.position >= 0) {
         return `${getPositionWord(
             letterAttempt.position
         )} letter must be ${letterAttempt.letter.toUpperCase()}`;
     }
-    return `Guess must contain ${letterAttempt.letter.toUpperCase()}`;
+    return `Guess must contain ${anotherText}${letterAttempt.letter.toUpperCase()}`;
 };
 
 const getErrorMessage = (error, userInput) => {
@@ -144,6 +148,7 @@ const getDayNumber = () => {
 };
 
 const compareAttempts = (currAttempt, previousAttempt) => {
+    // Keep track of which positions are correct, so that they can be exempt from the within check
     const correctPosArr = new Array(previousAttempt.length).fill(0).map((_) => false);
     // First check the letters in previous attempt that were correct
     for (let i = 0; i < previousAttempt.length; i++) {
@@ -162,6 +167,19 @@ const compareAttempts = (currAttempt, previousAttempt) => {
             correctPosArr[i] = true;
         }
     }
+    // Keep a count of the occurrences of each letter in the current guess,
+    // so that the error message for withins can account for another instance of that letter already in the guess
+    const countsMap = new Map();
+    currAttempt.forEach((letterAttempt) => {
+        if (!countsMap.get(letterAttempt.letter)) {
+            countsMap.set(letterAttempt.letter, 1);
+        } else {
+            countsMap.set(letterAttempt.letter, countsMap.get(letterAttempt.letter) + 1);
+        }
+    });
+    // Keep track of which positions in current guess are within, so that multiple instances of the same letter from previous guess
+    // will not be counted as in the current guess using the same letter from the current guess.
+    const withinPosArr = new Array(previousAttempt.length).fill(0).map((_) => false);
     // Now that the letters that were correct are known, check the withins
     for (let i = 0; i < previousAttempt.length; i++) {
         const letterAttempt = previousAttempt[i];
@@ -170,15 +188,24 @@ const compareAttempts = (currAttempt, previousAttempt) => {
             let inCurrAttempt = false;
             for (let j = 0; j < currAttempt.length; j++) {
                 const currLetterAttempt = currAttempt[j];
-                if (letterAttempt.letter === currLetterAttempt.letter && !correctPosArr[j]) {
+                if (
+                    letterAttempt.letter === currLetterAttempt.letter &&
+                    !correctPosArr[j] &&
+                    !withinPosArr[j]
+                ) {
                     inCurrAttempt = true;
+                    // Once this particular instance of letter is marked as in the attempt, it shouldn't be marked again by any following instances of that letter.
+                    withinPosArr[j] = true;
+                    break;
                 }
             }
             if (!inCurrAttempt) {
+                const letterCount = countsMap.get(letterAttempt.letter) || 0;
                 return {
                     matches: false,
                     expected: {
                         letter: letterAttempt.letter,
+                        unique: letterCount <= 0,
                     },
                 };
             }
