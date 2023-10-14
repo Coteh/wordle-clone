@@ -248,6 +248,10 @@ button.close {
     pointer-events: none;
 }
 
+.settings .settings-item > a {
+    text-decoration: none;
+}
+
 .settings .settings-item .settings-item-column {
     width: 100%;
     display: flex;
@@ -544,7 +548,7 @@ a {
 .box.incorrect,
 .box.correct,
 .box.within {
-    border: 1px solid rgba(0,0,0,0);
+    border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .correct {
@@ -596,4 +600,8 @@ body.snow .footer > .snow-theme-credits {
 
 body .footer a.author-link {
     text-decoration: none;
+}
+
+body a > .version-number {
+    pointer-events: initial;
 }
