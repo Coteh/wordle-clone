@@ -22,7 +22,7 @@
     "cypress-wait-until": "^1.7.2",
     "mocha": "^10.2.0",
     "mock-fs": "^5.2.0",
-    "sinon": "^15.2.0"
+    "sinon": "^16.1.0"
   },
   "dependencies": {
     "clipboardy": "^3.0.0"
