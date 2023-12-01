@@ -25,7 +25,7 @@
     "sinon": "^15.2.0"
   },
   "dependencies": {
-    "clipboardy": "^3.0.0"
+    "clipboardy": "^4.0.0"
   },
   "overrides": {
     "cypress-real-events": {
