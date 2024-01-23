@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+const { replaceCRLFWithLF } = require("../../support/util");
+
 const DAY_MS = 86400000;
 // March 23 2022 - initial release date
 const FIRST_DAY_MS = 1647993600000;
@@ -140,7 +142,7 @@ describe("high contrast mode", () => {
             win.focus();
             await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
             const copiedText = await win.navigator.clipboard.readText();
-            expect(copiedText).to.eq(PREV_COPIED_TEXT);
+            expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
         });
 
         const word = "leafy";
@@ -167,7 +169,7 @@ describe("high contrast mode", () => {
 
         cy.window().then(async (win) => {
             const copiedText = await win.navigator.clipboard.readText();
-            expect(copiedText).to.eq(`Wordle Clone 1 2/6
+            expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 1 2/6
 ⬛🟦⬛⬛🟦
 🟧🟧🟧🟧🟧`);
         });
