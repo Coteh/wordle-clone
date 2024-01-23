@@ -11,6 +11,7 @@
   "scripts": {
     "build": "./scripts/build.sh",
     "test": "NODE_ENV=test mocha",
+    "test-ci": "mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./results/unit-test-results.xml",
     "cypress": "cypress"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
     "cypress-real-events": "^1.11.0",
     "cypress-wait-until": "^1.7.2",
     "mocha": "^10.2.0",
+    "mocha-junit-reporter": "^2.2.1",
     "mock-fs": "^5.2.0",
     "sinon": "^15.2.0"
   },

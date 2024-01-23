@@ -8,4 +8,7 @@ preferences.json
 cypress/videos
 cypress/screenshots
 
+# Test results
+results/*.xml
+
 .DS_Store
