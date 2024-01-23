@@ -28,10 +28,5 @@
   },
   "dependencies": {
     "clipboardy": "^3.0.0"
-  },
-  "overrides": {
-    "cypress-real-events": {
-      "cypress": "^12.2.0"
-    }
   }
 }
