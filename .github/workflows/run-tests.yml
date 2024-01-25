@@ -31,19 +31,19 @@ jobs:
         with:
           name: cypress-test-results
           path: ./results/cypress-test-results-*.xml
-  publish-test-results:
-    needs: [test-game-logic, cypress-run]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download test results artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: *-test-results
-          path: ./results
-          merge-multiple: true
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            ./results/*-test-results-*.xml
+  # publish-test-results:
+  #   needs: [test-game-logic, cypress-run]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download test results artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: *-test-results
+  #         path: ./results
+  #         merge-multiple: true
+  #     - name: Publish test results
+  #       uses: EnricoMi/publish-unit-test-result-action@v2
+  #       if: always()
+  #       with:
+  #         files: |
+  #           ./results/*-test-results-*.xml
