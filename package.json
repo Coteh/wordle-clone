@@ -18,7 +18,7 @@
   "author": "James Cote (Coteh)",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^13.6.3",
+    "cypress": "^13.6.4",
     "cypress-real-events": "^1.11.0",
     "cypress-wait-until": "^1.7.2",
     "mocha": "^10.2.0",
