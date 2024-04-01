@@ -16,7 +16,7 @@
   },
   "keywords": [],
   "author": "James Cote (Coteh)",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "cypress": "^13.6.6",
     "cypress-real-events": "^1.12.0",
