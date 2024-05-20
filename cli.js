@@ -13,7 +13,15 @@ const rl = readline.createInterface({
     input,
     output,
 });
-const difficultyFlags = ["--hard", "--easy"];
+const validDifficulties = ["hard", "easy"];
+
+const { program, Option } = require("commander");
+
+program
+    .name("wordle-clone")
+    .description("A clone of Wordle for the command line")
+    .version(version, "-v, --version")
+    .addOption(new Option("-d, --difficulty <string>", "change game difficulty").choices(validDifficulties));
 
 let gameState;
 let isWinner = false;
@@ -100,31 +108,37 @@ const prompt = async (message = "> ") => {
     });
 };
 
+const handleCLIArguments = () => {
+    const options = program.opts();
+    // console.log(options);
+    if (options.difficulty) {
+        if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
+            console.error("Cannot switch difficulty while game is in progress");
+            process.exit(2);
+        }
+        hardMode = options.difficulty === "hard";
+        savePreferences({
+            hardMode,
+        });
+        if (hardMode) {
+            console.log("hard mode enabled");
+        } else {
+            console.log("easy mode enabled");
+        }
+    }
+};
+
 const runGame = async () => {
+    // Process arguments
+    program.parse();
     // Initialize game
     await initGame(eventHandler);
     // Load preferences
     preferences = loadPreferences();
+    // Use hard mode setting from preferences first, then CLI can change it if argument is specified
     hardMode = preferences.hardMode;
-    // Load difficulty setting from CLI args, otherwise uses the difficulty from preferences
-    const mode = process.argv[2];
-    if (mode) {
-        if (!difficultyFlags.includes(mode)) {
-            console.error("Not a valid difficulty (--hard|--easy)");
-        } else if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
-            console.error("Cannot switch difficulty while game is in progress");
-        } else {
-            hardMode = mode === "--hard";
-            savePreferences({
-                hardMode,
-            });
-            if (hardMode) {
-                console.log("hard mode enabled");
-            } else {
-                console.log("easy mode enabled");
-            }
-        }
-    }
+    // Process CLI arguments here, as we need to check current game state to see if they can switch to hard mode
+    handleCLIArguments();
     while (!gameState.ended) {
         const answer = await prompt();
         if (answer === "quit" || answer === "q" || answer === "exit") {
@@ -157,5 +171,4 @@ const runGame = async () => {
     console.log(`Next Wordle: ${getCountdownString(getNextDate())}`);
 };
 
-console.log("wordle-clone", `v${version}`);
 runGame().finally(() => rl.close());
