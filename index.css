@@ -614,3 +614,37 @@ body .footer a.author-link {
 body a > .version-number {
     pointer-events: initial;
 }
+
+/* Settings Toggle */
+
+.knob {
+    position: relative;
+    
+    width: 50px;
+    height: 22px;
+    border-radius: 8em;
+    background-color: var(--gray-2);
+
+    transition: background-color 0.25s;
+}
+
+.knob.enabled {
+    background-color: var(--correct-color);
+}
+
+.knob>.knob-inside {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+
+    width: 20px;
+    height: 20px;
+    background-color: var(--gray-7);
+    border-radius: 8em;
+
+    transition: left 0.25s;
+}
+
+.knob.enabled>.knob-inside {
+    left: 29px;
+}

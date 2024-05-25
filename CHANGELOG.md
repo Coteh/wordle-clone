@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add settings knob element, in place of ON/OFF toggle text for hard mode and high contrast settings
+- Add high contrast mode to CLI
+- Add `--version`, `--help`, and `--verbose` flags to CLI
+
+### Changed
+
+- Adjust high contrast colours in the browser version
+- Change difficulty flag in CLI from `--easy`/`--hard` to `-d`/`--difficulty <easy/hard>`
+
+### Fixed
+
+- Remove extra space beside revealed word in CLI
+
 ## [1.2.6] - 2023-10-13
 
 ### Added

@@ -300,15 +300,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     settings.forEach((setting) => {
         setting.addEventListener("click", (e) => {
             const elem = e.target;
-            const toggle = setting.querySelector(".toggle");
             let enabled = false;
             if (elem.classList.contains(THEME_SETTING_NAME)) {
+                const toggle = setting.querySelector(".toggle");
                 const themeIndex = selectableThemes.indexOf(selectedTheme);
                 const nextTheme = selectableThemes[(themeIndex + 1) % selectableThemes.length];
                 switchTheme(nextTheme);
                 savePreferenceValue(THEME_PREFERENCE_NAME, nextTheme);
                 toggle.innerText = nextTheme;
             } else if (elem.classList.contains(HIGH_CONTRAST_SETTING_NAME)) {
+                const knob = setting.querySelector(".knob");
                 enabled = highContrastMode = !highContrastMode;
                 if (highContrastMode) {
                     document.body.classList.add(HIGH_CONTRAST);
@@ -319,8 +320,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     HIGH_CONTRAST_PREFERENCE_NAME,
                     highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
                 );
-                toggle.innerText = enabled ? "ON" : "OFF";
+                if (enabled) {
+                    knob.classList.add("enabled");
+                } else {
+                    knob.classList.remove("enabled");
+                }
             } else if (elem.classList.contains(HARD_MODE_PREFERENCE_NAME)) {
+                const knob = setting.querySelector(".knob");
                 if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
                     return renderNotification(
                         "Hard mode can only be enabled at the start of a round"
@@ -331,7 +337,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     HARD_MODE_PREFERENCE_NAME,
                     hardMode ? SETTING_ENABLED : SETTING_DISABLED
                 );
-                toggle.innerText = hardMode ? "ON" : "OFF";
+                if (hardMode) {
+                    knob.classList.add("enabled");
+                } else {
+                    knob.classList.remove("enabled");
+                }
             }
         });
     });
@@ -343,15 +353,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
         highContrastMode = true;
         const setting = document.querySelector(".setting.high-contrast");
-        const toggle = setting.querySelector(".toggle");
-        toggle.innerText = "ON";
+        const knob = setting.querySelector(".knob");
+        knob.classList.add("enabled");
         document.body.classList.add(HIGH_CONTRAST);
     }
     if (getPreferenceValue(HARD_MODE_PREFERENCE_NAME) === SETTING_ENABLED) {
         hardMode = true;
         const setting = document.querySelector(".setting.hard-mode");
-        const toggle = setting.querySelector(".toggle");
-        toggle.innerText = "ON";
+        const knob = setting.querySelector(".knob");
+        knob.classList.add("enabled");
     }
 
     const landscapeQuery = window.matchMedia("(orientation: landscape)");

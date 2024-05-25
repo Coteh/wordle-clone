@@ -62,14 +62,14 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".settings-item.high-contrast").should("contain.text", "OFF");
+        cy.get(".settings-item.high-contrast .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
 
         cy.get(".settings-item.high-contrast").click();
 
-        cy.get(".settings-item.high-contrast").should("contain.text", "ON");
+        cy.get(".settings-item.high-contrast .knob").should("have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -93,7 +93,7 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".settings-item.high-contrast").should("contain.text", "ON");
+        cy.get(".settings-item.high-contrast .knob").should("have.class", "enabled");
     });
 
     it("should show version number at the bottom of the settings pane", () => {
@@ -153,14 +153,14 @@ describe("settings", () => {
 
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
 
         cy.get(".settings-item.hard-mode").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -171,7 +171,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -192,7 +192,7 @@ describe("settings", () => {
 
         cy.get(".settings-link").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
@@ -201,7 +201,7 @@ describe("settings", () => {
 
         cy.contains("Hard mode can only be enabled at the start of a round").should("be.visible");
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
@@ -230,7 +230,7 @@ describe("settings", () => {
 
         cy.get(".settings-link").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -243,7 +243,7 @@ describe("settings", () => {
 
         cy.contains("Hard mode can only be enabled at the start of a round").should("not.exist");
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -274,14 +274,14 @@ describe("settings", () => {
 
         cy.get(".settings-link").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.null;
         });
 
         cy.get(".settings-item.hard-mode").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -324,7 +324,7 @@ describe("settings", () => {
 
         cy.get(".settings-link").click();
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "ON");
+        cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
@@ -337,7 +337,7 @@ describe("settings", () => {
 
         cy.contains("Hard mode can only be enabled at the start of a round").should("not.exist");
 
-        cy.get(".settings-item.hard-mode").should("contain.text", "OFF");
+        cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
             expect(win.localStorage.getItem("preferences")).to.be.eql(
                 JSON.stringify({
