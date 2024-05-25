@@ -20,12 +20,15 @@ const { program, Option } = require("commander");
 program
     .name("wordle-clone")
     .description("A clone of Wordle for the command line")
-    .version(version, "-v, --version")
+    .version(version, "-V, --version")
+    .option("-v, --verbose", "print extra information")
     .addOption(new Option("-d, --difficulty <string>", "change game difficulty").choices(validDifficulties));
 
 let gameState;
 let isWinner = false;
 let hardMode = false;
+let isVerbose = false;
+let highContrast = false;
 let day;
 let lastSubmission;
 let preferences;
@@ -38,17 +41,19 @@ FgWhite = "\x1b[37m";
 BgBlack = "\x1b[40m";
 BgGreen = "\x1b[42m";
 BgYellow = "\x1b[43m";
+BgMagenta = "\x1b[45m";
+BgCyan = "\x1b[46m";
 
 ResetColour = "\x1b[0m";
 
 const getColouredLetter = (letter, colour) => {
     let colourFmt;
     switch (colour) {
-        case "yellow":
-            colourFmt = `${BgYellow}${FgBlack}`;
+        case "within":
+            colourFmt = (highContrast) ? `${BgCyan}${FgWhite}` : `${BgYellow}${FgBlack}`;
             break;
-        case "green":
-            colourFmt = `${BgGreen}${FgBlack}`;
+        case "correct":
+            colourFmt = (highContrast) ? `${BgMagenta}${FgWhite}` : `${BgGreen}${FgBlack}`;
             break;
         default:
             colourFmt = `${BgBlack}${FgWhite}`;
@@ -63,10 +68,10 @@ const renderState = (gameState) => {
                 gameState.attempts[i]
                     .map((entry) =>
                         entry.correct
-                            ? getColouredLetter(entry.letter, "green")
+                            ? getColouredLetter(entry.letter, "correct")
                             : entry.within
-                            ? getColouredLetter(entry.letter, "yellow")
-                            : getColouredLetter(entry.letter, "grey")
+                            ? getColouredLetter(entry.letter, "within")
+                            : getColouredLetter(entry.letter, "incorrect")
                     )
                     .join("")
             );
@@ -93,7 +98,7 @@ const eventHandler = (event, data) => {
         case "error":
             return console.log(getErrorMessage(data, lastSubmission));
         case "lose":
-            return console.log("Game over, word was ", data);
+            return console.log("Game over, word was", data);
         case "win":
             isWinner = true;
             return console.log("You win!");
@@ -110,7 +115,10 @@ const prompt = async (message = "> ") => {
 
 const handleCLIArguments = () => {
     const options = program.opts();
-    // console.log(options);
+    isVerbose = options.verbose;
+    if (isVerbose) {
+        console.log("CLI arguments:", options);
+    }
     if (options.difficulty) {
         if (!hardMode && gameState.attempts.length > 0 && !gameState.ended) {
             console.error("Cannot switch difficulty while game is in progress");
@@ -131,14 +139,18 @@ const handleCLIArguments = () => {
 const runGame = async () => {
     // Process arguments
     program.parse();
-    // Initialize game
-    await initGame(eventHandler);
     // Load preferences
     preferences = loadPreferences();
     // Use hard mode setting from preferences first, then CLI can change it if argument is specified
     hardMode = preferences.hardMode;
+    highContrast = preferences.highContrast;
+    // Initialize game
+    await initGame(eventHandler);
     // Process CLI arguments here, as we need to check current game state to see if they can switch to hard mode
     handleCLIArguments();
+    if (isVerbose) {
+        console.log("Loaded preferences:", preferences)
+    }
     while (!gameState.ended) {
         const answer = await prompt();
         if (answer === "quit" || answer === "q" || answer === "exit") {
@@ -162,6 +174,7 @@ const runGame = async () => {
                 clipboard.default.writeSync(
                     generateShareText(day, gameState.attempts, STARTING_LIVES, {
                         hardMode: gameState.wonHardMode,
+                        highContrastMode: highContrast,
                     })
                 );
                 console.log("Copied to clipboard");

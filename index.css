@@ -36,6 +36,7 @@
     --text-color: var(--white);
     --letter-text-color: var(--white);
     --letter-selected-text-color: var(--white);
+    --letter-selected-inverted-text-color: var(--white);
 
     --notification-background-color: var(--gray-7);
     --notification-text-color: var(--black);
@@ -72,6 +73,7 @@
 .high-contrast {
     --correct-color: var(--orange);
     --within-color: var(--blue);
+    --letter-selected-inverted-text-color: var(--black);
 }
 
 /* Main Content */
@@ -580,6 +582,13 @@ a {
     color: var(--letter-selected-text-color);
     user-select: none;
     -webkit-user-select: none;
+}
+
+.correct>.box-letter,
+.within>.box-letter,
+.keyboard>.keyboard-row>.correct.keyboard-item,
+.keyboard>.keyboard-row>.within.keyboard-item {
+    color: var(--letter-selected-inverted-text-color);
 }
 
 /* Special */
