@@ -50,10 +50,10 @@ const getColouredLetter = (letter, colour) => {
     let colourFmt;
     switch (colour) {
         case "within":
-            colourFmt = (highContrast) ? `${BgCyan}${FgWhite}` : `${BgYellow}${FgBlack}`;
+            colourFmt = (highContrast) ? `${BgCyan}${FgBlack}` : `${BgYellow}${FgBlack}`;
             break;
         case "correct":
-            colourFmt = (highContrast) ? `${BgMagenta}${FgWhite}` : `${BgGreen}${FgBlack}`;
+            colourFmt = (highContrast) ? `${BgMagenta}${FgBlack}` : `${BgGreen}${FgBlack}`;
             break;
         default:
             colourFmt = `${BgBlack}${FgWhite}`;
