@@ -7,7 +7,7 @@ const { generateShareText } = require("./src/share");
 const { STARTING_LIVES } = require("./src/consts");
 const { getCountdownString, getNextDate } = require("./src/datetime");
 const { version } = require("./package");
-const { loadPreferences, savePreferences } = require("./src/storage/cli");
+const { loadPreferences, savePreferences, STATE_JSON_FILENAME, PREFERENCES_JSON_FILENAME } = require("./src/storage/cli");
 
 const rl = readline.createInterface({
     input,
@@ -149,7 +149,9 @@ const runGame = async () => {
     // Process CLI arguments here, as we need to check current game state to see if they can switch to hard mode
     handleCLIArguments();
     if (isVerbose) {
-        console.log("Loaded preferences:", preferences)
+        console.log("State json:", STATE_JSON_FILENAME);
+        console.log("Preferences json:", PREFERENCES_JSON_FILENAME);
+        console.log("Loaded preferences:", preferences);
     }
     while (!gameState.ended) {
         const answer = await prompt();

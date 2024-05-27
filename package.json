@@ -27,6 +27,7 @@
     "sinon": "^15.2.0"
   },
   "dependencies": {
+    "@folder/xdg": "^4.0.1",
     "clipboardy": "^3.0.0",
     "commander": "^12.1.0"
   }

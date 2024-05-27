@@ -8,11 +8,15 @@ const {
     WON_HARD_MODE_KEY,
 } = require("./index");
 const fs = require("fs");
+const path = require("path");
+const xdg = require("@folder/xdg");
 const { STARTING_LIVES } = require("../consts");
 const { getCurrentDay } = require("../datetime");
 
-const STATE_JSON_FILENAME = "state.json";
-const PREFERENCES_JSON_FILENAME = "preferences.json";
+const dirs = xdg({subdir: "wordle-clone"});
+
+const STATE_JSON_FILENAME = path.join(dirs.data, "state.json");
+const PREFERENCES_JSON_FILENAME = path.join(dirs.config, "preferences.json");
 
 const saveGame = (attempts, lives, ended, day, wonHardMode) => {
     overwriteState({
@@ -25,6 +29,7 @@ const saveGame = (attempts, lives, ended, day, wonHardMode) => {
 };
 
 const savePreferences = (preferences) => {
+    createDirectoryIfNotExist(dirs.config);
     fs.writeFileSync(PREFERENCES_JSON_FILENAME, JSON.stringify(preferences));
 };
 
@@ -65,10 +70,12 @@ const loadPreferences = () => {
 };
 
 const clearGame = () => {
+    createDirectoryIfNotExist(dirs.data);
     fs.writeFileSync(STATE_JSON_FILENAME, "{}");
 };
 
 const clearPreferences = () => {
+    createDirectoryIfNotExist(dirs.config);
     fs.writeFileSync(PREFERENCES_JSON_FILENAME, "{}");
 };
 
@@ -106,7 +113,16 @@ const overwriteState = (newState) => {
     }
     json = Object.assign(json, newState);
     const jsonStr = JSON.stringify(json);
+    createDirectoryIfNotExist(dirs.data);
     fs.writeFileSync(STATE_JSON_FILENAME, jsonStr);
+};
+
+const createDirectoryIfNotExist = (directory) => {
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, {
+            recursive: true,
+        });
+    }
 };
 
 if (typeof process !== "undefined") {

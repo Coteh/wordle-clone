@@ -2,6 +2,7 @@ let fs;
 let debugEnabled;
 if (typeof process !== "undefined") {
     fs = require("fs");
+    path = require("path");
 
     const storage = require("./storage/cli");
     checkGameValidity = storage.checkGameValidity;
@@ -125,7 +126,8 @@ const initState = () => {
 const loadWordList = async () => {
     // TODO abstract the loading of words into separate struct/method
     if (typeof process !== "undefined") {
-        const wordListResp = fs.readFileSync("words.txt");
+        const wordsFilepath = path.join(__dirname, "../words.txt");
+        const wordListResp = fs.readFileSync(wordsFilepath);
         return wordListResp.toString().trimEnd().split("\n");
     }
     const wordListResp = await fetch("words.txt");

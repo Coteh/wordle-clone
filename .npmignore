@@ -7,6 +7,10 @@ test/
 
 build/
 
+src/share/browser.js
+src/storage/browser.js
+src/render.js
+
 favicon.ico
 icon*
 images/
