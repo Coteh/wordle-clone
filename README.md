@@ -35,6 +35,38 @@ Now you can run it using the following command:
 
 ```
 wordle
+# or, alternatively:
+# wordle-clone
+```
+
+#### Preferences
+
+Preferences are stored in the following locations (depending on OS):
+- `$HOME/.config/Wordle-clone` (Linux)
+- `/Users/<username>/Library/Preferences/Wordle-clone` (macOS)
+- `C:\Users\<username>\AppData\Roaming\Wordle-clone\Config` (Windows)
+
+In here, you can specify the following options in JSON format:
+|Name|Description|Default value|
+------------------
+|hardMode|Whether to enable hard mode|false
+|highContrast|Whether to turn on high contrast mode|false
+
+Example:
+```
+{
+    "hardMode": true,
+    "highContrast": false
+}
+```
+
+#### CLI arguments
+
+```
+--difficulty <easy/hard> Change game's difficulty
+--verbose Print extra information
+--help    Display help
+--version Display version
 ```
 
 ## Features
