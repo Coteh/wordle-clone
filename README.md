@@ -49,8 +49,8 @@ Preferences are stored in the following locations (depending on OS):
 In here, you can specify the following options in JSON format:
 | Name | Description | Default value |
 | ---- | ----------- | ------------- |
-| hardMode | Whether to enable hard mode | false |
-| highContrast | Whether to turn on high contrast mode | false |
+| `hardMode` | Whether to enable hard mode | `false` |
+| `highContrast` | Whether to turn on high contrast mode | `false` |
 
 Example:
 ```
