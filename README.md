@@ -63,10 +63,10 @@ Example:
 #### CLI arguments
 
 ```
---difficulty <easy/hard> Change game's difficulty
---verbose Print extra information
---help    Display help
---version Display version
+-d/--difficulty <easy/hard>     Change game's difficulty
+-v/--verbose                    Print extra information
+-h/--help                       Display help
+-V/--version                    Display version
 ```
 
 ## Features

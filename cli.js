@@ -127,6 +127,7 @@ const handleCLIArguments = () => {
         hardMode = options.difficulty === "hard";
         savePreferences({
             hardMode,
+            highContrast,
         });
         if (hardMode) {
             console.log("hard mode enabled");
