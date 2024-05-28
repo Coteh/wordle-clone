@@ -13,7 +13,12 @@ const xdg = require("@folder/xdg");
 const { STARTING_LIVES } = require("../consts");
 const { getCurrentDay } = require("../datetime");
 
-const dirs = xdg({subdir: "wordle-clone"});
+const dirs = xdg({
+    subdir: "wordle-clone",
+    resolve: (parentdir, ...args) => {
+        return path.join(parentdir, ...args);
+    },
+});
 
 const STATE_JSON_FILENAME = path.join(dirs.data, "state.json");
 const PREFERENCES_JSON_FILENAME = path.join(dirs.config, "preferences.json");

@@ -42,15 +42,15 @@ wordle
 #### Preferences
 
 Preferences are stored in the following locations (depending on OS):
-- `$HOME/.config/Wordle-clone` (Linux)
-- `/Users/<username>/Library/Preferences/Wordle-clone` (macOS)
-- `C:\Users\<username>\AppData\Roaming\Wordle-clone\Config` (Windows)
+- `$HOME/.config/wordle-clone` (Linux)
+- `/Users/<username>/Library/Preferences/wordle-clone` (macOS)
+- `C:\Users\<username>\AppData\Roaming\wordle-clone\Config` (Windows)
 
 In here, you can specify the following options in JSON format:
-| Name | Description | Default value |
-| ---- | ----------- | ------------- |
-| `hardMode` | Whether to enable hard mode | `false` |
-| `highContrast` | Whether to turn on high contrast mode | `false` |
+| Option | Type | Description | Default Value |
+| ------ | ---- | ----------- | ------------- |
+| `hardMode` | `boolean` | Whether to enable hard mode | `false` |
+| `highContrast` | `boolean` | Whether to turn on high contrast mode | `false` |
 
 Example:
 ```
