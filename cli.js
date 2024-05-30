@@ -22,7 +22,26 @@ program
     .description("A clone of Wordle for the command line")
     .version(version, "-V, --version")
     .option("-v, --verbose", "print extra information")
-    .addOption(new Option("-d, --difficulty <string>", "change game difficulty").choices(validDifficulties));
+    .addOption(new Option("-d, --difficulty <string>", "change game difficulty").choices(validDifficulties))
+    .action(() => {});
+    
+program.command("data")
+    .description("outputs the filepath of game state and/or preferences")
+    .option("-p, --preferences", "output preferences filepath")
+    .option("-s, --state", "output game state filepath")
+    .action((options) => {
+        if (!options.preferences && !options.state) {
+            console.error("Please specify a file to print (see --help for flags)");
+            process.exit(1);
+        }
+        if (options.preferences) {
+            console.log(PREFERENCES_JSON_FILENAME)
+        }
+        if (options.state) {
+            console.log(STATE_JSON_FILENAME);
+        }
+        process.exit(0);
+    });
 
 let gameState;
 let isWinner = false;

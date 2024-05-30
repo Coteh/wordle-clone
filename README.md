@@ -11,6 +11,15 @@ A clone of the worldwide phenomenon known as [Wordle](https://www.powerlanguage.
 
 Can be played on either the browser or the command line.
 
+## Features
+
+- Base game
+    - Browser version
+    - CLI version
+- Share functionality
+- Countdown to next day's Wordle
+- Hard Mode
+
 ## Setup
 
 ### Browser
@@ -39,6 +48,15 @@ wordle
 # wordle-clone
 ```
 
+#### CLI arguments
+
+```
+  -d, --difficulty <string>  change game difficulty (choices: "hard", "easy")
+  -v, --verbose              print extra information
+  -h, --help                 display help for command
+  -V, --version              output the version number
+```
+
 #### Preferences
 
 Preferences are stored in the following locations (depending on OS):
@@ -46,7 +64,9 @@ Preferences are stored in the following locations (depending on OS):
 - `/Users/<username>/Library/Preferences/wordle-clone` (macOS)
 - `C:\Users\<username>\AppData\Roaming\wordle-clone\Config` (Windows)
 
-In here, you can specify the following options in JSON format:
+To find where it's located on your machine, you can use the Game Data Subcommand (see [Game Data Subcommand Usage](#game-data-subcommand-usage) for full usage). You can output the preferences filepath by running `wordle data -p`.
+
+In this file, you can specify the following options in JSON format:
 | Option | Type | Description | Default Value |
 | ------ | ---- | ----------- | ------------- |
 | `hardMode` | `boolean` | Whether to enable hard mode | `false` |
@@ -60,23 +80,18 @@ Example:
 }
 ```
 
-#### CLI arguments
+##### Game Data Subcommand Usage
 
 ```
--d/--difficulty <easy/hard>     Change game's difficulty
--v/--verbose                    Print extra information
--h/--help                       Display help
--V/--version                    Display version
+Usage: wordle-clone data [options]
+
+outputs the filepath of game state and/or preferences
+
+Options:
+  -p, --preferences  output preferences filepath
+  -s, --state        output game state filepath
+  -h, --help         display help for command
 ```
-
-## Features
-
-- Base game
-    - Browser version
-    - CLI version
-- Share functionality
-- Countdown to next day's Wordle
-- Hard Mode
 
 ## Development
 
