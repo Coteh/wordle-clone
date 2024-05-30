@@ -60,9 +60,9 @@ wordle
 #### Preferences
 
 Preferences are stored in the following locations (depending on OS):
-- `$HOME/.config/wordle-clone` (Linux)
-- `/Users/<username>/Library/Application Support/wordle-clone` (macOS)
-- `C:\Users\<username>\AppData\Roaming\wordle-clone\Config` (Windows)
+- `$HOME/.config/wordle-clone/preferences.json` (Linux)
+- `/Users/<username>/Library/Application Support/wordle-clone/preferences.json` (macOS)
+- `C:\Users\<username>\AppData\Roaming\wordle-clone\Config\preferences.json` (Windows)
 
 To find where it's located on your machine, you can use the Game Data Subcommand (see [Game Data Subcommand Usage](#game-data-subcommand-usage) for full usage). You can output the preferences filepath by running `wordle data -p`.
 
