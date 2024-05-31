@@ -95,7 +95,7 @@
                 <div class="settings-item-group">
                     <div class="settings-item">
                         <a href="https://github.com/Coteh/wordle-clone/releases" target="_blank">
-                            <span class="version-number">v1.2.6</span>
+                            <span class="version-number">v1.2.7</span>
                         </a>
                     </div>
                     <div class="settings-item">
@@ -231,7 +231,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.2.6",
+                        release: "wordle-clone@1.2.7",
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;
@@ -243,7 +243,7 @@
             }
 
             gtag("event", "game_open", {
-                "version": "1.2.6",
+                "version": "1.2.7",
             });
         </script>
     </body>
