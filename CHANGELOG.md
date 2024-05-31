@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Browser: Add settings knob element, in place of ON/OFF toggle text for hard mode and high contrast settings
+- CLI: Now installable from npm
 - CLI: Add high contrast mode
 - CLI: Add `--version`, `--help`, and `--verbose` flags
 - CLI: Add `data` subcommand that outputs the filepaths to the state file and preferences file
