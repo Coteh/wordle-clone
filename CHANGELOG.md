@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.7] - 2024-05-31
+
 ### Added
 
 - Browser: Add settings knob element, in place of ON/OFF toggle text for hard mode and high contrast settings
@@ -351,7 +353,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial Release
 
-[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.2.6...HEAD
+[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...HEAD
+[1.2.7]: https://github.com/Coteh/wordle-clone/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Coteh/wordle-clone/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/Coteh/wordle-clone/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/Coteh/wordle-clone/compare/v1.2.3...v1.2.4
