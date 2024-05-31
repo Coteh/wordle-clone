@@ -3,7 +3,7 @@
 [![Run Tests](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Coteh/wordle-clone/actions/workflows/run-tests.yml)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/Coteh/wordle-clone)
 
-### [**Click here to play**](https://coteh.github.io/wordle-clone)
+### [**Click here to play on browser**](https://coteh.github.io/wordle-clone)
 
 ![Browser Game Screenshot](screenshot.gif "Browser Game Screenshot")
 
@@ -28,16 +28,10 @@ Can be played on either the browser or the command line.
 
 ### CLI
 
-Clone this repository, then run the following:
+Assuming you have [Node.js](https://nodejs.org) and npm installed, run the following command to install the game:
 
 ```
-npm install --production
-```
-
-Then run the following to link it to your PATH:
-
-```
-npm link
+npm install -g wordle-clone
 ```
 
 Now you can run it using the following command:
