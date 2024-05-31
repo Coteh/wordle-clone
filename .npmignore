@@ -1,9 +1,11 @@
 .git*
 .prettier*
 .vscode/
+.nvmrc
 
 cypress*
 test/
+results/
 
 build/
 
