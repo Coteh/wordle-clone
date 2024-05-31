@@ -258,6 +258,8 @@ describe("game storage - browser", () => {
 
 describe("game storage - CLI", () => {
     beforeEach(() => {
+        // NOTE: Tests using mock-fs will fail in Node v20, see https://github.com/tschaub/mock-fs/issues/384
+        // TODO: Either resolve the issue in mock-fs, or move to something else like memfs as suggested in the comments.
         mockFs({
             [STATE_JSON_FILENAME]: JSON.stringify({}),
         });
