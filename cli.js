@@ -80,6 +80,39 @@ const getColouredLetter = (letter, colour) => {
     return `${colourFmt}${letter}${ResetColour}`;
 };
 
+const getHowToPlayText = () => {
+    const correctGuess = [
+        getColouredLetter("c","correct"),
+        getColouredLetter("l","standard"),
+        getColouredLetter("o","standard"),
+        getColouredLetter("n","standard"),
+        getColouredLetter("e","standard"),
+    ].join("");
+    const withinGuess = [
+        getColouredLetter("s","standard"),
+        getColouredLetter("p","within"),
+        getColouredLetter("i","standard"),
+        getColouredLetter("c","standard"),
+        getColouredLetter("e","standard"),
+    ].join("");
+    const incorrectGuess = [
+        getColouredLetter("h","standard"),
+        getColouredLetter("e","standard"),
+        getColouredLetter("a","standard"),
+        getColouredLetter("r","incorrect"),
+        getColouredLetter("t","standard"),
+    ].join("");
+    return `How to play:
+Guess a five-letter word in six tries.\n
+${correctGuess}
+The letter C is in the correct place.\n
+${withinGuess}
+The letter P is in the word but in the wrong place.\n
+${incorrectGuess}
+The letter R is not in the word in any place.\n
+Good luck!`;
+};
+
 const renderState = (gameState) => {
     for (let i = 0; i < 6; i++) {
         if (i < gameState.attempts.length) {
@@ -108,7 +141,7 @@ const eventHandler = (event, data) => {
             break;
         case "first_time":
             console.log(
-                "How to play: Guess a five-letter word. Green letters mean they are in the correct place. Yellow letters mean that the letter is in the word but in the wrong place. Grey means that the letter is not in the word. You have six attempts. Good luck!"
+                getHowToPlayText()
             );
             break;
         case "draw":
@@ -178,16 +211,21 @@ const runGame = async () => {
         if (answer === "quit" || answer === "q" || answer === "exit") {
             console.log("Bye!");
             return;
+        } else if (answer === "help" || answer === "h") {
+            console.log(
+                getHowToPlayText()
+            );
+        } else {
+            lastSubmission = answer;
+            submitWord(
+                gameState,
+                answer,
+                hardMode && gameState.attempts.length > 0
+                    ? gameState.attempts[gameState.attempts.length - 1]
+                    : null,
+                hardMode
+            );
         }
-        lastSubmission = answer;
-        submitWord(
-            gameState,
-            answer,
-            hardMode && gameState.attempts.length > 0
-                ? gameState.attempts[gameState.attempts.length - 1]
-                : null,
-            hardMode
-        );
     }
     if (isWinner) {
         const answer = await prompt("Would you like to share your results? [Y/n]");
