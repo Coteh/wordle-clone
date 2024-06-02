@@ -14,12 +14,14 @@ Can be played on either the browser or the command line.
 
 ## Features
 
-- Base game
-    - Browser version
-    - CLI version
+- Base browser game
+- Also playable on the terminal
 - Share functionality
 - Countdown to next day's Wordle
+- Can be launched as PWA on mobile
 - Hard Mode
+- High Contrast Mode
+- Tap and hold backspace to clear input (unique to this clone)
 
 ## Setup
 
