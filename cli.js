@@ -44,7 +44,6 @@ program.command("data")
     });
 
 let gameState;
-let isWinner = false;
 let hardMode = false;
 let isVerbose = false;
 let highContrast = false;
@@ -152,7 +151,6 @@ const eventHandler = (event, data) => {
         case "lose":
             return console.log("Game over, word was", data);
         case "win":
-            isWinner = true;
             return console.log("You win!");
     }
 };
@@ -227,21 +225,24 @@ const runGame = async () => {
             );
         }
     }
-    if (isWinner) {
-        const answer = await prompt("Would you like to share your results? [Y/n]");
-        if (answer.toLowerCase() === "y" || answer.toLowerCase() === "yes") {
-            import("clipboardy").then((clipboard) => {
-                clipboard.default.writeSync(
-                    generateShareText(day, gameState.attempts, STARTING_LIVES, {
-                        hardMode: gameState.wonHardMode,
-                        highContrastMode: highContrast,
-                    })
-                );
-                console.log("Copied to clipboard");
-            });
-        }
+    const displayNextWordle = () => {
+        console.log(`Next Wordle: ${getCountdownString(getNextDate())}`);
+    };
+    const answer = await prompt("Would you like to share your results? [Y/n]");
+    if (answer.toLowerCase() === "" || answer.toLowerCase() === "y" || answer.toLowerCase() === "yes") {
+        import("clipboardy").then((clipboard) => {
+            clipboard.default.writeSync(
+                generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                    hardMode: gameState.wonHardMode,
+                    highContrastMode: highContrast,
+                })
+            );
+            console.log("Copied to clipboard");
+            displayNextWordle();
+        });
+    } else {
+        displayNextWordle();
     }
-    console.log(`Next Wordle: ${getCountdownString(getNextDate())}`);
 };
 
 runGame().finally(() => rl.close());

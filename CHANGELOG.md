@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to share incomplete game
+
+### Changed
+
+- CLI: How to Play text adjusted to resemble browser version
+- CLI: "Copied to clipboard" text now appears before Next Wordle time
+
+### Fixed
+
+- CLI: Fix default share option of yes not copying to clipboard
+
 ## [1.2.7] - 2024-05-31
 
 ### Added
