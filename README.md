@@ -21,7 +21,11 @@ Can be played on either the browser or the command line.
 - Can be launched as PWA on mobile
 - Hard Mode
 - High Contrast Mode
-- Tap and hold backspace to clear input (unique to this clone)
+- Themes
+  - Dark
+  - Light
+  - Snow
+- Tap and hold backspace to clear input
 
 ## Setup
 
