@@ -2,7 +2,9 @@ const generateShareText = (dayNumber, attempts, maxAttempts, options) => {
     if (!options) {
         options = {};
     }
-    let shareText = `Wordle Clone ${dayNumber} ${attempts.length}/${maxAttempts}${
+    const wasIncomplete = attempts.length === maxAttempts && 
+        attempts[maxAttempts - 1].some(entry => !entry.correct);
+    let shareText = `Wordle Clone ${dayNumber} ${wasIncomplete ? "X" : attempts.length}/${maxAttempts}${
         options.hardMode ? "*" : ""
     }\n`;
     shareText += attempts

@@ -290,4 +290,88 @@ describe("sharing results", () => {
 🟩🟩🟩🟩🟩`);
         });
     });
+
+    it("should allow player to share an incomplete game", () => {
+        const PREV_COPIED_TEXT =
+            "This text should not be in clipboard when the copy button is clicked";
+
+        cy.window().then(async (win) => {
+            win.focus();
+            await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
+        });
+
+        for (let i = 0; i < 6; i++) {
+            cy.keyboardItem("b").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("r").click();
+            cy.keyboardItem("g").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("enter").click();
+        }
+        cy.contains("You lose!").should("be.visible");
+        cy.contains("word was leafy").should("be.visible");
+
+        cy.get(".share-button").click();
+
+        cy.window().then(async (win) => {
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 1 X/6
+⬛🟨⬛⬛🟨
+⬛🟨⬛⬛🟨
+⬛🟨⬛⬛🟨
+⬛🟨⬛⬛🟨
+⬛🟨⬛⬛🟨
+⬛🟨⬛⬛🟨`);
+        });
+    });
+
+    it("should allow player to share an incomplete game with hard mode and high contrast enabled", () => {
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem(
+                    "preferences",
+                    JSON.stringify({
+                        ["hard-mode"]: "enabled",
+                        ["high-contrast"]: "enabled",
+                    })
+                );
+            },
+        });
+
+        const PREV_COPIED_TEXT =
+            "This text should not be in clipboard when the copy button is clicked";
+
+        cy.window().then(async (win) => {
+            win.focus();
+            await win.navigator.clipboard.writeText(PREV_COPIED_TEXT);
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
+        });
+
+        for (let i = 0; i < 6; i++) {
+            cy.keyboardItem("b").click();
+            cy.keyboardItem("a").click();
+            cy.keyboardItem("r").click();
+            cy.keyboardItem("g").click();
+            cy.keyboardItem("e").click();
+            cy.keyboardItem("enter").click();
+        }
+        cy.contains("You lose!").should("be.visible");
+        cy.contains("word was leafy").should("be.visible");
+
+        cy.get(".share-button").click();
+
+        cy.window().then(async (win) => {
+            const copiedText = await win.navigator.clipboard.readText();
+            expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 1 X/6*
+⬛🟦⬛⬛🟦
+⬛🟦⬛⬛🟦
+⬛🟦⬛⬛🟦
+⬛🟦⬛⬛🟦
+⬛🟦⬛⬛🟦
+⬛🟦⬛⬛🟦`);
+        });
+    });
 });

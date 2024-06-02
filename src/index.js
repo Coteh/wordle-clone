@@ -110,6 +110,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
             loseElem.querySelector("#word").innerText = word;
+            loseElem.querySelector(".share-button").addEventListener("click", (e) => {
+                e.preventDefault();
+                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                    highContrastMode,
+                    hardMode,
+                });
+                copyShareText(shareText);
+            });
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);
             setCountdownInterval(nextDate);
