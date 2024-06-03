@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.8] - 2024-06-03
+
 ### Added
 
 - Add ability to share incomplete game
 
 ### Changed
 
+- Browser: Harmonize spacing of dialog elements across Firefox/Chrome/Safari
 - CLI: How to Play text adjusted to resemble browser version
 - CLI: "Copied to clipboard" text now appears before Next Wordle time
 
@@ -367,7 +370,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial Release
 
-[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...HEAD
+[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.2.8...HEAD
+[1.2.8]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Coteh/wordle-clone/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Coteh/wordle-clone/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/Coteh/wordle-clone/compare/v1.2.4...v1.2.5
