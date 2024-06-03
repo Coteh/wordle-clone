@@ -142,65 +142,63 @@
                 <i data-feather="share-2"></i>
                 <span>Share</span>
             </button>
-            <div>
+            <div class="next-wordle">
                 Next Wordle:
                 <span class="countdown">20:00:00</span>
             </div>
         </template>
         <template id="lose-dialog-content">
-            <span>You lose!</span><br/>
-            <span>The word was <b id="word"></b></span><br/>
+            <span>You lose!</span>
+            <span>The word was <b id="word"></b></span>
             <span>Try again next time!</span>
             <button class="button share-button">
                 <i data-feather="share-2"></i>
                 <span>Share</span>
             </button>
-            <div>
+            <div class="next-wordle">
                 Next Wordle:
                 <span class="countdown">20:00:00</span>
             </div>
         </template>
         <template id="how-to-play">
-            <span class="how-to-play">
-                <h2>How to play</h2>
-                <span class="text">Guess a five-letter word in six tries.</span>
-                <hr/>
-                <br/>
-                <div class="meaning">
-                    <div class="sample">
-                        <div class="box correct"><span class="box-letter">c</span></div>
-                        <div class="box standard"><span class="box-letter">l</span></div>
-                        <div class="box standard"><span class="box-letter">o</span></div>
-                        <div class="box standard"><span class="box-letter">n</span></div>
-                        <div class="box standard"><span class="box-letter">e</span></div>
+            <div class="how-to-play">
+                <div class="how-to-play-content">
+                    <h2>How to play</h2>
+                    <span class="text">Guess a five-letter word in six tries.</span>
+                    <hr/>
+                    <div class="meaning">
+                        <div class="sample">
+                            <div class="box correct"><span class="box-letter">c</span></div>
+                            <div class="box standard"><span class="box-letter">l</span></div>
+                            <div class="box standard"><span class="box-letter">o</span></div>
+                            <div class="box standard"><span class="box-letter">n</span></div>
+                            <div class="box standard"><span class="box-letter">e</span></div>
+                        </div>
+                        <span class="text">The letter C is in the correct place.</span>
                     </div>
-                    <span class="text">The letter C is in the correct place.</span>
-                </div>
-                <br/>
-                <div class="meaning">
-                    <div class="sample">
-                        <div class="box standard"><span class="box-letter">s</span></div>
-                        <div class="box within"><span class="box-letter">p</span></div>
-                        <div class="box standard"><span class="box-letter">i</span></div>
-                        <div class="box standard"><span class="box-letter">c</span></div>
-                        <div class="box standard"><span class="box-letter">e</span></div>
+                    <div class="meaning">
+                        <div class="sample">
+                            <div class="box standard"><span class="box-letter">s</span></div>
+                            <div class="box within"><span class="box-letter">p</span></div>
+                            <div class="box standard"><span class="box-letter">i</span></div>
+                            <div class="box standard"><span class="box-letter">c</span></div>
+                            <div class="box standard"><span class="box-letter">e</span></div>
+                        </div>
+                        <span class="text">The letter P is in the word but in the wrong place.</span>
                     </div>
-                    <span class="text">The letter P is in the word but in the wrong place.</span>
-                </div>
-                <br/>
-                <div class="meaning">
-                    <div class="sample">
-                        <div class="box standard"><span class="box-letter">h</span></div>
-                        <div class="box standard"><span class="box-letter">e</span></div>
-                        <div class="box standard"><span class="box-letter">a</span></div>
-                        <div class="box incorrect"><span class="box-letter">r</span></div>
-                        <div class="box standard"><span class="box-letter">t</span></div>
+                    <div class="meaning">
+                        <div class="sample">
+                            <div class="box standard"><span class="box-letter">h</span></div>
+                            <div class="box standard"><span class="box-letter">e</span></div>
+                            <div class="box standard"><span class="box-letter">a</span></div>
+                            <div class="box incorrect"><span class="box-letter">r</span></div>
+                            <div class="box standard"><span class="box-letter">t</span></div>
+                        </div>
+                        <span class="text">The letter R is not in the word in any place.</span>
                     </div>
-                    <span class="text">The letter R is not in the word in any place.</span>
+                    <span class="text">Good luck!</span>
                 </div>
-                <br/>
-                <span class="text">Good luck!</span>
-            </span>
+            </div>
         </template>
         <template id="error-dialog-content">
             <span>

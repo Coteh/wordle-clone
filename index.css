@@ -318,6 +318,14 @@ button.close {
     overflow: auto;
 }
 
+.dialog > div.dialog-content > span {
+    margin: 8px 0;
+}
+
+.dialog > div.dialog-content > .next-wordle {
+    margin: 8px 0;
+}
+
 .dialog button > span {
     margin-left: 8px;
     color: var(--text-color);
@@ -341,19 +349,32 @@ button.close {
 
 .dialog > .dialog-content > .how-to-play {
     height: 100%;
-    top: -20px;
     position: relative;
 }
 
-.dialog > .dialog-content > .how-to-play > h2 {
-    text-transform: uppercase;
+.dialog > .dialog-content > .how-to-play > .how-to-play-content {
+    padding: 0 0 8px 0;
 }
 
-.dialog > .dialog-content > .how-to-play div.sample {
+.dialog > .dialog-content > .how-to-play > .how-to-play-content > h2 {
+    text-transform: uppercase;
+    margin: 12px 0;
+}
+
+.dialog > .dialog-content > .how-to-play > .how-to-play-content div.sample {
     display: flex;
 }
 
-.dialog > .dialog-content > .how-to-play > div.meaning > span.text {
+.dialog > .dialog-content > .how-to-play > .how-to-play-content > div.meaning {
+    margin: 12px 0;
+}
+
+.dialog > .dialog-content > .how-to-play > .how-to-play-content > div.meaning > div.sample {
+    margin: 4px 0;
+}
+
+.dialog > .dialog-content > .how-to-play > .how-to-play-content > div.meaning > span.text {
+    line-height: 1.25;
     font-size: 0.75em;
 }
 
@@ -415,12 +436,6 @@ button.close {
 
 #landscape-overlay > .overlay-content > img {
     height: 100px;
-}
-
-/* Error Content */
-
-span.error-text {
-    margin: 1em;
 }
 
 /* Text Content */
@@ -584,10 +599,10 @@ a {
     -webkit-user-select: none;
 }
 
-.correct>.box-letter,
-.within>.box-letter,
-.keyboard>.keyboard-row>.correct.keyboard-item,
-.keyboard>.keyboard-row>.within.keyboard-item {
+.correct > .box-letter,
+.within > .box-letter,
+.keyboard > .keyboard-row > .correct.keyboard-item,
+.keyboard > .keyboard-row > .within.keyboard-item {
     color: var(--letter-selected-inverted-text-color);
 }
 
@@ -619,7 +634,7 @@ body a > .version-number {
 
 .knob {
     position: relative;
-    
+
     width: 50px;
     height: 22px;
     border-radius: 8em;
@@ -632,7 +647,7 @@ body a > .version-number {
     background-color: var(--correct-color);
 }
 
-.knob>.knob-inside {
+.knob > .knob-inside {
     position: absolute;
     top: 1px;
     left: 1px;
@@ -645,6 +660,6 @@ body a > .version-number {
     transition: left 0.25s;
 }
 
-.knob.enabled>.knob-inside {
+.knob.enabled > .knob-inside {
     left: 29px;
 }
