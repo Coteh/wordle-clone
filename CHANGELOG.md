@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Browser: Fix error preventing the game from loading on older devices
+
 ## [1.2.8] - 2024-06-03
 
 ### Added
