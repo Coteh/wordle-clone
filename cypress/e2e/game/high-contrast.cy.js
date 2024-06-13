@@ -118,6 +118,22 @@ describe("high contrast mode", () => {
         );
 
         cy.reload();
+        
+        cy.window().then((win) => {
+            // Return false so that it will fallback to clipboard option
+            const canShareFunc = (data) => false;
+            // Create the property for canShare if it doesn't exist (ie. browser does not support share sheet), otherwise stub directly
+            if (!win.navigator.canShare) {
+                Object.defineProperty(win.navigator, 'canShare', {
+                    value: cy.stub().callsFake(canShareFunc),
+                    writable: true,
+                    configurable: true
+                });
+            } else {
+                cy.stub(win.navigator, 'canShare').callsFake(canShareFunc);
+            }
+        });
+
         cy.waitForGameReady();
 
         cy.get(".help-link").click();

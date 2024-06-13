@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     highContrastMode,
                     hardMode: gameState.wonHardMode,
                 });
-                copyShareText(shareText);
+                triggerShare(shareText);
             });
             const nextDate = getNextDate();
             updateCountdown(winElem.querySelector(".countdown"), nextDate);
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     highContrastMode,
                     hardMode,
                 });
-                copyShareText(shareText);
+                triggerShare(shareText);
             });
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);
