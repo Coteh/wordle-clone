@@ -25,7 +25,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
+        with:
+          browser: edge
+          start: npm run devs
+          wait-on: 'http://localhost:5501'
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:

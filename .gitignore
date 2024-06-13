@@ -11,4 +11,8 @@ cypress/screenshots
 # Test results
 results/*.xml
 
+# SSL certs
+ssl/
+
+# Misc
 .DS_Store

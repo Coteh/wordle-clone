@@ -118,6 +118,27 @@ git update-index --assume-unchanged words.txt
 
 At this point, you can run a local web server on the project directory, and the game should render when navigating to the port of the server from your browser.
 
+### HTTPS Local Development
+
+The share feature uses the share sheet provided by the browser/OS and can also fall back to the browser's clipboard feature if the share sheet isn't available. Both of these features need a secure context to operate, requiring the use of a local HTTPS server when developing them. However, the game can still run on a HTTP server, where it will default to legacy clipboard functionality.
+
+Using [mkcert](https://github.com/FiloSottile/mkcert), run the following commands to setup local certificates to be used by local HTTPS server:
+
+```sh
+mkdir ssl
+cd ssl
+
+mkcert -install
+
+mkcert localhost 127.0.0.1 ::1
+```
+
+Then run the following to start up the local HTTPS server:
+
+```sh
+npm run devs
+```
+
 ## Testing
 
 Run the following to launch unit tests:

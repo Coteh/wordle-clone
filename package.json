@@ -8,6 +8,8 @@
     "wordle-clone": "./cli.js"
   },
   "scripts": {
+    "dev": "serve -p 5500",
+    "devs": "serve -p 5501 --ssl-cert ./ssl/localhost+2.pem --ssl-key ./ssl/localhost+2-key.pem",
     "build": "./scripts/build.sh",
     "test": "NODE_ENV=test mocha",
     "test-ci": "mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./results/unit-test-results.xml",
@@ -23,6 +25,7 @@
     "mocha": "^10.4.0",
     "mocha-junit-reporter": "^2.2.1",
     "mock-fs": "^5.2.0",
+    "serve": "^14.2.3",
     "sinon": "^15.2.0"
   },
   "dependencies": {
