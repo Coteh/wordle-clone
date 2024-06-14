@@ -9,6 +9,7 @@ const FIRST_DAY_MS = 1647993600000;
 // NOTE: If viewing this set of tests on Cypress UI, make sure the browser is active and you've allowed clipboard access when prompted
 describe("sharing results", () => {
     beforeEach(() => {
+        cy.grantClipboardPermission();
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
         cy.clock(FIRST_DAY_MS + DAY_MS * 1 + (DAY_MS * 1) / 2, ["Date"]);
@@ -555,6 +556,7 @@ describe("sharing results", () => {
             performAction("chief");
 
             cy.window().then(async (win) => {
+                win.focus();
                 const copiedText = await win.navigator.clipboard.readText();
                 expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 7 2/6
 ⬛⬛🟩⬛🟨
@@ -593,6 +595,7 @@ describe("sharing results", () => {
             performAction("plait");
 
             cy.window().then(async (win) => {
+                win.focus();
                 const copiedText = await win.navigator.clipboard.readText();
                 expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 0 2/6
 ⬛🟩🟨⬛⬛
@@ -613,6 +616,7 @@ describe("sharing results", () => {
             performAction("buffs");
 
             cy.window().then(async (win) => {
+                win.focus();
                 const copiedText = await win.navigator.clipboard.readText();
                 expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone -5 2/6
 ⬛⬛⬛⬛⬛

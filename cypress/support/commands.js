@@ -82,6 +82,18 @@ Cypress.Commands.add("clearBrowserCache", () => {
     });
 });
 
+// Needed in order to make share tests work in headless
+// https://github.com/cypress-io/cypress/issues/8957
+Cypress.Commands.add("grantClipboardPermission", () => {
+    Cypress.automation('remote:debugger:protocol', {
+        command: 'Browser.grantPermissions',
+        params: {
+            permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'],
+            origin: window.location.origin,
+        },
+    });
+});
+
 // Adapted from https://github.com/cypress-io/cypress/discussions/21150#discussioncomment-2620947
 Cypress.Commands.add("shouldNotBeActionable", { prevSubject: "element" }, (subject, done) => {
     cy.once("fail", (err) => {

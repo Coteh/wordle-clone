@@ -116,7 +116,13 @@ The following will make it so that git doesn't detect that `words.txt` changed:
 git update-index --assume-unchanged words.txt
 ```
 
-At this point, you can run a local web server on the project directory, and the game should render when navigating to the port of the server from your browser.
+At this point, run the following to start a local dev server:
+
+```sh
+npm run dev
+```
+
+The game should render when navigating to http://localhost:5500.
 
 ### HTTPS Local Development
 
@@ -138,6 +144,8 @@ Then run the following to start up the local HTTPS server:
 ```sh
 npm run devs
 ```
+
+The game should render when navigating to https://localhost:5501.
 
 ## Testing
 
