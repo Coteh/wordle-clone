@@ -118,6 +118,8 @@ describe("high contrast mode", () => {
         );
 
         cy.reload();
+
+        cy.grantClipboardPermission();
         
         cy.window().then((win) => {
             // Return false so that it will fallback to clipboard option
