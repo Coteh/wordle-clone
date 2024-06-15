@@ -70,22 +70,30 @@ const triggerShare = async (shareText) => {
     const data = {
         text: shareText,
     };
-    if (navigator.canShare && navigator.canShare(data)) {
-        try {
-            await navigator.share(data);
-        } catch (err) {
-            if (err.name === 'NotAllowedError') {
-                console.log('Sharing was not allowed by the user or platform');
-                // Fallback to copy to clipboard
-                copyShareText(shareText);
-            } else if (err.name === 'AbortError') {
-                console.log('User aborted share operation');
-            } else {
-                console.error('Error sharing content:', err);
-                renderNotification("Could not share due to error");
-            }
-        }
-    } else {
+    if (navigator.canShare && !navigator.canShare(data)) {
+        console.log('Share data cannot be validated for share sheet, falling back to clipboard for share...');
+        // Fallback to copy to clipboard
         copyShareText(shareText);
+        return;
+    }
+    if (!navigator.share) {
+        console.log('Share sheet not available for this browser, falling back to clipboard for share...');
+        // Fallback to copy to clipboard
+        copyShareText(shareText);
+        return;
+    }
+    try {
+        await navigator.share(data);
+    } catch (err) {
+        if (err.name === 'NotAllowedError') {
+            console.log('Sharing was not allowed by the user or platform');
+            // Fallback to copy to clipboard
+            copyShareText(shareText);
+        } else if (err.name === 'AbortError') {
+            console.log('User aborted share operation');
+        } else {
+            console.error('Error sharing content:', err);
+            renderNotification("Could not share due to error");
+        }
     }
 }

@@ -85,13 +85,20 @@ Cypress.Commands.add("clearBrowserCache", () => {
 // Needed in order to make share tests work in headless
 // https://github.com/cypress-io/cypress/issues/8957
 Cypress.Commands.add("grantClipboardPermission", () => {
-    Cypress.automation('remote:debugger:protocol', {
-        command: 'Browser.grantPermissions',
-        params: {
-            permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'],
-            origin: window.location.origin,
-        },
-    });
+    cy.wrap(
+        Cypress.automation('remote:debugger:protocol', {
+            command: 'Browser.grantPermissions',
+            params: {
+                permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'],
+                origin: window.location.origin,
+            },
+        }).catch((error) =>
+			// Electron (v106 and newer) will land here, but that's ok, cause the permissions will be granted anyway
+            // https://github.com/cypress-io/cypress/issues/18675#issuecomment-1403483477
+            // https://gist.github.com/mbinic/e75a8910ec51a27a041f967e5b3a5345
+			Cypress.log({ message: `Permission request failed: ${error.message}` })
+		)
+    );
 });
 
 // Adapted from https://github.com/cypress-io/cypress/discussions/21150#discussioncomment-2620947
