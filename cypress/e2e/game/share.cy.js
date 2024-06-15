@@ -150,6 +150,8 @@ describe("sharing results", () => {
                 const copiedText = await win.navigator.clipboard.readText();
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
+
+            cy.contains("Copy to Clipboard").should("not.be.visible");
         });
 
         it("copies to clipboard automatically when share sheet fails due to permission issue", () => {
@@ -195,6 +197,8 @@ describe("sharing results", () => {
 ⬛🟨⬛⬛🟨
 🟩🟩🟩🟩🟩`);
             });
+
+            cy.contains("Copy to Clipboard").should("not.be.visible");
         });
 
         it("does not copy to clipboard automatically and instead displays error message when share sheet fails due to unknown error", () => {
@@ -240,6 +244,15 @@ describe("sharing results", () => {
                 const copiedText = await win.navigator.clipboard.readText();
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
+
+            cy.contains("Copy to Clipboard").should("be.visible").click();
+
+            cy.window().then(async (win) => {
+                const copiedText = await win.navigator.clipboard.readText();
+                expect(replaceCRLFWithLF(copiedText)).to.eq(`Wordle Clone 1 2/6
+⬛🟨⬛⬛🟨
+🟩🟩🟩🟩🟩`);
+            });
         });
 
         it("copies to clipboard automatically if browser cannot validate data to be shared", () => {
@@ -277,6 +290,8 @@ describe("sharing results", () => {
 ⬛🟨⬛⬛🟨
 🟩🟩🟩🟩🟩`);
             });
+
+            cy.contains("Copy to Clipboard").should("not.be.visible");
         });
     });
 

@@ -94,13 +94,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         renderWin() {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
-            winElem.querySelector(".share-button").addEventListener("click", (e) => {
+            const shareButton = winElem.querySelector(".share-button");
+            const copyButton = winElem.querySelector(".clipboard-button");
+            shareButton.addEventListener("click", async (e) => {
                 e.preventDefault();
                 const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
                     highContrastMode,
                     hardMode: gameState.wonHardMode,
                 });
-                triggerShare(shareText);
+                if (!await triggerShare(shareText)) {
+                    console.log("Triggering share not successful, swapping out for copy to clipboard button...");
+                    copyButton.style.display = "";
+                    shareButton.style.display = "none";
+                }
+            });
+            copyButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                    highContrastMode,
+                    hardMode: gameState.wonHardMode,
+                });
+                copyShareText(shareText);
             });
             const nextDate = getNextDate();
             updateCountdown(winElem.querySelector(".countdown"), nextDate);
@@ -110,13 +124,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
             loseElem.querySelector("#word").innerText = word;
-            loseElem.querySelector(".share-button").addEventListener("click", (e) => {
+            const shareButton = loseElem.querySelector(".share-button");
+            const copyButton = loseElem.querySelector(".clipboard-button")
+            shareButton.addEventListener("click", async (e) => {
                 e.preventDefault();
                 const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
                     highContrastMode,
                     hardMode,
                 });
-                triggerShare(shareText);
+                if (!await triggerShare(shareText)) {
+                    console.log("Triggering share not successful, swapping out for copy to clipboard button...");
+                    copyButton.style.display = "";
+                    shareButton.style.display = "none";
+                }
+            });
+            copyButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                    highContrastMode,
+                    hardMode,
+                });
+                copyShareText(shareText);
             });
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);

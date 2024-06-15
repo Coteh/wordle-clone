@@ -30,8 +30,9 @@ const fallbackCopyShareText = (shareText) => {
         textArea.select();
     }
 
+    let successful = false;
     try {
-        const successful = document.execCommand("copy");
+        successful = document.execCommand("copy");
         if (successful) {
             const message = document.createElement("span");
             message.innerText = "Copied to clipboard!";
@@ -49,21 +50,22 @@ const fallbackCopyShareText = (shareText) => {
     } finally {
         textArea.remove();
     }
+    return successful;
 };
 
-const copyShareText = (shareText) => {
+const copyShareText = async (shareText) => {
     if (!navigator.clipboard) {
         return fallbackCopyShareText(shareText);
     }
-    navigator.clipboard
-        .writeText(shareText)
-        .then(() => {
-            renderNotification("Copied to clipboard!");
-        })
-        .catch((e) => {
-            console.error(e);
-            renderNotification("Could not copy to clipboard due to error");
-        });
+    try {
+        await navigator.clipboard.writeText(shareText);
+    } catch (e) {
+        console.error(e);
+        renderNotification("Could not copy to clipboard due to error");
+        return false;
+    }
+    renderNotification("Copied to clipboard!");
+    return true;
 };
 
 const triggerShare = async (shareText) => {
@@ -73,14 +75,12 @@ const triggerShare = async (shareText) => {
     if (navigator.canShare && !navigator.canShare(data)) {
         console.log('Share data cannot be validated for share sheet, falling back to clipboard for share...');
         // Fallback to copy to clipboard
-        copyShareText(shareText);
-        return;
+        return copyShareText(shareText);
     }
     if (!navigator.share) {
         console.log('Share sheet not available for this browser, falling back to clipboard for share...');
         // Fallback to copy to clipboard
-        copyShareText(shareText);
-        return;
+        return copyShareText(shareText);
     }
     try {
         await navigator.share(data);
@@ -88,12 +88,18 @@ const triggerShare = async (shareText) => {
         if (err.name === 'NotAllowedError') {
             console.log('Sharing was not allowed by the user or platform');
             // Fallback to copy to clipboard
-            copyShareText(shareText);
+            return copyShareText(shareText);
         } else if (err.name === 'AbortError') {
             console.log('User aborted share operation');
+        } else if (err.name === 'NotSupportedError') {
+            console.error('Share sheet operation not supported');
+            // Fallback to copy to clipboard
+            return copyShareText(shareText);
         } else {
             console.error('Error sharing content:', err);
             renderNotification("Could not share due to error");
+            return false;
         }
     }
+    return true;
 }
