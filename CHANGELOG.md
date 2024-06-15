@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Browser: Sharing game results now uses Web Share API to allow users to share directly to other apps
+    - If sharing fails, a Copy to Clipboard button will be presented to the player which functions like the Share button previously and copies to clipboard
+
 ### Fixed
 
 - Browser: Fix error preventing the game from loading on older devices

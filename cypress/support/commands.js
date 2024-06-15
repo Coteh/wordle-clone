@@ -93,11 +93,11 @@ Cypress.Commands.add("grantClipboardPermission", () => {
                 origin: window.location.origin,
             },
         }).catch((error) =>
-			// Electron (v106 and newer) will land here, but that's ok, cause the permissions will be granted anyway
+            // Electron (v106 and newer) will land here, but that's ok, cause the permissions will be granted anyway
             // https://github.com/cypress-io/cypress/issues/18675#issuecomment-1403483477
             // https://gist.github.com/mbinic/e75a8910ec51a27a041f967e5b3a5345
-			Cypress.log({ message: `Permission request failed: ${error.message}` })
-		)
+            Cypress.log({ message: `Permission request failed: ${error.message}` })
+        )
     );
 });
 
