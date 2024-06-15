@@ -339,7 +339,8 @@ button.close {
 
 /* Specific Dialogs */
 
-.dialog button.share-button {
+.dialog button.share-button,
+.dialog button.clipboard-button {
     background-color: var(--correct-color);
 }
 
