@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-06-15
+
 ### Added
 
 - Browser: Sharing game results now uses Web Share API to allow users to share directly to other apps
@@ -379,7 +381,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial Release
 
-[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.2.8...HEAD
+[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/Coteh/wordle-clone/compare/v1.2.8...v1.3.0
 [1.2.8]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Coteh/wordle-clone/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/Coteh/wordle-clone/compare/v1.2.5...v1.2.6
