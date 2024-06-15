@@ -65,7 +65,7 @@ describe("sharing results", () => {
                 "This data should still be in clipboard when share is clicked";
 
             cy.window().then(async (win) => {
-                // Create the property for canShare it doesn't exist
+                // Create the property for canShare if it doesn't exist
                 if (!win.navigator.canShare) {
                     Object.defineProperty(win.navigator, 'canShare', {
                         value: cy.stub().callsFake((data) => true),
@@ -84,7 +84,7 @@ describe("sharing results", () => {
                     // Return a Promise to simulate the share operation
                     return Promise.resolve();
                 };
-                // Define share function as a stub if it's browser that doesn't support it normally, otherwise stub it directly
+                // Define share function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.share) {
                     Object.defineProperty(win.navigator, 'share', {
                         value: cy.stub().callsFake(shareFunc),
@@ -114,7 +114,7 @@ describe("sharing results", () => {
                 "This data should still be in clipboard when share is clicked";
 
             cy.window().then(async (win) => {
-                // Create the property for canShare it doesn't exist
+                // Create the property for canShare if it doesn't exist
                 if (!win.navigator.canShare) {
                     Object.defineProperty(win.navigator, 'canShare', {
                         value: cy.stub().callsFake((data) => true),
@@ -127,7 +127,7 @@ describe("sharing results", () => {
                     // Return a Promise to simulate cancelling share operation
                     return Promise.reject(new DOMException("Share canceled", "AbortError"));
                 };
-                // Define share function as a stub if it's browser that doesn't support it normally, otherwise stub it directly
+                // Define share function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.share) {
                     Object.defineProperty(win.navigator, 'share', {
                         value: cy.stub().callsFake(shareFunc),
@@ -159,7 +159,7 @@ describe("sharing results", () => {
                 "This data should still be in clipboard when share is clicked";
 
             cy.window().then(async (win) => {
-                // Create the property for canShare it doesn't exist
+                // Create the property for canShare if it doesn't exist
                 if (!win.navigator.canShare) {
                     Object.defineProperty(win.navigator, 'canShare', {
                         value: cy.stub().callsFake((data) => true),
@@ -172,7 +172,7 @@ describe("sharing results", () => {
                     // Return a Promise to simulate permission issue
                     return Promise.reject(new DOMException("User or app denied permission", "NotAllowedError"));
                 };
-                // Define share function as a stub if it's browser that doesn't support it normally, otherwise stub it directly
+                // Define share function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.share) {
                     Object.defineProperty(win.navigator, 'share', {
                         value: cy.stub().callsFake(shareFunc),
@@ -206,7 +206,7 @@ describe("sharing results", () => {
                 "This data should still be in clipboard when share is clicked";
 
             cy.window().then(async (win) => {
-                // Create the property for canShare it doesn't exist
+                // Create the property for canShare if it doesn't exist
                 if (!win.navigator.canShare) {
                     Object.defineProperty(win.navigator, 'canShare', {
                         value: cy.stub().callsFake((data) => true),
@@ -219,7 +219,7 @@ describe("sharing results", () => {
                     // Return a Promise to simulate unknown error
                     return Promise.reject(new DOMException("Unknown error", "UnknownError"));
                 };
-                // Define share function as a stub if it's browser that doesn't support it normally, otherwise stub it directly
+                // Define share function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.share) {
                     Object.defineProperty(win.navigator, 'share', {
                         value: cy.stub().callsFake(shareFunc),
@@ -265,7 +265,7 @@ describe("sharing results", () => {
                     // Return false to indicate that sharing cannot be done due to invalid data
                     return false;
                 };
-                // Define canShare function as a stub if it's browser that doesn't support it normally, otherwise stub it directly
+                // Define canShare function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.canShare) {
                     Object.defineProperty(win.navigator, 'canShare', {
                         value: cy.stub().callsFake(canShareFunc),
