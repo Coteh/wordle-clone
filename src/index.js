@@ -1,14 +1,15 @@
 const LIGHT_MODE = "light";
 const DARK_MODE = "dark";
 const SNOW_THEME = "snow";
+const QWERTY_KEYBOARD = "qwerty";
+const DVORAK_KEYBOARD = "dvorak";
+const ALPHABETICAL_KEYBOARD = "alphabetical";
 const HIGH_CONTRAST = "high-contrast";
 
 const THEME_PREFERENCE_NAME = "theme";
 const HIGH_CONTRAST_PREFERENCE_NAME = "high-contrast";
-
-const THEME_SETTING_NAME = "theme-switch";
-const HIGH_CONTRAST_SETTING_NAME = "high-contrast";
 const HARD_MODE_PREFERENCE_NAME = "hard-mode";
+const KEYBOARD_PREFERENCE_NAME = "keyboard";
 
 const SETTING_ENABLED = "enabled";
 const SETTING_DISABLED = "disabled";
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 attempt.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             });
             currentInputElem = inputRowElems[attempts.length];
-            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState);
+            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState, selectedKeyboard);
         },
         renderCheckResults(results) {
             for (let i = 0; i < 5; i++) {
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ).className = `box ${getLetterColourClass(results, i)}`;
             }
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
-            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState);
+            renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState, selectedKeyboard);
         },
         renderCheckError(error) {
             renderNotification(getErrorMessage(error));
@@ -304,6 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (snowEmbed) snowEmbed.style.display = "none";
 
     let selectedTheme = DARK_MODE;
+    let selectedKeyboard = QWERTY_KEYBOARD;
     let highContrastMode = false;
     let hardMode = false;
 
@@ -311,10 +313,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const switchTheme = (theme) => {
         if (!theme || !selectableThemes.includes(theme)) {
-            theme = "dark";
+            theme = DARK_MODE;
         }
         document.body.classList.remove(selectedTheme);
-        if (theme !== "dark") {
+        if (theme !== DARK_MODE) {
             document.body.classList.add(theme);
         }
         let themeColor = "#000";
@@ -332,19 +334,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         selectedTheme = theme;
     };
 
+    const selectableKeyboards = [QWERTY_KEYBOARD, DVORAK_KEYBOARD, ALPHABETICAL_KEYBOARD];
+
+    const switchKeyboard = (keyboard) => {
+        if (!keyboard || !selectableKeyboards.includes(keyboard)) {
+            keyboard = QWERTY_KEYBOARD;
+        }
+        selectedKeyboard = keyboard;
+    };
+
     const settings = document.querySelectorAll(".setting");
     settings.forEach((setting) => {
         setting.addEventListener("click", (e) => {
             const elem = e.target;
             let enabled = false;
-            if (elem.classList.contains(THEME_SETTING_NAME)) {
+            if (elem.classList.contains(`${THEME_PREFERENCE_NAME}-switch`)) {
                 const toggle = setting.querySelector(".toggle");
                 const themeIndex = selectableThemes.indexOf(selectedTheme);
                 const nextTheme = selectableThemes[(themeIndex + 1) % selectableThemes.length];
                 switchTheme(nextTheme);
                 savePreferenceValue(THEME_PREFERENCE_NAME, nextTheme);
                 toggle.innerText = nextTheme;
-            } else if (elem.classList.contains(HIGH_CONTRAST_SETTING_NAME)) {
+            } else if (elem.classList.contains(HIGH_CONTRAST_PREFERENCE_NAME)) {
                 const knob = setting.querySelector(".knob");
                 enabled = highContrastMode = !highContrastMode;
                 if (highContrastMode) {
@@ -378,24 +389,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     knob.classList.remove("enabled");
                 }
+            } else if (elem.classList.contains(`${KEYBOARD_PREFERENCE_NAME}-switch`)) {
+                const toggle = setting.querySelector(".toggle");
+                const keyboardIndex = selectableKeyboards.indexOf(selectedKeyboard);
+                const nextKeyboard = selectableKeyboards[(keyboardIndex + 1) % selectableKeyboards.length];
+                switchKeyboard(nextKeyboard);
+                savePreferenceValue(KEYBOARD_PREFERENCE_NAME, nextKeyboard);
+                toggle.innerText = nextKeyboard === QWERTY_KEYBOARD ? nextKeyboard.toUpperCase() : nextKeyboard;
+                renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState, selectedKeyboard);
             }
         });
     });
 
     initPreferences();
     switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
-    const themeSetting = document.querySelector(".setting.theme-switch");
+    switchKeyboard(getPreferenceValue(KEYBOARD_PREFERENCE_NAME));
+    const themeSetting = document.querySelector(`.setting.${THEME_PREFERENCE_NAME}-switch`);
     themeSetting.querySelector(".toggle").innerText = selectedTheme;
+    const keyboardSetting = document.querySelector(`.setting.${KEYBOARD_PREFERENCE_NAME}-switch`);
+    keyboardSetting.querySelector(".toggle").innerText = selectedKeyboard === QWERTY_KEYBOARD ? selectedKeyboard.toUpperCase() : selectedKeyboard;
     if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
         highContrastMode = true;
-        const setting = document.querySelector(".setting.high-contrast");
+        const setting = document.querySelector(`.setting.${HIGH_CONTRAST_PREFERENCE_NAME}`);
         const knob = setting.querySelector(".knob");
         knob.classList.add("enabled");
         document.body.classList.add(HIGH_CONTRAST);
     }
     if (getPreferenceValue(HARD_MODE_PREFERENCE_NAME) === SETTING_ENABLED) {
         hardMode = true;
-        const setting = document.querySelector(".setting.hard-mode");
+        const setting = document.querySelector(`.setting.${HARD_MODE_PREFERENCE_NAME}`);
         const knob = setting.querySelector(".knob");
         knob.classList.add("enabled");
     }

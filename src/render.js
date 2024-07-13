@@ -18,12 +18,31 @@ const renderInputRow = (parentElem, numberOfLetters) => {
     return container;
 };
 
-const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, gameState) => {
-    const rows = [
-        ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-        ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-        ["enter", "z", "x", "c", "v", "b", "n", "m", "backspace"],
-    ];
+const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, gameState, keyboard) => {
+    let rows;
+    switch (keyboard) {
+        case DVORAK_KEYBOARD:
+            rows = [
+                ["p", "y", "f", "g", "c", "r", "l", "backspace"],
+                ["a", "o", "e", "u", "i", "d", "h", "t", "n", "s"],
+                ["enter", "q", "j", "k", "x", "b", "m", "w", "v", "z"],
+            ];
+            break;
+        case ALPHABETICAL_KEYBOARD:
+            rows = [
+                ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+                ["k", "l", "m", "n", "o", "p", "q", "r", "s"],
+                ["enter", "t", "u", "v", "w", "x", "y", "z", "backspace"],
+            ];
+            break;
+        default: // QWERTY_KEYBOARD
+            rows = [
+                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+                ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+                ["enter", "z", "x", "c", "v", "b", "n", "m", "backspace"],
+            ];
+            break;
+    }
     const bigKeys = ["enter", "backspace"];
     const container = document.createElement("div");
     container.id = "keyboard";
