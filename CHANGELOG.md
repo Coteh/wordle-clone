@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2024-07-13
+
+### Added
+
+- Dvorak and Alphabetical on-screen keyboard layouts 
+
 ## [1.3.0] - 2024-06-15
 
 ### Added
@@ -381,7 +387,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial Release
 
-[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/Coteh/wordle-clone/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/Coteh/wordle-clone/compare/v1.2.8...v1.3.0
 [1.2.8]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/Coteh/wordle-clone/compare/v1.2.6...v1.2.7
