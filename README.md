@@ -134,6 +134,7 @@ Using [mkcert](https://github.com/FiloSottile/mkcert), run the following command
 mkdir ssl
 cd ssl
 
+# run this on elevated shell on Windows
 mkcert -install
 
 mkcert localhost 127.0.0.1 ::1
