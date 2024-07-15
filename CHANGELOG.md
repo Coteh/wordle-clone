@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2024-07-14
+
 ### Changed
 
 - Vendor Feather icons dependency for increased reliability
@@ -391,7 +393,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial Release
 
-[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.3.1...HEAD
+[unreleased]: https://github.com/Coteh/wordle-clone/compare/v1.3.2...HEAD
+[1.3.2]: https://github.com/Coteh/wordle-clone/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/Coteh/wordle-clone/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/Coteh/wordle-clone/compare/v1.2.8...v1.3.0
 [1.2.8]: https://github.com/Coteh/wordle-clone/compare/v1.2.7...v1.2.8
