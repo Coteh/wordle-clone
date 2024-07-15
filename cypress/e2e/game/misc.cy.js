@@ -249,7 +249,7 @@ describe("misc", () => {
         // This test has issues with interception of the feather-icons dependency, it occasionally gets cached.
         // Turning off caching for this test.
         it("should be able to be played if feather icons could not load", () => {
-            cy.intercept("https://unpkg.com/**/feather.min.js", {
+            cy.intercept("/vendor/feather.min.js", {
                 statusCode: 500,
             }).as("feather");
 

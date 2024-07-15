@@ -175,4 +175,3 @@ npm run cypress run
 - Player Statistics
 - Archive
 - Animations
-- Code cleanup
