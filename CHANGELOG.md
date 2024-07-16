@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Adjust styling of dialog buttons for both regular and high contrast modes
+
 ## [1.3.2] - 2024-07-14
 
 ### Changed
