@@ -215,6 +215,18 @@ button.close {
     color: var(--text-color);
 }
 
+button.button {
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    margin: 0.5em 0em 0.5em 0em;
+    border-radius: 8em;
+    background-color: var(--correct-color);
+}
+
+button.button > * {
+    color: var(--letter-selected-inverted-text-color);
+    font-weight: bold;
+}
+
 /* Settings */
 
 .settings {
@@ -328,7 +340,6 @@ button.close {
 
 .dialog button > span {
     margin-left: 8px;
-    color: var(--text-color);
 }
 
 .dialog button.close {
@@ -338,15 +349,6 @@ button.close {
 }
 
 /* Specific Dialogs */
-
-.dialog button.share-button,
-.dialog button.clipboard-button {
-    background-color: var(--correct-color);
-}
-
-.dialog button.share-button > * {
-    color: var(--letter-selected-text-color);
-}
 
 .dialog > .dialog-content > .how-to-play {
     height: 100%;
