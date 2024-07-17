@@ -94,6 +94,16 @@ Options:
   -h, --help         display help for command
 ```
 
+##### Uninstalling CLI
+
+You can use the command `wordle data -s` to find the state file on your machine, as well as `wordle data -p` to find the preferences file on your machine.
+
+Uninstalling the game and all its data from your machine is as simple as deleting those underlying directories, then running:
+
+```
+npm uninstall -g wordle-clone
+```
+
 ## Development
 
 Clone this repository, then run the following:
