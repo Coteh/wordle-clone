@@ -26,6 +26,7 @@ Can be played on either the browser or the command line.
   - Light
   - Snow
 - Tap and hold backspace to clear input
+- QWERTY, Dvorak, and Alphabetical on-screen keyboards
 
 ## Setup
 
