@@ -68,6 +68,8 @@
     --fallback-background-color: rgb(2, 0, 36);
 
     --standard-block-color: rgba(0, 0, 0, 0);
+
+    --dialog-background-color: #070069;
 }
 
 .high-contrast {
