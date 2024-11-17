@@ -25,7 +25,7 @@ describe("sharing results", () => {
         cy.waitForGameReady();
     });
 
-    const performAction = (word) => {
+    const performWordSubmissions = (secondWord) => {
         cy.keyboardItem("g").click();
         cy.keyboardItem("l").click();
         cy.keyboardItem("i").click();
@@ -33,12 +33,10 @@ describe("sharing results", () => {
         cy.keyboardItem("e").click();
         cy.keyboardItem("enter").click();
 
-        for (let i = 0; i < word.length; i++) {
-            cy.keyboardItem(word[i]).click();
+        for (let i = 0; i < secondWord.length; i++) {
+            cy.keyboardItem(secondWord[i]).click();
         }
         cy.keyboardItem("enter").click();
-
-        cy.get(".share-button").click();
     };
 
     const stubShare = () => {
@@ -63,6 +61,7 @@ describe("sharing results", () => {
         it("sends data to share sheet", () => {
             const PREV_COPIED_TEXT =
                 "This data should still be in clipboard when share is clicked";
+            let shareStub;
 
             cy.window().then(async (win) => {
                 // Create the property for canShare if it doesn't exist
@@ -73,26 +72,16 @@ describe("sharing results", () => {
                         configurable: true
                     });
                 }
-                const shareFunc = (data) => {
-                    console.log('Shared data:', data);
-
-                    expect(Object.keys(data)).to.deep.eq(["text"]);
-                    expect(replaceCRLFWithLF(data.text)).to.eq(`Wordle Clone 1 2/6
-⬛🟨⬛⬛🟨
-🟩🟩🟩🟩🟩`);
-                    
-                    // Return a Promise to simulate the share operation
-                    return Promise.resolve();
-                };
                 // Define share function as a stub if it's a browser that doesn't support it normally, otherwise stub it directly
                 if (!win.navigator.share) {
+                    shareStub = cy.stub().resolves();
                     Object.defineProperty(win.navigator, 'share', {
-                        value: cy.stub().callsFake(shareFunc),
+                        value: shareStub,
                         writable: true,
                         configurable: true
                     });
                 } else {
-                    cy.stub(win.navigator, 'share').callsFake(shareFunc);
+                    shareStub = cy.stub(win.navigator, 'share').resolves();
                 }
 
                 win.focus();
@@ -101,7 +90,16 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+
+            cy.get(".share-button").click().then(() => {
+                expect(shareStub).to.be.calledOnce;
+                expect(shareStub).to.be.calledWithExactly({
+                    text: `Wordle Clone 1 2/6
+⬛🟨⬛⬛🟨
+🟩🟩🟩🟩🟩`,
+                });
+            });
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -144,7 +142,8 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -189,7 +188,8 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -236,7 +236,8 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.contains("Could not share due to error").should("be.visible");
 
@@ -282,7 +283,8 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -311,7 +313,8 @@ describe("sharing results", () => {
                 expect(copiedText).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -325,7 +328,8 @@ describe("sharing results", () => {
         // https://github.com/Coteh/wordle-clone/actions/runs/3864885869/jobs/6588015395
         // TODO: If it happens again, or if it happens more often, look into a fix.
         it("should show a message when results have been copied", () => {
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.contains("Copied to clipboard").should("be.visible");
         });
@@ -341,7 +345,8 @@ describe("sharing results", () => {
                 win.navigator.clipboard.writeText = cy.stub().rejects(new Error("Error copying"));
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.contains("Could not copy to clipboard due to error").should("be.visible");
 
@@ -373,7 +378,8 @@ describe("sharing results", () => {
                 expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -394,7 +400,8 @@ describe("sharing results", () => {
                 expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.visit("/", {
                 onBeforeLoad: () => {
@@ -437,7 +444,8 @@ describe("sharing results", () => {
                 expect(replaceCRLFWithLF(copiedText)).to.eq(PREV_COPIED_TEXT);
             });
 
-            performAction("leafy");
+            performWordSubmissions("leafy");
+            cy.get(".share-button").click();
 
             cy.visit("/", {
                 onBeforeLoad: () => {
@@ -568,7 +576,8 @@ describe("sharing results", () => {
             stubShare();
             cy.waitForGameReady();
 
-            performAction("chief");
+            performWordSubmissions("chief");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 win.focus();
@@ -587,7 +596,8 @@ describe("sharing results", () => {
             stubShare();
             cy.waitForGameReady();
 
-            performAction("urban");
+            performWordSubmissions("urban");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
@@ -607,7 +617,8 @@ describe("sharing results", () => {
             stubShare();
             cy.waitForGameReady();
 
-            performAction("plait");
+            performWordSubmissions("plait");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 win.focus();
@@ -628,7 +639,8 @@ describe("sharing results", () => {
             stubShare();
             cy.waitForGameReady();
 
-            performAction("buffs");
+            performWordSubmissions("buffs");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 win.focus();
@@ -647,7 +659,8 @@ describe("sharing results", () => {
             stubShare();
             cy.waitForGameReady();
 
-            performAction("toots");
+            performWordSubmissions("toots");
+            cy.get(".share-button").click();
 
             cy.window().then(async (win) => {
                 const copiedText = await win.navigator.clipboard.readText();
