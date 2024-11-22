@@ -451,6 +451,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     checkForOrientation(landscapeQuery);
 
+    // TODO: Also check if local storage exists but throws errors
+    if (!window.localStorage) {
+        const dialogElem = document.createElement("span");
+        dialogElem.innerText = "Local storage not enabled. You will still be able to play the game, but won't be able to save your progress.";
+        renderDialog(dialogElem, {
+            fadeIn: true,
+        });
+        const dialog = document.querySelector(".dialog");
+        const dialogContent = dialog.querySelector(".dialog-content");
+        const okButton = document.createElement("button");
+        okButton.classList.add("button");
+        okButton.textContent = "OK";
+        okButton.addEventListener("click", (e) => {
+            const dialog = document.querySelector(".dialog");
+            closeDialog(dialog, overlayBackElem);
+        });
+        dialogContent.appendChild(okButton);
+    }
+
     try {
         await initGame(eventHandler);
     } catch (e) {

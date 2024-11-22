@@ -21,3 +21,4 @@ import "./commands";
 
 import "cypress-real-events/support";
 import 'cypress-wait-until';
+import "cypress-localstorage-commands";

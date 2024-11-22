@@ -11,31 +11,47 @@ if (typeof process !== "undefined") {
 }
 
 const saveGame = (attempts, lives, ended, day, wonHardMode) => {
-    window.localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
-    window.localStorage.setItem(LIVES_KEY, lives);
-    window.localStorage.setItem(ENDED_KEY, ended);
-    window.localStorage.setItem(DAY_KEY, day);
-    window.localStorage.setItem(WON_HARD_MODE_KEY, wonHardMode);
+    try {
+        if (!window.localStorage) {
+            throw new LocalStorageNotAvailableError();
+        }
+        window.localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
+        window.localStorage.setItem(LIVES_KEY, lives);
+        window.localStorage.setItem(ENDED_KEY, ended);
+        window.localStorage.setItem(DAY_KEY, day);
+        window.localStorage.setItem(WON_HARD_MODE_KEY, wonHardMode);
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 const savePreferences = (preferences) => {
-    window.localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+    try {
+        window.localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 const loadGame = () => {
-    const attempts = JSON.parse(window.localStorage.getItem(ATTEMPTS_KEY)) || [];
-    let lives = parseInt(window.localStorage.getItem(LIVES_KEY));
-    if (lives == null || isNaN(lives)) {
-        lives = STARTING_LIVES;
+    try {
+        const attempts = JSON.parse(window.localStorage.getItem(ATTEMPTS_KEY)) || [];
+        let lives = parseInt(window.localStorage.getItem(LIVES_KEY));
+        if (lives == null || isNaN(lives)) {
+            lives = STARTING_LIVES;
+        }
+        const ended = JSON.parse(window.localStorage.getItem(ENDED_KEY)) || false;
+        const wonHardMode = JSON.parse(window.localStorage.getItem(WON_HARD_MODE_KEY)) || false;
+        return {
+            attempts,
+            lives,
+            ended,
+            wonHardMode,
+        };
+    } catch (e) {
+        console.error(e);
+        return null;
     }
-    const ended = JSON.parse(window.localStorage.getItem(ENDED_KEY)) || false;
-    const wonHardMode = JSON.parse(window.localStorage.getItem(WON_HARD_MODE_KEY)) || false;
-    return {
-        attempts,
-        lives,
-        ended,
-        wonHardMode,
-    };
 };
 
 const loadPreferences = () => {
@@ -53,21 +69,50 @@ const loadPreferences = () => {
 };
 
 const clearGame = () => {
-    window.localStorage.removeItem(ATTEMPTS_KEY);
-    window.localStorage.removeItem(LIVES_KEY);
-    window.localStorage.removeItem(DAY_KEY);
-    window.localStorage.removeItem(WON_HARD_MODE_KEY);
+    try {
+        window.localStorage.removeItem(ATTEMPTS_KEY);
+        window.localStorage.removeItem(LIVES_KEY);
+        window.localStorage.removeItem(DAY_KEY);
+        window.localStorage.removeItem(WON_HARD_MODE_KEY);
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 const clearPreferences = () => {
-    window.localStorage.removeItem(PREFERENCES_KEY);
+    try {
+        window.localStorage.removeItem(PREFERENCES_KEY);
+    } catch (e) {
+        console.error(e);
+    }
 };
 
-const checkGameValidity = () => parseInt(window.localStorage.getItem(DAY_KEY)) === getCurrentDay();
+const checkGameValidity = () => {
+    try {
+        return parseInt(window.localStorage.getItem(DAY_KEY)) === getCurrentDay()
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
 
-const checkFirstTime = () => window.localStorage.getItem(PLAYED_BEFORE_KEY) !== "true";
+const checkFirstTime = () => {
+    try {
+        return window.localStorage.getItem(PLAYED_BEFORE_KEY) !== "true";
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
 
-const setPlayedBefore = (status) => window.localStorage.setItem(PLAYED_BEFORE_KEY, status);
+const setPlayedBefore = (status) => {
+    try {
+        return window.localStorage.setItem(PLAYED_BEFORE_KEY, status);
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
 
 if (typeof process !== "undefined") {
     module.exports = {
