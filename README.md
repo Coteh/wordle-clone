@@ -16,9 +16,9 @@ Can be played on either the browser or the command line.
 
 - Base browser game
 - Also playable on the terminal
-- Share functionality
+- Share functionality (using OS-native share sheet or copy to clipboard as fallback)
 - Countdown to next day's Wordle
-- Can be launched as PWA on mobile
+- Mobile-friendly web app (can be added to mobile home screens as an app, runs in fullscreen)
 - Hard Mode
 - High Contrast Mode
 - Themes
