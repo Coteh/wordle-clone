@@ -9,5 +9,5 @@ if [ "$DEPLOY_ENV" = "" ]; then
     exit 1
 fi
 
-magick icon152.png -gravity south -fill black -undercolor '#FFFFFF' -pointsize 42 -annotate +0+10 "$DEPLOY_ENV" icon152_nonprod.png
-magick icon128.png -gravity south -fill black -undercolor '#FFFFFF' -pointsize 36 -annotate +0+10 "$DEPLOY_ENV" icon128_nonprod.png
+magick icon152.png -gravity south -fill black -undercolor '#FFFFFF' -pointsize 42 -font Lato-Black -annotate +0+10 "$DEPLOY_ENV" icon152_nonprod.png
+magick icon128.png -gravity south -fill black -undercolor '#FFFFFF' -pointsize 36 -font Lato-Black -annotate +0+10 "$DEPLOY_ENV" icon128_nonprod.png
