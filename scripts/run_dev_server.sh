@@ -2,22 +2,30 @@
 
 set -e
 
-DEV_SERVER="$(pwd)/node_modules/.bin/serve --config serve.json"
+DEV_SERVER="$(pwd)/node_modules/.bin/serve"
 DEV_SERVER_TYPE="$1"
 DEPLOY_ENV="$2"
 OUTPUT_DIR=./build
+MAGICK=magick
 
-# Create build directory to put the modified icons in
-mkdir -p $OUTPUT_DIR
+# If ImageMagick is installed on the system, then perform app icon modification so that it has a label on it
+if [ -x "$(command -v $MAGICK)" ]; then
+    # Create build directory to put the modified icons in
+    mkdir -p $OUTPUT_DIR
 
-# Modify app icons so that they have the label supplied by $DEPLOY_ENV to them
-./scripts/gen_nonprod_icon.sh "$DEPLOY_ENV"
-for file in icon*_nonprod.png; do
-    cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"
-    if [ "$?" = 0 ]; then
-        rm "$file"
-    fi
-done
+    # Modify app icons so that they have the label supplied by $DEPLOY_ENV on them
+    ./scripts/gen_nonprod_icon.sh "$DEPLOY_ENV"
+    for file in icon*_nonprod.png; do
+        cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"
+        if [ "$?" = 0 ]; then
+            rm "$file"
+        fi
+    done
+
+    DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
+else
+    echo "ImageMagick not installed on system, skipping icon modification..."
+fi
 
 # Serve the dev server
 if [ "$DEV_SERVER_TYPE" = "HTTPS" ]; then
