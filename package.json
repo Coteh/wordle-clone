@@ -8,8 +8,8 @@
     "wordle-clone": "./cli.js"
   },
   "scripts": {
-    "dev": "serve -p 5500",
-    "devs": "serve -p 5501 --ssl-cert ./ssl/localhost+2.pem --ssl-key ./ssl/localhost+2-key.pem",
+    "dev": "./scripts/run_dev_server.sh HTTP LOCAL",
+    "devs": "./scripts/run_dev_server.sh HTTPS LOCALS",
     "build": "./scripts/build.sh",
     "test": "NODE_ENV=test mocha",
     "test-ci": "mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./results/unit-test-results.xml",

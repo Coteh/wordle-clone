@@ -1,0 +1,8 @@
+{
+    "redirects": [
+        {
+            "source": "/icon:size.png",
+            "destination": "/build/icon:size.png"
+        }
+    ]
+}
