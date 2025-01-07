@@ -24,12 +24,18 @@ cp manifest.json $OUTPUT_DIR
 cp words.txt $OUTPUT_DIR
 
 if [ "$DEPLOY_ENV" != "" ]; then
-    ./scripts/gen_nonprod_icon.sh "$DEPLOY_ENV"
+    MAGICK=magick
+
+    # If ImageMagick is installed on the system, then perform app icon modification so that it has a label on it
+    if [ -x "$(command -v $MAGICK)" ]; then
+        # Modify app icons so that they have the label supplied by $DEPLOY_ENV on them
+        ./scripts/gen_nonprod_icon.sh "$DEPLOY_ENV"
+    else
+        echo "ImageMagick not installed on system, skipping icon modification..."
+    fi
+
     for file in icon*_nonprod.png; do
         cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"
-        if [ "$?" = 0 ]; then
-            rm "$file"
-        fi
     done
 else
     cp icon*.png $OUTPUT_DIR

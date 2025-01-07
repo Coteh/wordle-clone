@@ -159,6 +159,35 @@ npm run devs
 
 The game should render when navigating to https://localhost:5501.
 
+### Optional Components
+
+#### Nonprod App Icon
+
+With [ImageMagick](https://imagemagick.org/) installed, both the build script and the dev server are capable of generating a version of the app icon with a label (e.g., "LOCAL", "DEV") at the bottom. This helps distinguish the local version of the app from the production build when saving it to the home screen.
+
+![prod app icon](icon128.png)
+![local app icon](icon128_nonprod.png)
+
+For systems without ImageMagick, the pregenerated version of the icon in the repo is used.
+
+To generate icons with different labels, pass the label as an argument to `./scripts/gen_nonprod_icon.sh`.
+
+Example:
+```sh
+./scripts/gen_nonprod_icon.sh DEV
+```
+
+This command creates icons with the "DEV" label.
+
+The dev server always creates icons with the "LOCAL" label. For builds, any label can be specified by including it as the first argument for the build command.
+
+Example:
+```sh
+npm run build -- DEV
+```
+
+This command creates icons with the "DEV" label and copies them to the build output.
+
 ## Testing
 
 Run the following to launch unit tests:
