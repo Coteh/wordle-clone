@@ -3,6 +3,11 @@
         {
             "source": "/icon:size.png",
             "destination": "/build/icon:size.png"
+        },
+        {
+            "source": "/CHANGELOG.html",
+            "destination": "/build/CHANGELOG.html"
         }
-    ]
+    ],
+    "cleanUrls": ["/"]
 }

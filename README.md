@@ -27,6 +27,10 @@ Can be played on either the browser or the command line.
   - Snow
 - Tap and hold backspace to clear input
 - QWERTY, Dvorak, and Alphabetical on-screen keyboards
+- Changelog Dialog
+    - Shows the contents of [CHANGELOG.md](CHANGELOG.md) in a dialog box in-game
+    - Uses [marked](https://github.com/markedjs/marked) to parse the changelog markdown file into HTML to be displayed in the dialog
+      - Does it during build time to avoid having to bundle the markdown parser in the final build
 
 ## Setup
 

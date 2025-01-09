@@ -311,6 +311,7 @@ button.button > * {
     border: 1px solid black;
     width: 300px;
     height: auto;
+    margin: 0;
 
     opacity: 1;
 
@@ -330,6 +331,23 @@ button.button > * {
     left: 50%;
     transform: translate(-50%, -50%);
     overflow: auto;
+}
+
+.dialog > div.dialog-content > div.dialog-text {
+    height: 100%;
+    position: relative;
+}
+
+.dialog > div.dialog-content > div.dialog-text > ul > li {
+    margin-bottom: 8px;
+}
+
+.dialog > div.dialog-content > div.dialog-text > ul > li:last-child {
+    margin-bottom: 0;
+}
+
+.dialog > div.dialog-content > div.dialog-text > *:last-child {
+    padding: 0 0 16px 0;
 }
 
 .dialog > div.dialog-content > span {
@@ -389,7 +407,7 @@ button.button > * {
     position: fixed;
     top: 10%;
     left: 50%;
-    z-index: 101;
+    z-index: 102;
     transform: translate(-50%, 0);
 
     display: flex;
@@ -398,11 +416,14 @@ button.button > * {
     width: 60%;
 }
 
-.notification-area > div.notification {
+.notification-area > .notification {
     background-color: var(--notification-background-color);
     border: 1px solid var(--notification-background-color);
     border-radius: 0.25rem;
     margin: 0.2rem;
+
+    /* Need to inherit z-index from parent, otherwise they won't appear on top of dialogs in iOS Safari */
+    z-index: inherit;
 
     text-align: center;
 
@@ -410,7 +431,7 @@ button.button > * {
     transition: opacity 0.25s;
 }
 
-.notification-area > div.notification > div.notification-content {
+.notification-area > .notification > .notification-content {
     padding: 1rem 1.5rem;
     font-weight: bold;
     color: var(--notification-text-color);

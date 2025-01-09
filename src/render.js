@@ -130,7 +130,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
     return container;
 };
 
-const renderDialog = (content, fadeIn, closable = true) => {
+const renderDialog = (content, options) => {
     // Close any currently existing dialogs
     const dialogElem = document.querySelector(".dialog");
     if (dialogElem) dialogElem.remove();
@@ -138,32 +138,40 @@ const renderDialog = (content, fadeIn, closable = true) => {
     const template = document.querySelector("#dialog");
     const clone = template.content.cloneNode(true);
 
-    const overlayBackElem = document.querySelector(".overlay-back");
+    const dialog = clone.querySelector(".dialog");
 
-    const closeBtn = clone.querySelector("button.close");
-    if (closable) {
-        closeBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            const dialog = document.querySelector(".dialog");
-            dialog.remove();
-            overlayBackElem.style.display = "none";
-        });
-    } else {
-        closeBtn.style.display = "none";
-    }
+    const overlayBackElem = document.querySelector(".overlay-back");
 
     const dialogContent = clone.querySelector(".dialog-content");
     dialogContent.appendChild(content);
 
-    if (fadeIn) {
-        const dialog = clone.querySelector(".dialog");
-        dialog.style.opacity = 0;
-        dialog.style.top = "100%";
-        setTimeout(() => {
-            const dialog = document.querySelector(".dialog");
-            dialog.style.opacity = "";
-            dialog.style.top = "";
-        }, 10);
+    if (options) {
+        if (options.fadeIn) {
+            dialog.style.opacity = "0";
+            dialog.style.top = "100%";
+            setTimeout(() => {
+                const dialog = document.querySelector(".dialog");
+                dialog.style.opacity = "";
+                dialog.style.top = "";
+            }, 10);
+        }
+
+        const closeBtn = clone.querySelector("button.close");
+        if (options.closable || options.closable == null) {
+            closeBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const dialog = document.querySelector(".dialog");
+                dialog.close();
+                dialog.remove();
+                overlayBackElem.style.display = "none";
+            });
+        } else {
+            closeBtn.style.display = "none";
+        }
+
+        if (options.style) {
+            Object.assign(dialog.style, options.style);
+        }
     }
 
     document.body.appendChild(clone);
@@ -175,6 +183,8 @@ const renderDialog = (content, fadeIn, closable = true) => {
     } else {
         document.querySelector(".dialog [data-feather='x']").innerText = "X";
     }
+
+    dialog.show();
 };
 
 const renderNotification = (msg) => {

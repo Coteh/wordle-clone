@@ -120,7 +120,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nextDate = getNextDate();
             updateCountdown(winElem.querySelector(".countdown"), nextDate);
             setCountdownInterval(nextDate);
-            renderDialog(winElem, true);
+            renderDialog(winElem, {
+                fadeIn: true,
+                closable: true,
+            });
         },
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
@@ -150,7 +153,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);
             setCountdownInterval(nextDate);
-            renderDialog(loseElem, true);
+            renderDialog(loseElem, {
+                fadeIn: true,
+                closable: true,
+            });
         },
         renderInput(key) {
             const elem = document.querySelector(
@@ -188,7 +194,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.querySelector(".day-number").innerText = `Day #${day}`;
                 break;
             case "first_time":
-                renderDialog(createDialogContentFromTemplate("#how-to-play"), true);
+                renderDialog(createDialogContentFromTemplate("#how-to-play"), {
+                    fadeIn: true,
+                    closable: true,
+                });
                 break;
             case "draw":
                 if (!gameLoaded || gameState.attempts.length <= 0) return;
@@ -214,6 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (closeBtn.style.display === "none") {
                 return;
             }
+            dialog.close();
             dialog.remove();
         }
         // NTS: Perhaps it'd make more sense if overlay backdrop only disappeared when a valid dialog is passed,
@@ -265,7 +275,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const helpLink = document.querySelector(".help-link");
     helpLink.addEventListener("click", (e) => {
         e.preventDefault();
-        renderDialog(createDialogContentFromTemplate("#how-to-play"), true);
+        renderDialog(createDialogContentFromTemplate("#how-to-play"), {
+            fadeIn: true,
+            closable: true,
+        });
         helpLink.blur();
     });
 
@@ -451,6 +464,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     checkForOrientation(landscapeQuery);
 
+    const changelogLink = document.querySelector("#changelog-link");
+    changelogLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        // Fetch changelog
+        // TODO: Cache it
+        const changelog = await fetch("CHANGELOG.html").then((res) => res.text());
+        const dialogElem = createDialogContentFromTemplate("#changelog-content");
+        const changelogElem = dialogElem.querySelector("#changelog-text");
+        changelogElem.innerHTML = changelog;
+        // Capitalize title
+        changelogElem.children.item(0).style.textTransform = "uppercase";
+        // Remove Keep a Changelog and Unreleased sections
+        changelogElem.children.item(1)?.remove();
+        changelogElem.children.item(1)?.remove();
+        changelogElem.children.item(1)?.remove();
+        // All links in this section should open a new tab
+        changelogElem.querySelectorAll("a").forEach((elem) => (elem.target = "_blank"));
+        renderDialog(dialogElem, {
+            fadeIn: true,
+            closable: true,
+            style: {
+                width: "75%",
+                height: "75%",
+                maxWidth: "600px",
+            },
+        });
+    });
+
     try {
         await initGame(eventHandler);
     } catch (e) {
@@ -463,7 +504,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Unknown error occurred", e);
             errorContent.innerText = e.message;
         }
-        renderDialog(elem, true, false);
+        renderDialog(elem, {
+            fadeIn: true,
+            closable: false,
+        });
     }
 
     gameLoaded = true;

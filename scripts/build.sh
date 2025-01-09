@@ -42,3 +42,6 @@ else
         cp "$file" "$OUTPUT_DIR"
     done
 fi
+
+# Generate changelog HTML and copy it to the build directory
+./scripts/gen_changelog_html.js > $OUTPUT_DIR/CHANGELOG.html

@@ -102,7 +102,7 @@
                 <span class="space"></span>
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <a href="https://github.com/Coteh/wordle-clone/releases" target="_blank">
+                        <a href="#" id="changelog-link" target="_blank">
                             <span class="version-number">v1.3.5</span>
                         </a>
                     </div>
@@ -131,11 +131,11 @@
             </div>
         </div>
         <template id="dialog">
-            <div class="dialog">
+            <dialog class="dialog">
                 <button class="close"><i data-feather="x"></i></button>
                 <div class="dialog-content">
                 </div>
-            </div>
+            </dialog>
         </template>
         <template id="notification">
             <div class="notification">
@@ -215,6 +215,9 @@
                     <span class="text">Good luck!</span>
                 </div>
             </div>
+        </template>
+        <template id="changelog-content">
+            <div id="changelog-text" class="dialog-text"></div>
         </template>
         <template id="error-dialog-content">
             <span>

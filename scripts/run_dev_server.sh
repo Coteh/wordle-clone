@@ -23,6 +23,9 @@ for file in icon*_nonprod.png; do
     cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"
 done
 
+# Generate changelog HTML and copy it to the build directory
+./scripts/gen_changelog_html.js > $OUTPUT_DIR/CHANGELOG.html
+
 DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
 
 # Serve the dev server
