@@ -38,5 +38,7 @@ if [ "$DEPLOY_ENV" != "" ]; then
         cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"
     done
 else
-    cp icon*.png $OUTPUT_DIR
+    for file in $(ls icon*.png | grep -v _nonprod); do
+        cp "$file" "$OUTPUT_DIR"
+    done
 fi
