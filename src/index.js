@@ -235,7 +235,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const handleKeyInput = (key) => {
         const dialog = document.querySelector(".dialog");
         if (dialog && (key === "enter" || key === "escape")) {
-            return closeDialog(dialog, overlayBackElem);
+            closeDialog(dialog, overlayBackElem);
+            // Unfocus the currently active element to prevent dialogs from opening again.
+            // This can happen in situations where pressing enter to close the dialog shifts focus from the close button to an element that opens a dialog.
+            // (e.g. closing how to play dialog shifting focus to help link, which then opens that same dialog back again)
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            return;
         }
         if (dialog || gameState.ended) {
             return;
