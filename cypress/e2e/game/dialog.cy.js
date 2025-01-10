@@ -126,14 +126,16 @@ describe("dialogs", () => {
             }
         });
 
-        it("can be closed by pressing enter key", () => {
+        it("should not be able to be closed by pressing enter key", () => {
             cy.get(".dialog").should("be.visible");
             cy.get(".overlay-back").should("be.visible");
 
+            cy.get(".dialog .close").blur();
+
             cy.get("body").type("{enter}");
 
-            cy.get(".dialog").should("not.exist");
-            cy.get(".overlay-back").should("not.be.visible");
+            cy.get(".dialog").should("be.visible");
+            cy.get(".overlay-back").should("be.visible");
         });
 
         it("can be closed by pressing escape key", () => {
