@@ -168,7 +168,7 @@ const renderDialog = (content, options) => {
                     dialog.remove();
                     overlayBackElem.style.display = "none";
                 });
-            })
+            });
         } else {
             closeBtn.style.display = "none";
         }

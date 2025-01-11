@@ -26,6 +26,8 @@ jobs:
           node-version: 20
     - name: Install dependencies
       run: npm install
+    - name: Regenerate word list for dev build
+      run: ./scripts/gen_word_list.sh
     - name: Build
       run: npm run build -- DEV
 
