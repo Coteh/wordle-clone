@@ -464,23 +464,41 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     checkForOrientation(landscapeQuery);
 
+    let changelogFetchSuccess = false;
+    let changelogHTML;
+
     const changelogLink = document.querySelector("#changelog-link");
     changelogLink.addEventListener("click", async (e) => {
         e.preventDefault();
         // Fetch changelog
-        // TODO: Cache it
-        const changelog = await fetch("CHANGELOG.html").then((res) => res.text());
+        if (!changelogFetchSuccess) {
+            try {
+                const res = await fetch("CHANGELOG.html");
+                if (res.status !== 200) {
+                    console.error("Could not fetch changelog:", res.statusText);
+                    changelogHTML = `<p class="changelog-error">Could not retrieve changelog.</p>`;
+                } else {
+                    changelogHTML = await res.text();
+                    changelogFetchSuccess = true;
+                }
+            } catch (e) {
+                console.error("Could not fetch changelog:", e);
+                changelogHTML = `<p class="changelog-error">Could not retrieve changelog.</p>`;
+            }
+        }
         const dialogElem = createDialogContentFromTemplate("#changelog-content");
         const changelogElem = dialogElem.querySelector("#changelog-text");
-        changelogElem.innerHTML = changelog;
-        // Capitalize title
-        changelogElem.children.item(0).style.textTransform = "uppercase";
-        // Remove Keep a Changelog and Unreleased sections
-        changelogElem.children.item(1)?.remove();
-        changelogElem.children.item(1)?.remove();
-        changelogElem.children.item(1)?.remove();
-        // All links in this section should open a new tab
-        changelogElem.querySelectorAll("a").forEach((elem) => (elem.target = "_blank"));
+        changelogElem.innerHTML = changelogHTML;
+        if (changelogFetchSuccess) {
+            // Capitalize title
+            changelogElem.children.item(0).style.textTransform = "uppercase";
+            // Remove Keep a Changelog and Unreleased sections
+            changelogElem.children.item(1)?.remove();
+            changelogElem.children.item(1)?.remove();
+            changelogElem.children.item(1)?.remove();
+            // All links in this section should open a new tab
+            changelogElem.querySelectorAll("a").forEach((elem) => (elem.target = "_blank"));
+        }
         renderDialog(dialogElem, {
             fadeIn: true,
             closable: true,

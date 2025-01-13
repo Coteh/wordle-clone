@@ -3,7 +3,9 @@
         {
             "source": "/icon:size.png",
             "destination": "/build/icon:size.png"
-        },
+        }
+    ],
+    "rewrites": [
         {
             "source": "/CHANGELOG.html",
             "destination": "/build/CHANGELOG.html"

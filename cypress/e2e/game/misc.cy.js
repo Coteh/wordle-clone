@@ -317,4 +317,64 @@ describe("misc", () => {
             });
         });
     });
+
+    describe("changelog", () => {
+        beforeEach(() => {
+            cy.visit("/");
+            cy.get(".settings-link").click();
+        });
+
+        it("should successfully toggle the changelog on/off", () => {
+            cy.intercept("GET", "/CHANGELOG.html").as("getChangelog");
+            cy.contains("Changelog").should("not.exist");
+            cy.get("#changelog-link").click({ force: true });
+            cy.wait("@getChangelog");
+            cy.get(".dialog").contains("Changelog").should("be.visible");
+            cy.get(".dialog .close").click();
+            cy.contains("Changelog").should("not.exist");
+        });
+
+        it("should display an error message if the changelog cannot be retrieved", () => {
+            cy.intercept("GET", "/CHANGELOG.html", { statusCode: 404 }).as("getChangelog");
+            cy.contains("Changelog").should("not.exist");
+            cy.get(".dialog .changelog-error").should("not.exist");
+            cy.get("#changelog-link").click({ force: true });
+            cy.wait("@getChangelog");
+            cy.get(".dialog .changelog-error").should("be.visible");
+        });
+
+        it("should only make one request to the changelog", () => {
+            const interceptedRequests = [];
+
+            // Intercept network requests to /CHANGELOG.html
+            cy.intercept("GET", "/CHANGELOG.html", (req) => {
+                interceptedRequests.push(req); // Track all intercepted requests
+            }).as("getChangelog");
+
+            // Initial state: no dialog visible
+            cy.contains("Changelog").should("not.exist");
+
+            // First click: Request should be made
+            cy.get("#changelog-link").click({ force: true });
+
+            cy.wait("@getChangelog").then(() => {
+                expect(interceptedRequests).to.have.length(1); // Only one request should have been made
+            });
+
+            cy.get(".dialog").contains("Changelog").should("be.visible");
+
+            // Close the dialog
+            cy.get(".dialog .close").click();
+            cy.contains("Changelog").should("not.exist");
+
+            // Second click: Request should not fire again
+            cy.get("#changelog-link").click({ force: true });
+            cy.get(".dialog").contains("Changelog").should("be.visible");
+
+            // Assert that only one request was made
+            cy.then(() => {
+                expect(interceptedRequests).to.have.length(1); // Still only one request
+            });
+        });
+    });
 });
