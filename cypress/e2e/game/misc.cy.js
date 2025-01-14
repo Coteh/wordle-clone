@@ -343,6 +343,15 @@ describe("misc", () => {
             cy.get(".dialog .changelog-error").should("be.visible");
         });
 
+        it("should display an error message if the changelog cannot be retrieved due to a network error", () => {
+            cy.intercept("GET", "/CHANGELOG.html", { forceNetworkError: true }).as("getChangelog");
+            cy.contains("Changelog").should("not.exist");
+            cy.get(".dialog .changelog-error").should("not.exist");
+            cy.get("#changelog-link").click({ force: true });
+            cy.wait("@getChangelog");
+            cy.get(".dialog .changelog-error").should("be.visible");
+        });
+
         it("should only make one request to the changelog", () => {
             const interceptedRequests = [];
 
