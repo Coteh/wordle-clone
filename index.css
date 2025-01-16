@@ -318,6 +318,12 @@ button.button > * {
     transition: top 0.5s, opacity 0.5s;
 }
 
+@media (max-width: 320px) {
+    .dialog {
+        width: 250px;
+    }
+}
+
 .dialog > div.dialog-content {
     display: flex;
     flex-direction: column;
