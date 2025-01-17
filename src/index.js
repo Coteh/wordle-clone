@@ -493,9 +493,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Capitalize title
             changelogElem.children.item(0).style.textTransform = "uppercase";
             // Remove Keep a Changelog and Unreleased sections
-            changelogElem.children.item(1)?.remove();
-            changelogElem.children.item(1)?.remove();
-            changelogElem.children.item(1)?.remove();
+            for (let i = 0; i < 3; i++) {
+                const item = changelogElem.children.item(1);
+                if (item) {
+                    item.remove();
+                }
+            }
             // All links in this section should open a new tab
             changelogElem.querySelectorAll("a").forEach((elem) => (elem.target = "_blank"));
         }

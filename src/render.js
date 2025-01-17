@@ -140,6 +140,11 @@ const renderDialog = (content, options) => {
 
     const dialog = clone.querySelector(".dialog");
 
+    if (!('HTMLDialogElement' in window)) {
+        console.warn("The <dialog> element is not supported in this browser. Applying polyfill...");
+        dialogPolyfill.registerDialog(dialog);
+    }
+
     const overlayBackElem = document.querySelector(".overlay-back");
 
     const dialogContent = clone.querySelector(".dialog-content");
