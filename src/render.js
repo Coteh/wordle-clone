@@ -61,7 +61,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
             itemElem.classList.add(letterStatus || "standard");
             itemElem.addEventListener("click", (e) => {
                 e.preventDefault();
-                handleKeyInput(item);
+                handleKeyInput(item, false, false);
             });
             let downTime, timeout;
             const handleDown = () => {
@@ -94,7 +94,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 e.preventDefault();
                 handleUp();
                 handleRelease();
-                handleKeyInput(item);
+                handleKeyInput(item, false, false);
             });
             itemElem.addEventListener("touchcancel", (e) => {
                 handleRelease();

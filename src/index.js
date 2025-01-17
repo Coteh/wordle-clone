@@ -232,12 +232,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         overlayBackElem.style.display = "none";
     };
 
-    const handleKeyInput = (key) => {
+    const handleKeyInput = (key, ctrlKey, metaKey) => {
         const dialog = document.querySelector(".dialog");
         if (dialog && key === "escape") {
             return closeDialog(dialog, overlayBackElem);
         }
-        if (dialog || gameState.ended) {
+        if (dialog || gameState.ended || ctrlKey || metaKey) {
             return;
         }
         if (key === "enter") {
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     window.addEventListener("keydown", (e) => {
-        handleKeyInput(e.key.toLowerCase());
+        handleKeyInput(e.key.toLowerCase(), e.ctrlKey, e.metaKey);
     });
 
     const helpLink = document.querySelector(".help-link");

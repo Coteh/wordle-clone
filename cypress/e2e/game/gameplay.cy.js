@@ -1282,4 +1282,21 @@ describe("gameplay", () => {
             });
         });
     });
+
+    describe("keyboard shortcuts", () => {
+        it("should not type 'l' when ctrl + l is pressed", () => {
+            cy.get("body").type("{ctrl}l");
+            cy.currentRow().inputCell(1).inputLetter().should("be.empty");
+        });
+
+        it("should not type 'l' when cmd + l is pressed", () => {
+            cy.get("body").type("{cmd}l");
+            cy.currentRow().inputCell(1).inputLetter().should("be.empty");
+        });
+
+        it("should type 'l' when only 'l' is pressed", () => {
+            cy.get("body").type("l");
+            cy.currentRow().inputCell(1).inputLetter().should("have.text", "l");
+        });
+    });
 });
