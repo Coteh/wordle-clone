@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changelog dialog
 
+### Fixed
+
+- Prevent letter from being typed using physical keyboard if Ctrl or Meta (Cmd/Windows) key is held at the same time
+
 ## [1.3.5] - 2024-11-09
 
 ### Changed
