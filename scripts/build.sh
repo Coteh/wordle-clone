@@ -18,6 +18,7 @@ cp src/storage/browser.js $OUTPUT_DIR/src/storage
 cp src/share/index.js $OUTPUT_DIR/src/share
 cp src/share/browser.js $OUTPUT_DIR/src/share
 cp vendor/*.js $OUTPUT_DIR/vendor
+cp vendor/*.css $OUTPUT_DIR/vendor
 cp images/*.png $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR
 cp manifest.json $OUTPUT_DIR
