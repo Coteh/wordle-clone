@@ -51,10 +51,10 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
     let downTime, timeout;
 
     const handleMouseMove = (e) => {
-        const heldKey = document.querySelector(".keyboard-item[data-held='true']");
-        if (!heldKey) return;
+        const pressedKey = document.querySelector(".keyboard-item[data-pressed='true']");
+        if (!pressedKey) return;
 
-        const rect = heldKey.getBoundingClientRect();
+        const rect = pressedKey.getBoundingClientRect();
         const { clientX, clientY } = e;
 
         // Check if the mouse position is outside the element's boundaries
@@ -64,10 +64,10 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
             clientY < rect.top ||
             clientY > rect.bottom
         ) {
-            heldKey.classList.remove("pressed");
-            heldKey.classList.remove("held");
-            heldKey.classList.add(letterMap.get(heldKey.innerText.toLowerCase()) || "standard");
-            delete heldKey.dataset.held;
+            pressedKey.classList.remove("pressed");
+            pressedKey.classList.remove("held");
+            pressedKey.classList.add(letterMap.get(pressedKey.innerText.toLowerCase()) || "standard");
+            delete pressedKey.dataset.pressed;
             clearTimeout(timeout);
         }
     };
@@ -75,10 +75,10 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
     document.addEventListener("mousemove", handleMouseMove);
 
     const handleTouchMove = (e) => {
-        const heldKey = document.querySelector(".keyboard-item[data-held='true']");
-        if (!heldKey) return;
+        const pressedKey = document.querySelector(".keyboard-item[data-pressed='true']");
+        if (!pressedKey) return;
 
-        const rect = heldKey.getBoundingClientRect();
+        const rect = pressedKey.getBoundingClientRect();
         const { clientX, clientY } = e.touches[0];
 
         // Check if the touch position is outside the element's boundaries
@@ -88,10 +88,10 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
             clientY < rect.top ||
             clientY > rect.bottom
         ) {
-            heldKey.classList.remove("pressed");
-            heldKey.classList.remove("held");
-            heldKey.classList.add(letterMap.get(heldKey.innerText.toLowerCase()) || "standard");
-            delete heldKey.dataset.held;
+            pressedKey.classList.remove("pressed");
+            pressedKey.classList.remove("held");
+            pressedKey.classList.add(letterMap.get(pressedKey.innerText.toLowerCase()) || "standard");
+            delete pressedKey.dataset.pressed;
             clearTimeout(timeout);
         }
     };
@@ -119,7 +119,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 downTime = Date.now();
                 itemElem.classList.remove(letterStatus || "standard");
                 itemElem.classList.add("pressed");
-                itemElem.dataset.held = "true";
+                itemElem.dataset.pressed = "true";
                 timeout = setTimeout(() => {
                     itemElem.classList.remove("pressed");
                     itemElem.classList.add("held");
