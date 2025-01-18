@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Prevent letter from being typed using physical keyboard if Ctrl or Meta (Cmd/Windows) key is held at the same time
+- Fix keyboard key elements stuck in pressed/held state when mouse or finger is held there initially then released outside of it
 
 ## [1.3.5] - 2024-11-09
 
