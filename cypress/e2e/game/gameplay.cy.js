@@ -536,7 +536,15 @@ describe("gameplay", () => {
                     cy.keyboardItem("a").should("not.have.class", "held");
 
                     cy.wait(100);
-                    cy.keyboardItem("a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.keyboardItem("a").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
             });
 
@@ -549,6 +557,16 @@ describe("gameplay", () => {
                 it("should change the key to held state", () => {
                     cy.keyboardItem("a").should("have.class", "held");
                     cy.keyboardItem("a").should("not.have.class", "pressed");
+
+                    if (type === "mouse") {
+                        cy.keyboardItem("a").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
             });
 
@@ -580,7 +598,15 @@ describe("gameplay", () => {
                     cy.get("@d").should("not.have.class", "standard");
 
                     cy.wait(100);
-                    cy.get("@d").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@d").trigger("mouseup");
+                    } else {
+                        cy.get("@d").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@d").should("have.class", "standard");
                     cy.get("@d").should("not.have.class", "pressed");
@@ -598,7 +624,15 @@ describe("gameplay", () => {
                     cy.get("@a").should("not.have.class", "correct");
 
                     cy.wait(100);
-                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@a").trigger("mouseup");
+                    } else {
+                        cy.get("@a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@a").should("have.class", "correct");
                     cy.get("@a").should("not.have.class", "pressed");
@@ -616,7 +650,15 @@ describe("gameplay", () => {
                     cy.get("@l").should("not.have.class", "within");
 
                     cy.wait(100);
-                    cy.get("@l").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@l").trigger("mouseup");
+                    } else {
+                        cy.get("@l").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@l").should("have.class", "within");
                     cy.get("@l").should("not.have.class", "pressed");
@@ -634,7 +676,15 @@ describe("gameplay", () => {
                     cy.get("@p").should("not.have.class", "incorrect");
 
                     cy.wait(100);
-                    cy.get("@p").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@p").trigger("mouseup");
+                    } else {
+                        cy.get("@p").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@p").should("have.class", "incorrect");
                     cy.get("@p").should("not.have.class", "pressed");
@@ -669,7 +719,15 @@ describe("gameplay", () => {
                     cy.get("@a").should("have.class", "correct");
                     cy.get("@a").should("not.have.class", "pressed");
 
-                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@a").trigger("mouseup");
+                    } else {
+                        cy.get("@a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
             });
 
@@ -702,7 +760,15 @@ describe("gameplay", () => {
                     cy.get("@a").should("have.class", "correct");
                     cy.get("@a").should("not.have.class", "held");
 
-                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@a").trigger("mouseup");
+                    } else {
+                        cy.get("@a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@a").should("have.class", "correct");
                     cy.get("@a").should("not.have.class", "held");
@@ -738,7 +804,15 @@ describe("gameplay", () => {
                     cy.get("@a").should("not.have.class", "pressed");
 
                     cy.wait(100);
-                    cy.get("@a").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.get("@a").trigger("mouseup");
+                    } else {
+                        cy.get("@a").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
 
                     cy.get("@a").should("have.class", "correct");
                     cy.get("@a").should("not.have.class", "pressed");
@@ -760,7 +834,15 @@ describe("gameplay", () => {
                     );
                     cy.wait(KEY_HOLD_TIMEOUT_MS);
                     cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
-                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.keyboardItem("backspace").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("backspace").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
 
                 it("should backspace all letters in the current row", () => {
@@ -799,11 +881,19 @@ describe("gameplay", () => {
                     );
                     cy.wait(KEY_HOLD_TIMEOUT_MS);
                     cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
-                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.keyboardItem("backspace").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("backspace").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
 
                 it("should backspace all letters in the current row", () => {
-                    cy.inputRowShouldBeEmpty(1, "");
+                    cy.inputRowShouldBeEmpty(1);
                 });
             });
 
@@ -832,7 +922,15 @@ describe("gameplay", () => {
                     );
                     cy.wait(KEY_HOLD_TIMEOUT_MS);
                     cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
-                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.keyboardItem("backspace").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("backspace").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
 
                 it("should not backspace anything", () => {
@@ -866,7 +964,15 @@ describe("gameplay", () => {
                     );
                     cy.wait(KEY_HOLD_TIMEOUT_MS);
                     cy.tick(KEY_HOLD_TIMEOUT_MS); // have to advance the clock manually as well since it's mocked
-                    cy.keyboardItem("backspace").trigger(type === "mouse" ? "mouseup" : "touchend");
+                    if (type === "mouse") {
+                        cy.keyboardItem("backspace").trigger("mouseup");
+                    } else {
+                        cy.keyboardItem("backspace").then(el => {
+                            cy.wrap(el).trigger("touchend", {
+                                changedTouches: [{ identifier: 0, target: el[0] }],
+                            });
+                        });
+                    }
                 });
 
                 it("should not backspace anything", () => {
@@ -906,7 +1012,11 @@ describe("gameplay", () => {
                 cy.get("@p").should("not.have.class", "incorrect");
 
                 cy.wait(100);
-                cy.get("@p").trigger("touchcancel");
+                cy.get("@p").then(el => {
+                    cy.wrap(el).trigger("touchcancel", {
+                        changedTouches: [{ identifier: 0, target: el[0] }],
+                    });
+                });
 
                 cy.get("@p").should("have.class", "incorrect");
                 cy.get("@p").should("not.have.class", "pressed");
