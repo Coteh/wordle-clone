@@ -264,7 +264,7 @@ button.button > * {
     pointer-events: none;
 }
 
-.settings .settings-item > a {
+.settings .settings-item a {
     text-decoration: none;
 }
 
@@ -272,6 +272,8 @@ button.button > * {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: baseline;
+    gap: 0.5em;
 }
 
 .settings .settings-item .settings-item-column:last-child {
@@ -658,8 +660,13 @@ body .footer a.author-link {
     text-decoration: none;
 }
 
-body a > .version-number {
+body a > .version-number,
+body a > .commit-hash {
     pointer-events: initial;
+}
+
+body a > .commit-hash {
+    font-size: 16px;
 }
 
 /* Settings Toggle */

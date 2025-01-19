@@ -8,6 +8,11 @@ DEPLOY_ENV="$2"
 OUTPUT_DIR=./build
 MAGICK=magick
 
+# Create build directory to put modified files in
+mkdir -p $OUTPUT_DIR
+
+./scripts/transform_index_html.sh $OUTPUT_DIR
+
 # If ImageMagick is installed on the system, then perform app icon modification so that it has a label on it
 if [ -x "$(command -v $MAGICK)" ]; then
     # Modify app icons so that they have the label supplied by $DEPLOY_ENV on them
@@ -15,9 +20,6 @@ if [ -x "$(command -v $MAGICK)" ]; then
 else
     echo "ImageMagick not installed on system, skipping icon modification..."
 fi
-
-# Create build directory to put the modified icons in
-mkdir -p $OUTPUT_DIR
 
 for file in icon*_nonprod.png; do
     cp "$file" "$OUTPUT_DIR/$(basename "$file" _nonprod.png).png"

@@ -464,6 +464,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     checkForOrientation(landscapeQuery);
 
+    const commitElem = document.querySelector(".commit-hash");
+    commitElem.parentElement.href += commitElem.innerText;
+
     let changelogFetchSuccess = false;
     let changelogHTML;
 

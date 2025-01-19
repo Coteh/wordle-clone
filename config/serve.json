@@ -9,6 +9,10 @@
         {
             "source": "/CHANGELOG.html",
             "destination": "/build/CHANGELOG.html"
+        },
+        {
+            "source": "/",
+            "destination": "/build/index.html"
         }
     ],
     "cleanUrls": ["/"]

@@ -10,7 +10,8 @@ mkdir -p $OUTPUT_DIR/src/share
 mkdir -p $OUTPUT_DIR/vendor
 mkdir -p $OUTPUT_DIR/images
 
-cp index.html $OUTPUT_DIR
+./scripts/transform_index_html.sh $OUTPUT_DIR
+
 cp index.css $OUTPUT_DIR
 cp src/*.js $OUTPUT_DIR/src
 cp src/storage/index.js $OUTPUT_DIR/src/storage
