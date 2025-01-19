@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Changelog dialog
+- Commit hash of latest build in settings page
 
 ### Fixed
 
