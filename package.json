@@ -8,9 +8,9 @@
     "wordle-clone": "./cli.js"
   },
   "scripts": {
-    "dev": "./scripts/run_dev_server.sh HTTP LOCAL",
-    "devs": "./scripts/run_dev_server.sh HTTPS LOCALS",
-    "build": "./scripts/build.sh",
+    "dev": "sh ./scripts/run_dev_server.sh HTTP LOCAL",
+    "devs": "sh ./scripts/run_dev_server.sh HTTPS LOCALS",
+    "build": "sh ./scripts/build.sh",
     "preview": "serve ./build",
     "test": "NODE_ENV=test mocha",
     "test-ci": "mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./results/unit-test-results.xml",
