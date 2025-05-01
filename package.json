@@ -28,7 +28,7 @@
     "mocha-junit-reporter": "^2.2.1",
     "mock-fs": "^5.2.0",
     "serve": "^14.2.3",
-    "sinon": "^15.2.0"
+    "sinon": "^20.0.0"
   },
   "dependencies": {
     "@folder/xdg": "^4.0.1",
