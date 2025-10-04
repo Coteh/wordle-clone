@@ -146,14 +146,41 @@ The share feature uses the share sheet provided by the browser/OS and can also f
 Using [mkcert](https://github.com/FiloSottile/mkcert), run the following commands to setup local certificates to be used by local HTTPS server:
 
 ```sh
-mkdir ssl
-cd ssl
-
 # run this on elevated shell on Windows
 mkcert -install
 
-mkcert localhost 127.0.0.1 ::1
+# run this command to generate a local cert
+mkcert --cert-file ssl/local.pem --key-file ssl/local-key.pem localhost 127.0.0.1 ::1
+
+# or, run the following to have it generate a cert that also contains your local network IP
+./scripts/gen_mkcert_cert.sh
 ```
+
+The root certificate authority (CA) file also needs to be installed on the device in order for the cert to be recognized.
+
+#### iOS Instructions
+
+1. Find the root CA file (`rootCA.pem`)
+
+  - run `mkcert -CAROOT` to see where the file is located on your machine
+
+2. Transfer to device (via AirDrop, etc.)
+
+1. There should be a prompt right away to install it, otherwise find it in Files app
+
+1. Confirm installation
+
+1. Profiles are in Settings -> General -> VPN & Device Management
+
+1. To trust the certificate, go to Settings -> General -> About -> Certificate Trust Settings
+
+1. Under "ENABLE FULL TRUST FOR ROOT CERTIFICATES," toggle on the certificate in the list (it should be listed)
+
+#### Android Instructions
+
+TODO
+
+#### Running the HTTPS dev server
 
 Then run the following to start up the local HTTPS server:
 
