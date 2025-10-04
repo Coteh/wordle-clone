@@ -34,6 +34,7 @@ jobs:
           sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
       - name: Generate self-signed certificate
         run: |
+          mkdir ssl
           mkcert -install
           mkcert --cert-file ssl/local.pem --key-file ssl/local-key.pem localhost 127.0.0.1 ::1
       - name: Set CA Cert environment variable
