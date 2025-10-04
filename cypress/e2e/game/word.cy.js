@@ -13,6 +13,7 @@ describe("loading word of the day", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("wc_played_before", true);
@@ -25,6 +26,7 @@ describe("loading word of the day", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.reload();
         cy.keyboardItem("l").click();
         cy.keyboardItem("e").click();
@@ -40,6 +42,7 @@ describe("loading word of the day", () => {
             body: "Not found",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.reload();
         cy.contains("Could not fetch word list.").should("be.visible");
         // The error dialog should not close

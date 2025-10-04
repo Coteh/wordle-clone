@@ -24,6 +24,7 @@ describe("misc", () => {
             fixture: "readme-screenshot-words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: (contentWindow) => {
                 contentWindow.document.addEventListener("DOMContentLoaded", () => {

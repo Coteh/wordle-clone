@@ -23,6 +23,7 @@ cp src/share/index.js $OUTPUT_DIR/src/share
 cp src/share/browser.js $OUTPUT_DIR/src/share
 cp src/theme/*.js $OUTPUT_DIR/src/theme
 cp vendor/*.js $OUTPUT_DIR/vendor
+cp sw.js $OUTPUT_DIR
 cp vendor/*.css $OUTPUT_DIR/vendor
 cp images/*.png $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR

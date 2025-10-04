@@ -44,6 +44,7 @@ describe("viewport", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("wc_played_before", true);
