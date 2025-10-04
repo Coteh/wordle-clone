@@ -17,6 +17,7 @@ describe("sharing results", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
@@ -572,6 +573,7 @@ describe("sharing results", () => {
             });
             cy.clock(new Date("2022-03-30T00:00:00.000Z"), ["Date"]);
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
             stubShare();
             cy.waitForGameReady();
@@ -592,6 +594,7 @@ describe("sharing results", () => {
             });
             cy.clock(new Date("2022-07-01T00:00:00.000Z"), ["Date"]);
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
             stubShare();
             cy.waitForGameReady();
@@ -613,6 +616,7 @@ describe("sharing results", () => {
             });
             cy.clock(new Date("2022-03-23T00:00:00.000Z"), ["Date"]);
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
             stubShare();
             cy.waitForGameReady();
@@ -635,6 +639,7 @@ describe("sharing results", () => {
             });
             cy.clock(new Date("2022-03-18T00:00:00.000Z"), ["Date"]);
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
             stubShare();
             cy.waitForGameReady();
@@ -655,6 +660,7 @@ describe("sharing results", () => {
             });
             cy.clock(new Date("2022-03-22T00:00:00.000Z"), ["Date"]);
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
             stubShare();
             cy.waitForGameReady();

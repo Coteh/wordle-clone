@@ -82,6 +82,67 @@ Cypress.Commands.add("clearBrowserCache", () => {
     });
 });
 
+Cypress.Commands.add("clearServiceWorkers", () => {
+    cy.window().then((win) => {
+        if ('serviceWorker' in win.navigator) {
+            win.navigator.serviceWorker.getRegistrations().then((registrations) => {
+                registrations.forEach((registration) => registration.unregister());
+            });
+        }
+    });
+});
+
+Cypress.Commands.add("clearServiceWorkerCaches", () => {
+    cy.window().then((win) => {
+        if ('caches' in win) {
+            win.caches.keys().then((keys) => {
+                keys.forEach((key) => win.caches.delete(key));
+            });
+        }
+    });
+});
+
+// https://www.cypress.io/blog/testing-application-in-offline-network-mode
+Cypress.Commands.add("goOffline", () => {
+    cy.log("**go offline**")
+        .then(() => {
+            return Cypress.automation('remote:debugger:protocol', {
+                command: 'Network.enable',
+            })
+        })
+        .then(() => {
+            return Cypress.automation('remote:debugger:protocol', {
+                command: 'Network.emulateNetworkConditions',
+                params: {
+                    offline: true,
+                    latency: -1,
+                    downloadThroughput: -1,
+                    uploadThroughput: -1,
+                },
+            })
+        });
+});
+
+Cypress.Commands.add("goOnline", () => {
+    cy.log("**go online**")
+        .then(() => {
+            return Cypress.automation('remote:debugger:protocol', {
+                command: 'Network.emulateNetworkConditions',
+                params: {
+                    offline: false,
+                    latency: -1,
+                    downloadThroughput: -1,
+                    uploadThroughput: -1,
+                },
+            })
+        })
+        .then(() => {
+            return Cypress.automation('remote:debugger:protocol', {
+                command: 'Network.disable',
+            })
+        });
+});
+
 // Needed in order to make share tests work in headless
 // https://github.com/cypress-io/cypress/issues/8957
 Cypress.Commands.add("grantClipboardPermission", () => {

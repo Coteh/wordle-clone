@@ -13,6 +13,7 @@ describe("dialogs", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
@@ -157,6 +158,7 @@ describe("dialogs", () => {
                 body: "Not found",
             });
             cy.clearBrowserCache();
+            cy.clearServiceWorkerCaches();
             cy.reload();
         });
 

@@ -15,6 +15,7 @@ describe("keyboard", () => {
             fixture: "words.txt",
         });
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
