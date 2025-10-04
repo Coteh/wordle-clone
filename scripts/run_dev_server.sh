@@ -36,7 +36,7 @@ DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
 
 # Serve the dev server
 if [ "$DEV_SERVER_TYPE" = "HTTPS" ]; then
-    $DEV_SERVER -p 5501 --ssl-cert ./ssl/localhost+2.pem --ssl-key ./ssl/localhost+2-key.pem
+    $DEV_SERVER -p 5501 --ssl-cert ./ssl/local.pem --ssl-key ./ssl/local-key.pem
 else
     $DEV_SERVER -p 5500
 fi
