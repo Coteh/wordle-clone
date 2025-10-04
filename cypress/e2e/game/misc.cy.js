@@ -34,6 +34,7 @@ describe("misc", () => {
         });
 
         cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
         cy.reload();
 
         cy.contains("The following error occurred:").should("be.visible");
