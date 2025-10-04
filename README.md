@@ -170,9 +170,9 @@ The root certificate authority (CA) file also needs to be installed on the devic
 
 1. Confirm installation
 
-1. Profiles are in Settings -> General -> VPN & Device Management
+  - Profiles are in Settings -> General -> VPN & Device Management
 
-1. To trust the certificate, go to Settings -> General -> About -> Certificate Trust Settings
+5. To trust the certificate, go to Settings -> General -> About -> Certificate Trust Settings
 
 1. Under "ENABLE FULL TRUST FOR ROOT CERTIFICATES," toggle on the certificate in the list (it should be listed)
 
