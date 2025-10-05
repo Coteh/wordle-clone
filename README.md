@@ -18,7 +18,10 @@ Can be played on either the browser or the command line.
 - Also playable on the terminal
 - Share functionality (using OS-native share sheet or copy to clipboard as fallback)
 - Countdown to next day's Wordle
-- Mobile-friendly web app (can be added to mobile home screens as an app, runs in fullscreen)
+- Mobile-friendly web app 
+  - Installable to mobile home screens as an app
+  - Runs in fullscreen
+  - Playable offline
 - Hard Mode
 - High Contrast Mode
 - Themes

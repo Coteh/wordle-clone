@@ -543,6 +543,32 @@ const registerServiceWorker = async () => {
             const registration = await navigator.serviceWorker.register("/sw.js", {
                 scope: "/",
             });
+
+            function promptUserToRefresh() {
+                const dialogElem = createDialogContentFromTemplate("#prompt-dialog-content");
+                dialogElem.querySelector(".prompt-text").innerText =
+                    "New version available! Refresh?";
+                renderPromptDialog(dialogElem, {
+                    fadeIn: true,
+                    onConfirm: () => {
+                        console.log("going to refresh!")
+                        registration.waiting.postMessage("skipWaiting");
+                    },
+                });
+            }
+
+            function listenForWaitingServiceWorker(reg, callback) {
+                if (!reg) return;
+                if (reg.waiting) return callback();
+                reg.addEventListener('updatefound', () => {
+                    if (reg.installing) {
+                        reg.installing.addEventListener('statechange', () => {
+                            if (reg.waiting) callback();
+                        });
+                    }
+                });
+            }
+
             if (registration.installing) {
                 console.log("Service worker installing...");
             } else if (registration.waiting) {
@@ -550,6 +576,22 @@ const registerServiceWorker = async () => {
             } else if (registration.active) {
                 console.log("Service worker active");
             }
+
+            // Just a test event listener to observe the waiting and installing states of registration
+            // TODO: Remove this later
+            registration.addEventListener('updatefound', () => {
+                console.log("waiting", registration.waiting);
+                console.log("installing", registration.installing);
+            });
+
+            listenForWaitingServiceWorker(registration, promptUserToRefresh);
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener("controllerchange", () => {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
+            });
         } catch (error) {
             console.error(`Registration failed with ${error}`);
         }

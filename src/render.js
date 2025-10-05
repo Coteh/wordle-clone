@@ -256,6 +256,71 @@ const renderDialog = (content, options) => {
     dialog.show();
 };
 
+const renderPromptDialog = (content, options) => {
+    // Close any currently existing dialogs
+    const dialogElem = document.querySelector(".dialog");
+    if (dialogElem) dialogElem.remove();
+
+    const template = document.querySelector("#dialog");
+    const clone = template.content.cloneNode(true);
+
+    const overlayBackElem = document.querySelector(".overlay-back");
+
+    clone.querySelector("button.close").style.display = "none";
+
+    const dialog = clone.querySelector(".dialog");
+
+    const dialogContent = clone.querySelector(".dialog-content");
+    dialogContent.appendChild(content);
+
+    if (options) {
+        if (options.fadeIn) {
+            dialog.style.opacity = "0";
+            // TODO: Instead of copying over "translate(-50%, -50%)" from the css style,
+            // have it base itself off of a computed transform property
+            dialog.style.transform = "translate(-50%, -50%) scale(0.5)";
+            setTimeout(() => {
+                const dialog = document.querySelector(".dialog");
+                dialog.style.opacity = "";
+                dialog.style.transform = "translate(-50%, -50%)";
+            }, 10);
+        }
+
+        if (options.style) {
+            Object.assign(dialog.style, options.style);
+        }
+    }
+
+    const cancelBtn = clone.querySelector("button.cancel");
+    cancelBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const dialog = document.querySelector(".dialog");
+        dialog.close();
+        dialog.remove();
+        overlayBackElem.style.display = "none";
+        if (options && options.onCancel) {
+            options.onCancel();
+        }
+    });
+    const confirmBtn = clone.querySelector("button.confirm");
+    confirmBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const dialog = document.querySelector(".dialog");
+        dialog.close();
+        dialog.remove();
+        overlayBackElem.style.display = "none";
+        if (options && options.onConfirm) {
+            options.onConfirm();
+        }
+    });
+
+    document.body.appendChild(clone);
+
+    overlayBackElem.style.display = "block";
+
+    dialog.show();
+};
+
 const renderNotification = (msg) => {
     const template = document.querySelector("#notification");
     const clone = template.content.cloneNode(true);
