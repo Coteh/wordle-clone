@@ -36,6 +36,29 @@ self.addEventListener("install", (event) => {
     )
 });
 
+self.addEventListener("activate", (event) => {
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then(cacheNames =>
+            Promise.all(
+                cacheNames.map(cacheName => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        // This cache does not match the current version, delete
+                        return caches.delete(cacheName);
+                    }
+                })
+            )
+        )
+    );
+});
+
 self.addEventListener("fetch", (event) => {
     event.respondWith(cacheFirst(event.request, event));
+});
+
+self.addEventListener("message", (event) => {
+    console.log("message received", event);
+    if (event.data === "skipWaiting") {
+        self.skipWaiting();
+    }
 });
