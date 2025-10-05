@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Offline support via service worker
+- Offline support
 - Browser interface and/or status bar colour will dim alongside the rest of the game's elements when a dialog is open
 
 ### Fixed
