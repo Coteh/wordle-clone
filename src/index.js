@@ -50,7 +50,15 @@ const setCountdownInterval = (nextDate) => {
     }, 1000);
 };
 
+const getConfig = async () => {
+    const configResp = await fetch("/config.json");
+    const configJSON = await configResp.json();
+    return configJSON;
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
+    const config = await getConfig();
+
     const middleElem = document.querySelector("#middle");
     const bottomElem = document.querySelector("#bottom");
 
@@ -516,6 +524,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
+    if (config.env === "dev") {
+        console.log("Running in development mode, skipping registering service worker...");
+    } else {
+        registerServiceWorker();
+    }
+
     try {
         await initGame(eventHandler);
     } catch (e) {
@@ -597,5 +611,3 @@ const registerServiceWorker = async () => {
         }
     }
 };
-
-registerServiceWorker();

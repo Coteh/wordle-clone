@@ -12,6 +12,12 @@ mkdir -p $OUTPUT_DIR/images
 
 ./scripts/transform_index_html.sh $OUTPUT_DIR
 
+cat <<EOF > $OUTPUT_DIR/config.json
+{
+    "env": "prod"
+}
+EOF
+
 cp index.css $OUTPUT_DIR
 cp src/*.js $OUTPUT_DIR/src
 cp src/storage/index.js $OUTPUT_DIR/src/storage

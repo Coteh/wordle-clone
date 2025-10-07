@@ -13,6 +13,12 @@ mkdir -p $OUTPUT_DIR
 
 ./scripts/transform_index_html.sh $OUTPUT_DIR
 
+cat <<EOF > $OUTPUT_DIR/config.json
+{
+    "env": "dev"
+}
+EOF
+
 # If ImageMagick is installed on the system, then perform app icon modification so that it has a label on it
 if [ -x "$(command -v $MAGICK)" ]; then
     # Modify app icons so that they have the label supplied by $DEPLOY_ENV on them
