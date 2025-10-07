@@ -14,6 +14,12 @@ mkdir -p $OUTPUT_DIR/images
 # Pass DEPLOY_ENV to transform script (non-prod builds will remove canonical link and/or show debug link)
 ./scripts/transform_index_html.sh "$OUTPUT_DIR" "$DEPLOY_ENV"
 
+cat <<EOF > $OUTPUT_DIR/config.json
+{
+    "env": "prod"
+}
+EOF
+
 cp index.css $OUTPUT_DIR
 cp src/*.js $OUTPUT_DIR/src
 cp src/storage/index.js $OUTPUT_DIR/src/storage

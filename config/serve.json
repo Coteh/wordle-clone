@@ -13,6 +13,10 @@
         {
             "source": "/",
             "destination": "/build/index.html"
+        },
+        {
+            "source": "/config.json",
+            "destination": "/build/config.json"
         }
     ],
     "cleanUrls": ["/"]
