@@ -28,6 +28,10 @@ done
 # Generate changelog HTML and copy it to the build directory
 ./scripts/gen_changelog_html.js > $OUTPUT_DIR/CHANGELOG.html
 
+# Setup the watch server
+# (no need to track the PID and terminate it on SIGINT, it will be cleaned up automatically when this script terminates)
+./scripts/run_dev_watch.js &
+
 DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
 
 # Serve the dev server
