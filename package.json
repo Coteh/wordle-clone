@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@folder/xdg": "^4.0.1",
-    "clipboardy": "^3.0.0",
+    "clipboardy": "^5.0.0",
     "commander": "^12.1.0"
   }
 }
