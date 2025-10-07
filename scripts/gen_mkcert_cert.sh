@@ -11,12 +11,12 @@ case "$OS_NAME" in
     HOST_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
     ;;
   Linux)
-    # Linux (Untested)
+    # Linux
     # https://stackoverflow.com/a/13322549
     HOST_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
     ;;
   MINGW*|CYGWIN*|MSYS*)
-    # Windows under Git Bash or Cygwin (Untested)
+    # Windows under Git Bash or Cygwin
     HOST_IP=$(ipconfig | grep 'IPv4 Address' | awk '{print $NF}')
     ;;
   *)
