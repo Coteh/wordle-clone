@@ -169,7 +169,7 @@ The root certificate authority (CA) file also needs to be installed on the devic
 
 2. Transfer to device (via AirDrop, etc.)
 
-1. There should be a prompt right away to install it, otherwise find it in Files app
+1. On the device, there should be a prompt right away to install it. Otherwise, find it in Files app.
 
 1. Confirm installation
 
@@ -181,7 +181,19 @@ The root certificate authority (CA) file also needs to be installed on the devic
 
 #### Android Instructions
 
-TODO
+1. Find the root CA file (`rootCA.pem`)
+
+  - run `mkcert -CAROOT` to see where the file is located on your machine
+
+2. Transfer to device
+
+1. On the device, open Settings -> Security -> Encryption & credentials (or Security & Privacy -> More security settings on some devices)
+
+1. Select "Install Certificate" (or "Install from device storage" or a similar option), then select "CA certificate"
+
+1. Locate the CA certificate on the device and select it. Then confirm the installation (you may be prompted for a device password or PIN). There should then be a message that confirms that it's been installed.
+
+1. Open the browser on the device. For Chrome, it should take effect right away as it's set up to trust user-installed CAs (However, may require a restart).
 
 #### Running the HTTPS dev server
 
