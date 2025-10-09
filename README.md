@@ -144,7 +144,12 @@ The game should render when navigating to http://localhost:5500.
 
 ### HTTPS Local Development
 
-The share feature uses the share sheet provided by the browser/OS and can also fall back to the browser's clipboard feature if the share sheet isn't available. Both of these features need a secure context to operate, requiring the use of a local HTTPS server when developing them. However, the game can still run on a HTTP server, where it will default to legacy clipboard functionality.
+The web app must be served over HTTPS in order for the following features to function:
+
+- Share sheet (used by the share feature)
+- Clipboard (used as a fallback by the share feature if the share sheet isn't available)
+  - However, will fallback to legacy clipboard functionality when run over HTTP or the HTTPS server isn't trusted by the browser
+- Installing the app as a PWA with offline support
 
 Using [mkcert](https://github.com/FiloSottile/mkcert), run the following commands to setup local certificates to be used by local HTTPS server:
 
