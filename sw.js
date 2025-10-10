@@ -1,5 +1,5 @@
 // TODO: Base the cache name off the app version and commit hash
-const CACHE_NAME = "wordle-clone-v1.4.0-rev5";
+const CACHE_NAME = "wordle-clone-v1.4.0-rev6";
 
 const addResourcesToCache = async (resources) => {
     const cache = await caches.open(CACHE_NAME);
