@@ -576,7 +576,7 @@ const registerServiceWorker = async () => {
                 renderPromptDialog(dialogElem, {
                     fadeIn: true,
                     onConfirm: () => {
-                        console.log("going to refresh!")
+                        console.log("going to refresh! (waiting)", registration.waiting)
                         registration.waiting.postMessage("skipWaiting");
                     },
                 });
@@ -586,9 +586,17 @@ const registerServiceWorker = async () => {
                 if (!reg) return;
                 if (reg.waiting) return callback();
                 reg.addEventListener('updatefound', () => {
+                    // TODO: If an update was found, but no service worker has been installed previously, then don't prompt update
                     if (reg.installing) {
+                        console.log("current state before state change event", reg.installing.state)
                         reg.installing.addEventListener('statechange', () => {
-                            if (reg.waiting) callback();
+                            if (reg.active) {
+                                console.log("the active one", reg.active, reg.active.state)
+                            }
+                            if (reg.waiting) {
+                                console.log("the waiting one", reg.waiting, reg.waiting.state)
+                                callback();
+                            }
                         });
                     }
                 });
@@ -605,8 +613,7 @@ const registerServiceWorker = async () => {
             // Just a test event listener to observe the waiting and installing states of registration
             // TODO: Remove this later
             registration.addEventListener('updatefound', () => {
-                console.log("waiting", registration.waiting);
-                console.log("installing", registration.installing);
+                console.log("updatefound (waiting, installing)", registration.waiting, registration.installing);
             });
 
             listenForWaitingServiceWorker(registration, promptUserToRefresh);
