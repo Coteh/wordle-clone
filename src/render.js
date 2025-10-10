@@ -276,13 +276,11 @@ const renderPromptDialog = (content, options) => {
     if (options) {
         if (options.fadeIn) {
             dialog.style.opacity = "0";
-            // TODO: Instead of copying over "translate(-50%, -50%)" from the css style,
-            // have it base itself off of a computed transform property
-            dialog.style.transform = "translate(-50%, -50%) scale(0.5)";
+            dialog.style.top = "100%";
             setTimeout(() => {
                 const dialog = document.querySelector(".dialog");
                 dialog.style.opacity = "";
-                dialog.style.transform = "translate(-50%, -50%)";
+                dialog.style.top = "";
             }, 10);
         }
 
