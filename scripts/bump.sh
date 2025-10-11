@@ -22,6 +22,11 @@ fi
 
 rm index.html.bak
 
+# Replace the version number in sw.js using sed
+sed -i.bak -r "s/(const VERSION_NUMBER = )'[^']*';/\1'$NEW_VERSION_NUMBER';/" sw.js
+
+rm sw.js.bak
+
 # Perform npm version bump, using --no-git-tag-version so that everything can be committed together
 npm version $NEW_VERSION_NUMBER --no-git-tag-version
 

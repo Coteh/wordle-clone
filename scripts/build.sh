@@ -11,6 +11,7 @@ mkdir -p $OUTPUT_DIR/vendor
 mkdir -p $OUTPUT_DIR/images
 
 ./scripts/transform_index_html.sh $OUTPUT_DIR
+./scripts/transform_sw.sh $OUTPUT_DIR
 
 cat <<EOF > $OUTPUT_DIR/config.json
 {
@@ -25,7 +26,6 @@ cp src/storage/browser.js $OUTPUT_DIR/src/storage
 cp src/share/index.js $OUTPUT_DIR/src/share
 cp src/share/browser.js $OUTPUT_DIR/src/share
 cp vendor/*.js $OUTPUT_DIR/vendor
-cp sw.js $OUTPUT_DIR
 cp vendor/*.css $OUTPUT_DIR/vendor
 cp images/*.png $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR
