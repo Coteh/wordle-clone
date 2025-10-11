@@ -13,6 +13,7 @@ mkdir -p $OUTPUT_DIR/images
 
 # Pass DEPLOY_ENV to transform script (non-prod builds will remove canonical link and/or show debug link)
 ./scripts/transform_index_html.sh "$OUTPUT_DIR" "$DEPLOY_ENV"
+./scripts/transform_sw.sh "$OUTPUT_DIR"
 
 cat <<EOF > $OUTPUT_DIR/config.json
 {
@@ -29,7 +30,6 @@ cp src/share/index.js $OUTPUT_DIR/src/share
 cp src/share/browser.js $OUTPUT_DIR/src/share
 cp src/theme/*.js $OUTPUT_DIR/src/theme
 cp vendor/*.js $OUTPUT_DIR/vendor
-cp sw.js $OUTPUT_DIR
 cp vendor/*.css $OUTPUT_DIR/vendor
 cp images/*.png $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR
