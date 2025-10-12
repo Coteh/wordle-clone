@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { version } from "../../../package.json";
+
 const DAY_MS = 86400000;
 // March 23 2022 - initial release date
 const FIRST_DAY_MS = 1647993600000;
@@ -18,6 +20,7 @@ describe("retrieving saved progress", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("wc_played_before", true);
+                window.localStorage.setItem("wc_last_version", version);
                 window.localStorage.setItem("wc_day", FIRST_DAY + 1);
                 window.localStorage.setItem("wc_lives", 4);
                 window.localStorage.setItem("wc_ended", false);

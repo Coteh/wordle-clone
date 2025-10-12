@@ -4,6 +4,7 @@ const LIVES_KEY = PREFIX + "lives";
 const DAY_KEY = PREFIX + "day";
 const ENDED_KEY = PREFIX + "ended";
 const PLAYED_BEFORE_KEY = PREFIX + "played_before";
+const LAST_VERSION_KEY = PREFIX + "last_version";
 const PREFERENCES_KEY = PREFIX + "preferences";
 const WON_HARD_MODE_KEY = PREFIX + "won_hard_mode";
 
@@ -14,6 +15,7 @@ if (typeof process !== "undefined") {
         DAY_KEY,
         ENDED_KEY,
         PLAYED_BEFORE_KEY,
+        LAST_VERSION_KEY,
         PREFERENCES_KEY,
         WON_HARD_MODE_KEY,
     };

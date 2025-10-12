@@ -12,8 +12,7 @@ echo $NEW_VERSION_NUMBER
 # Replace the version number in index.html using sed
 # (.bak file created for cross-platform compatibility, as some versions of sed require it)
 sed -i.bak -r -e "s/(<.+ class=\"version-number\">v)(.+)(<\/.+>)/\1$NEW_VERSION_NUMBER\3/g" \
-    -e "s/(release: \"wordle-clone@)(.+)(\",)/\1$NEW_VERSION_NUMBER\3/g" \
-    -e "s/(\"version\": \")(.+)(\",)/\1$NEW_VERSION_NUMBER\3/g" index.html
+    -e "s/(const GAME_VERSION = )\"[^\"]*\";/\1\"$NEW_VERSION_NUMBER\";/" index.html
 
 if [ $? != 0 ]; then
     >&2 echo "Failure editing index.html"
