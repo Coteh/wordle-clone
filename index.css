@@ -218,7 +218,7 @@ button.close {
 }
 
 button.button {
-    padding: 0.5em 0.5em 0.5em 0.5em;
+    padding: 1em 0.5em 1em 0.5em;
     margin: 0.5em 0em 0.5em 0em;
     border-radius: 8em;
     background-color: var(--correct-color);
