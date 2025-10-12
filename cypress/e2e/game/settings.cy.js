@@ -19,6 +19,7 @@ describe("settings", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("last_version", version);
             },
         });
         cy.waitForGameReady();

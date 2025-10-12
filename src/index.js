@@ -206,6 +206,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                     fadeIn: true,
                     closable: true,
                 });
+                setLastVersion(GAME_VERSION);
+                break;
+            case "played_before":
+                if (hasPlayedPreviousVersion()) {
+                    const dialogElem = createDialogContentFromTemplate("#prompt-dialog-content");
+                    dialogElem.querySelector(".prompt-text").innerText =
+                        `Updated to version v${GAME_VERSION}. Would you like to see what's new?`;
+                    renderPromptDialog(dialogElem, {
+                        fadeIn: true,
+                        onConfirm: async () => {
+                            await openChangelog();
+                        },
+                    });
+                }
+                setLastVersion(GAME_VERSION);
                 break;
             case "draw":
                 if (!gameLoaded || gameState.attempts.length <= 0) return;
@@ -478,9 +493,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let changelogFetchSuccess = false;
     let changelogHTML;
 
-    const changelogLink = document.querySelector("#changelog-link");
-    changelogLink.addEventListener("click", async (e) => {
-        e.preventDefault();
+    const openChangelog = async () => {
         // Fetch changelog
         if (!changelogFetchSuccess) {
             try {
@@ -522,6 +535,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 maxWidth: "600px",
             },
         });
+    };
+
+    const changelogLink = document.querySelector("#changelog-link");
+    changelogLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await openChangelog();
     });
 
     if (config.env === "dev") {

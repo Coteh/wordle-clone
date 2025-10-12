@@ -4,8 +4,6 @@ OUTPUT_DIR="$1"
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 
-echo "$COMMIT_HASH"
-
 cp sw.js $OUTPUT_DIR
 
 # Replace the commit hash in sw.js using sed

@@ -308,6 +308,8 @@ const initGame = async (_eventHandler) => {
     if (checkFirstTime()) {
         eventHandler("first_time");
         setPlayedBefore(true);
+    } else {
+        eventHandler("played_before");
     }
 
     if (debugEnabled) console.log(gameState);

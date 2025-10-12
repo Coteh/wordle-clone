@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { version } from "../../../package.json";
+
 const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 
@@ -13,6 +15,7 @@ describe("misc", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("last_version", version);
             },
         });
     });

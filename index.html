@@ -253,6 +253,11 @@
         <script src="vendor/snow.js" defer></script>
         <script src="vendor/dialog-polyfill.js" defer></script>
         <script>
+            const GAME_NAME = "wordle-clone";
+            const GAME_VERSION = "1.4.0";
+
+            console.log(`${GAME_NAME} v${GAME_VERSION}`);
+
             if (typeof feather !== "undefined") {
                 feather.replace();
             } else {
@@ -264,7 +269,7 @@
             if (typeof Sentry !== "undefined") {
                 Sentry.onLoad(() => {
                     Sentry.init({
-                        release: "wordle-clone@1.4.0",
+                        release: `${GAME_NAME}@${GAME_VERSION}`,
                         beforeSend(event) {
                             if (event.request.url.includes("localhost") || event.request.url.includes("127.0.0.1")) {
                                 return null;
@@ -276,7 +281,7 @@
             }
 
             gtag("event", "game_open", {
-                "version": "1.4.0",
+                "version": GAME_VERSION,
             });
         </script>
     </body>

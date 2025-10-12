@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { version } from "../../../package.json";
+
 const { replaceCRLFWithLF } = require("../../support/util");
 
 const DAY_MS = 86400000;
@@ -19,6 +21,7 @@ describe("high contrast mode", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("last_version", version);
             },
         });
         cy.waitForGameReady();

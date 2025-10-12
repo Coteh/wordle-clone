@@ -5,6 +5,7 @@ if (typeof process !== "undefined") {
     DAY_KEY = storage.DAY_KEY;
     ENDED_KEY = storage.ENDED_KEY;
     PLAYED_BEFORE_KEY = storage.PLAYED_BEFORE_KEY;
+    LAST_VERSION_KEY = storage.LAST_VERSION_KEY;
     WON_HARD_MODE_KEY = storage.WON_HARD_MODE_KEY;
     PREFERENCES_KEY = storage.PREFERENCES_KEY;
     STARTING_LIVES = require("../consts").STARTING_LIVES;
@@ -69,6 +70,14 @@ const checkFirstTime = () => window.localStorage.getItem(PLAYED_BEFORE_KEY) !== 
 
 const setPlayedBefore = (status) => window.localStorage.setItem(PLAYED_BEFORE_KEY, status);
 
+const hasPlayedPreviousVersion = () => {
+    const lastVersion = window.localStorage.getItem(LAST_VERSION_KEY);
+    const hasPlayedBefore = !checkFirstTime();
+    return hasPlayedBefore && (!!!lastVersion || lastVersion !== GAME_VERSION);
+};
+
+const setLastVersion = (version) => window.localStorage.setItem(LAST_VERSION_KEY, GAME_VERSION);
+
 if (typeof process !== "undefined") {
     module.exports = {
         saveGame,
@@ -80,5 +89,7 @@ if (typeof process !== "undefined") {
         checkGameValidity,
         checkFirstTime,
         setPlayedBefore,
+        hasPlayedPreviousVersion,
+        setLastVersion,
     };
 }

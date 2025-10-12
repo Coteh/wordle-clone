@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { version } from "../../../package.json";
+
 const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 
@@ -16,6 +18,7 @@ describe("misc", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("last_version", version);
             },
         });
     });
@@ -387,4 +390,128 @@ describe("misc", () => {
             });
         });
     });
+
+    describe("version updated prompt", () => {
+        it("should prompt player to view latest changelog if they have played before and version has updated", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "played_before",
+                        true
+                    );
+                    window.localStorage.setItem(
+                        "last_version",
+                        "1.0.0"
+                    );
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+            cy.contains("Changelog").should("not.exist");
+        });
+        it("should prompt player to view latest changelog if they have played before but not yet received version marker", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "played_before",
+                        true
+                    );
+                    window.localStorage.removeItem("last_version");
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+            cy.contains("Changelog").should("not.exist");
+        });
+        it("should not prompt player to view latest changelog if they have never played before", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.removeItem("played_before");
+                    window.localStorage.removeItem("last_version");
+                },
+            });
+            cy.waitForGameReady();
+            
+            cy.get(".dialog").contains("How to play").should("be.visible");
+
+            cy.contains("Changelog").should("not.exist");
+        });
+        it("should not prompt player to view latest changelog if they have played before but no new version available", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "played_before",
+                        true
+                    );
+                    window.localStorage.setItem(
+                        "last_version",
+                        version
+                    );
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.get(".dialog").should("not.exist");
+        });
+        it("should allow player to see changelog if they say yes to the prompt", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "played_before",
+                        true
+                    );
+                    window.localStorage.setItem(
+                        "last_version",
+                        "1.0.0"
+                    );
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+            cy.contains("Changelog").should("not.exist");
+
+            cy.get(".dialog").contains("Yes").click();
+
+            cy.get(".dialog").contains("Changelog").should("be.visible");
+        });
+        it("should allow player to cancel and not see the changelog", () => {
+            cy.visit("/", {
+                onBeforeLoad: () => {
+                    window.localStorage.setItem(
+                        "played_before",
+                        true
+                    );
+                    window.localStorage.setItem(
+                        "last_version",
+                        "1.0.0"
+                    );
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+            cy.contains("Changelog").should("not.exist");
+
+            cy.get(".dialog").contains("Cancel").click();
+
+            cy.get(".dialog").should("not.exist");
+
+            cy.contains("Changelog").should("not.exist");
+
+            // If player refreshes the page, the changelog prompt should no longer appear
+            cy.reload();
+            cy.waitForGameReady();
+
+            cy.get(".dialog").should("not.exist");
+
+            cy.contains("Changelog").should("not.exist");
+        });
+    })
 });
