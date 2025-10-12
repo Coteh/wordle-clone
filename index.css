@@ -222,6 +222,7 @@ button.button {
     margin: 0.5em 0em 0.5em 0em;
     border-radius: 8em;
     background-color: var(--correct-color);
+    font-size: 0.85rem;
 }
 
 button.button > * {
@@ -368,6 +369,10 @@ button.button > * {
 
 .dialog button > span {
     margin-left: 8px;
+}
+
+.dialog button > span:only-child {
+    margin-left: 0;
 }
 
 .dialog button.close {
