@@ -13,6 +13,12 @@ mkdir -p $OUTPUT_DIR
 
 ./scripts/transform_index_html.sh $OUTPUT_DIR
 
+# NOTE: Dev server will still use sw.js from the root directory for now.
+# It doesn't seem to be easy to write a rewrite rule for it in serve.json that works,
+# as GET /sw.js points to a file that exists, which will make serve skip the rewrite rule.
+# The untransformed sw.js is good enough for dev purposes.
+# ./scripts/transform_sw.sh $OUTPUT_DIR
+
 cat <<EOF > $OUTPUT_DIR/config.json
 {
     "env": "dev"

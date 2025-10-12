@@ -10,6 +10,7 @@ chokidar.watch('index.html').on("change", (path) => {
         if (stderr) {
             console.error(stderr);
         }
+        console.log(`Transformed ${path} and saved to ./build/${path}`);
     });
 });
 
@@ -21,5 +22,6 @@ chokidar.watch('CHANGELOG.md').on("change", (path) => {
             return;
         }
         fs.writeFileSync("./build/CHANGELOG.html", stdout);
+        console.log(`Generated ${path} as HTML and saved to ./build/${path.replace(".md", ".html")}`);
     });
 });
