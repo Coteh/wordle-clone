@@ -26,6 +26,13 @@ describe("misc", () => {
         cy.intercept("/words.txt", {
             fixture: "readme-screenshot-words.txt",
         });
+        cy.intercept("/config.json", {
+            statusCode: 200,
+            body: {
+                debugMenu: false,
+                serviceWorker: false
+            },
+        });
         cy.clearBrowserCache();
         cy.clearServiceWorkerCaches();
         cy.reload();

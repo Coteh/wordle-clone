@@ -13,11 +13,17 @@ mkdir -p $OUTPUT_DIR/images
 ./scripts/transform_index_html.sh $OUTPUT_DIR
 ./scripts/transform_sw.sh $OUTPUT_DIR
 
-cat <<EOF > $OUTPUT_DIR/config.json
+if [ "$DEPLOY_ENV" == "DEV" ]; then
+    cat <<EOF > $OUTPUT_DIR/config.json
 {
-    "env": "prod"
+    "debugMenu": true
 }
 EOF
+else
+    cat <<EOF > $OUTPUT_DIR/config.json
+{}
+EOF
+fi
 
 cp index.css $OUTPUT_DIR
 cp src/*.js $OUTPUT_DIR/src

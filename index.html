@@ -40,6 +40,9 @@
                     <a class="help-link link-icon" href="#">
                         <i data-feather="help-circle"></i>
                     </a>
+                    <a id="debug" class="debug-link link-icon" href="#" style="display:none">
+                        <i data-feather="tool"></i>
+                    </a>
                     <a class="settings-link link-icon" href="#">
                         <i data-feather="settings"></i>
                     </a>
@@ -230,6 +233,16 @@
         <template id="changelog-content">
             <div id="changelog-text" class="dialog-text"></div>
         </template>
+        <template id="debug-dialog-content">
+            <div class="debug-dialog">
+                <h3>Debug</h3><br/>
+                <button class="button prompt-dialog"><span>Prompt Dialog</span></button>
+                <button class="button non-closable-dialog"><span>Non-Closable Dialog</span></button>
+                <button class="button show-notification"><span>Show Notification</span></button>
+                <button class="button regular-dialog"><span>Regular Dialog</span></button>
+                <button class="button stacked-dialogs"><span>Stacked Dialogs</span></button>
+            </div>
+        </template>
         <template id="error-dialog-content">
             <span>
                 The following error occurred:
@@ -242,6 +255,7 @@
         </template>
         <script src="src/consts.js"></script>
         <script src="src/render.js"></script>
+        <script src="src/dialogManager.js"></script>
         <script src="src/datetime.js"></script>
         <script src="src/game.js"></script>
         <script src="src/storage/index.js"></script>

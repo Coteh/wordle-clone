@@ -52,6 +52,10 @@ const setCountdownInterval = (nextDate) => {
 
 const getConfig = async () => {
     const configResp = await fetch("/config.json");
+    if (configResp.status >= 400) {
+        console.error("Error getting config.json", configResp.statusText);
+        return {};
+    }
     const configJSON = await configResp.json();
     return configJSON;
 };
@@ -128,10 +132,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nextDate = getNextDate();
             updateCountdown(winElem.querySelector(".countdown"), nextDate);
             setCountdownInterval(nextDate);
-            renderDialog(winElem, {
-                fadeIn: true,
-                closable: true,
-            });
+            // If rendered during initial load, ensure it can preempt current prompt (processImmediate)
+            const processImmediate = !gameLoaded;
+            window.DialogManager.show(winElem, { fadeIn: true, closable: true }, "regular", {}, processImmediate);
         },
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
@@ -161,10 +164,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const nextDate = getNextDate();
             updateCountdown(loseElem.querySelector(".countdown"), nextDate);
             setCountdownInterval(nextDate);
-            renderDialog(loseElem, {
-                fadeIn: true,
-                closable: true,
-            });
+            const processImmediate = !gameLoaded;
+            window.DialogManager.show(loseElem, { fadeIn: true, closable: true }, "regular", {}, processImmediate);
         },
         renderInput(key) {
             const elem = document.querySelector(
@@ -202,10 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.querySelector(".day-number").innerText = `Day #${day}`;
                 break;
             case "first_time":
-                renderDialog(createDialogContentFromTemplate("#how-to-play"), {
-                    fadeIn: true,
-                    closable: true,
-                });
+                window.DialogManager.show(createDialogContentFromTemplate("#how-to-play"), { fadeIn: true, closable: true }, "regular", {}, false);
                 setLastVersion(GAME_VERSION);
                 break;
             case "played_before":
@@ -213,12 +211,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const dialogElem = createDialogContentFromTemplate("#prompt-dialog-content");
                     dialogElem.querySelector(".prompt-text").innerText =
                         `Updated to version v${GAME_VERSION}. Would you like to see what's new?`;
-                    renderPromptDialog(dialogElem, {
-                        fadeIn: true,
-                        onConfirm: async () => {
-                            await openChangelog();
+                    // pass callbacks for confirm/cancel; when a dialog is already active and this is shown,
+                    // other dialogs may be pushed/popped by the DialogManager
+                    window.DialogManager.show(
+                        dialogElem,
+                        { fadeIn: true },
+                        "prompt",
+                        {
+                            onConfirm: async () => {
+                                await openChangelog();
+                            },
+                            onCancel: null,
                         },
-                    });
+                        false
+                    );
                 }
                 setLastVersion(GAME_VERSION);
                 break;
@@ -298,10 +304,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const helpLink = document.querySelector(".help-link");
     helpLink.addEventListener("click", (e) => {
         e.preventDefault();
-        renderDialog(createDialogContentFromTemplate("#how-to-play"), {
-            fadeIn: true,
-            closable: true,
-        });
+        window.DialogManager.show(createDialogContentFromTemplate("#how-to-play"), { fadeIn: true, closable: true }, "regular", {}, false);
         helpLink.blur();
     });
 
@@ -333,8 +336,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const overlayBackElem = document.querySelector(".overlay-back");
     overlayBackElem.addEventListener("click", (e) => {
-        const dialog = document.querySelector(".dialog");
-        closeDialog(dialog, overlayBackElem);
+        if (window.DialogManager && typeof window.DialogManager.overlayClickHandler === "function") {
+            window.DialogManager.overlayClickHandler();
+        }
     });
 
     let snowEmbed = document.getElementById("embedim--snow");
@@ -526,15 +530,115 @@ document.addEventListener("DOMContentLoaded", async () => {
             // All links in this section should open a new tab
             changelogElem.querySelectorAll("a").forEach((elem) => (elem.target = "_blank"));
         }
-        renderDialog(dialogElem, {
-            fadeIn: true,
-            closable: true,
-            style: {
-                width: "75%",
-                height: "75%",
-                maxWidth: "600px",
+        window.DialogManager.show(
+            dialogElem,
+            {
+                fadeIn: true,
+                closable: true,
+                style: {
+                    width: "75%",
+                    height: "75%",
+                    maxWidth: "600px",
+                },
             },
-        });
+            "regular"
+        );
+    };
+
+    const openDebugDialog = async () => {
+        const dialogElem = createDialogContentFromTemplate("#debug-dialog-content");
+
+        // Provide a rehydrate callback so DialogManager can attach listeners to the rendered DOM,
+        // and also so listeners will be reattached if this dialog is stacked and later restored.
+        const rehydrate = (renderedDialog) => {
+            const content = renderedDialog.querySelector(".dialog-content");
+            if (!content) return;
+            const by = (sel) => content.querySelector(sel);
+
+            // Prompt Dialog (preempt current debug dialog to show prompt)
+            const promptBtn = by(".prompt-dialog");
+            if (promptBtn) {
+                promptBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const promptContent = createDialogContentFromTemplate("#prompt-dialog-content");
+                    promptContent.querySelector(".prompt-text").innerText = "Debug: proceed?";
+                    window.DialogManager.show(
+                        promptContent,
+                        { fadeIn: true },
+                        "prompt",
+                        {
+                            onConfirm: () => renderNotification("Debug prompt confirmed"),
+                            onCancel: () => renderNotification("Debug prompt canceled"),
+                        },
+                        true
+                    );
+                });
+            }
+
+            // Non-closable Dialog
+            const nonClosableBtn = by(".non-closable-dialog");
+            if (nonClosableBtn) {
+                nonClosableBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const nc = document.createElement("div");
+                    nc.innerHTML = "<span>Non-closable debug dialog</span>";
+                    window.DialogManager.show(nc, { fadeIn: true, closable: false }, "regular", {}, true);
+                });
+            }
+
+            // Show Notification
+            const notifyBtn = by(".show-notification");
+            if (notifyBtn) {
+                notifyBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    renderNotification("Debug notification");
+                });
+            }
+
+            // Regular Dialog
+            const regularBtn = by(".regular-dialog");
+            if (regularBtn) {
+                regularBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const r = document.createElement("div");
+                    r.innerHTML = "<span>Regular debug dialog</span>";
+                    window.DialogManager.show(r, { fadeIn: true, closable: true }, "regular", {}, true);
+                });
+            }
+
+            // Stacked Dialogs: show base then immediate top prompt (demonstrates push/pop)
+            const stackedBtn = by(".stacked-dialogs");
+            if (stackedBtn) {
+                stackedBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const top = createDialogContentFromTemplate("#prompt-dialog-content");
+                    top.querySelector(".prompt-text").innerText = "Show the stacked dialog on top?";
+                    window.DialogManager.show(
+                        top,
+                        { fadeIn: true },
+                        "prompt",
+                        {
+                            onConfirm: () => {
+                                const base = document.createElement("div");
+                                base.innerHTML = "<span>This will be shown immediate</span>";
+                                window.DialogManager.show(base, { fadeIn: true, closable: true }, "regular", {}, true);
+                                renderNotification("Top prompt confirmed - should be shown on top");
+                            },
+                            onCancel: () => {
+                                const base = document.createElement("div");
+                                base.innerHTML = "<span>This will be shown underneath</span>";
+                                window.DialogManager.show(base, { fadeIn: true, closable: true }, "regular", {}, false);
+                                renderNotification("Top prompt canceled - should be shown underneath");
+                            },
+                        },
+                        true
+                    );
+                });
+            }
+        };
+
+        // Show debug dialog (regular, closable) and provide the rehydrate callback
+        window.DialogManager.show(dialogElem, { fadeIn: true, closable: true }, "regular", { rehydrate }, false);
     };
 
     const changelogLink = document.querySelector("#changelog-link");
@@ -543,8 +647,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         await openChangelog();
     });
 
-    if (config.env === "dev") {
-        console.log("Running in development mode, skipping registering service worker...");
+    // Show debug link only when explicitly enabled via config.debugMenu
+    const debugLink = document.querySelector("#debug");
+    if (config && config.debugMenu && debugLink) {
+        debugLink.style.display = "";
+        debugLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            openDebugDialog();
+            debugLink.blur();
+        });
+    }
+
+    // Register service worker unless explicitly disabled via config.serviceWorker === false
+    if (config && config.serviceWorker === false) {
+        console.log("Service worker disabled in config, skipping registration...");
     } else {
         registerServiceWorker();
     }
@@ -561,10 +677,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Unknown error occurred", e);
             errorContent.innerText = e.message;
         }
-        renderDialog(elem, {
-            fadeIn: true,
-            closable: false,
-        });
+        window.DialogManager.show(elem, { fadeIn: true, closable: false }, "regular", {}, false);
     }
 
     gameLoaded = true;
@@ -581,13 +694,19 @@ const registerServiceWorker = async () => {
                 const dialogElem = createDialogContentFromTemplate("#prompt-dialog-content");
                 dialogElem.querySelector(".prompt-text").innerText =
                     "New version available! Refresh?";
-                renderPromptDialog(dialogElem, {
-                    fadeIn: true,
-                    onConfirm: () => {
-                        console.log("going to refresh! (waiting)", registration.waiting)
-                        registration.waiting.postMessage("skipWaiting");
+                window.DialogManager.show(
+                    dialogElem,
+                    {
+                        fadeIn: true,
                     },
-                });
+                    "prompt",
+                    {
+                        onConfirm: () => {
+                            console.log("going to refresh! (waiting)", registration.waiting)
+                            registration.waiting.postMessage("skipWaiting");
+                        },
+                    }
+                );
             }
 
             function listenForWaitingServiceWorker(reg, callback) {

@@ -414,6 +414,10 @@ button.button > * {
     font-size: 0.75em;
 }
 
+.dialog > .dialog-content > .debug-dialog {
+    height: 100%;
+}
+
 /* Notification */
 
 .notification-area {

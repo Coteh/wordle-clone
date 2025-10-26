@@ -14,6 +14,13 @@ describe("dialogs", () => {
         cy.intercept("/words.txt", {
             fixture: "words.txt",
         });
+        cy.intercept("/config.json", {
+            statusCode: 200,
+            body: {
+                debugMenu: false,
+                serviceWorker: false
+            },
+        });
         cy.clearBrowserCache();
         cy.clearServiceWorkerCaches();
         cy.visit("/", {
@@ -183,6 +190,123 @@ describe("dialogs", () => {
             });
 
             cy.get(".dialog").should("be.visible");
+        });
+    });
+
+    describe("dialog stacking", () => {
+        it("allows for immediate dialogs that take precedence over other dialogs in the stack", () => {
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    // ensure player state won't trigger other prompts
+                    win.localStorage.setItem("played_before", true);
+                    win.localStorage.setItem("last_version", version);
+                },
+            });
+
+            cy.window().then(win => {
+                const elem = document.createElement("div");
+                elem.innerText = "Hello";
+                win.DialogManager.show(elem, { fadeIn: true, closable: true }, "regular", {}, true);
+            });
+
+            cy.contains("Hello").should("be.visible");
+            cy.contains("World").should("not.exist");
+            
+            cy.window().then(win => {
+                const elem2 = document.createElement("div");
+                elem2.innerText = "World";
+                win.DialogManager.show(elem2, { fadeIn: true, closable: true }, "regular", {}, true);
+            });
+            
+            cy.contains("Hello").should("not.exist");
+            cy.contains("World").should("be.visible");
+            
+            cy.get(".dialog").within(() => {
+                cy.get(".close").should("be.visible").click();
+            });
+
+            cy.contains("Hello").should("be.visible");
+            cy.contains("World").should("not.exist");
+        });
+
+        it("allows for non-immediate dialogs to appear behind all other dialogs in the stack", () => {
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    // ensure player state won't trigger other prompts
+                    win.localStorage.setItem("played_before", true);
+                    win.localStorage.setItem("last_version", version);
+                },
+            });
+
+            cy.window().then(win => {
+                const elem = document.createElement("div");
+                elem.innerText = "Hello";
+                win.DialogManager.show(elem, { fadeIn: true, closable: true }, "regular", {}, false);
+            });
+
+            cy.contains("Hello").should("be.visible");
+            cy.contains("World").should("not.exist");
+            
+            cy.window().then(win => {
+                const elem2 = document.createElement("div");
+                elem2.innerText = "World";
+                win.DialogManager.show(elem2, { fadeIn: true, closable: true }, "regular", {}, false);
+            });
+
+            cy.contains("Hello").should("be.visible");
+            cy.contains("World").should("not.exist");
+            
+            cy.get(".dialog").within(() => {
+                cy.get(".close").should("be.visible").click();
+            });
+
+            cy.contains("Hello").should("not.exist");
+            cy.contains("World").should("be.visible");
+        });
+
+        it("rehydrates dialog event listeners after being stacked and restored", () => {
+            // Serve dev config so debug link appears
+            cy.intercept("/config.json", {
+                statusCode: 200,
+                body: {
+                    debugMenu: true,
+                    serviceWorker: false
+                },
+            });
+
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    // ensure player state won't trigger other prompts
+                    win.localStorage.setItem("played_before", true);
+                    win.localStorage.setItem("last_version", version);
+                },
+            });
+
+            cy.waitForGameReady();
+
+            // Ensure debug link is visible and open debug dialog
+            cy.get("#debug").should("be.visible").click();
+
+            // Debug dialog should appear
+            cy.get(".dialog").contains("Debug").should("be.visible");
+
+            // Click prompt button which preempts debug dialog (pushes it to stack)
+            cy.get(".dialog .prompt-dialog").click();
+
+            // Prompt should appear with the expected text
+            cy.get(".dialog").contains("Debug: proceed?").should("be.visible");
+
+            // Click cancel on prompt to close it and restore debug dialog
+            cy.get(".dialog .cancel").click();
+
+            // Debug dialog should be visible again
+            cy.get(".dialog").contains("Debug").should("be.visible");
+
+            // Click the "Show Notification" button that was bound during rehydrate
+            cy.get(".dialog .show-notification").click();
+
+            // Notification should be visible
+            cy.contains("Debug notification").should("be.visible");
         });
     });
 });

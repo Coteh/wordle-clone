@@ -11,10 +11,30 @@ const DESKTOP_USER_AGENT =
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0";
 
 describe("misc", () => {
+    before(() => {
+        // Google Analytics hangs the tests with a 503 response when service worker is enabled, intercepting the response fixes it
+        cy.intercept('https://www.google-analytics.com/**', { statusCode: 200, body: {} }).as('ga');
+        // Do an initial visit of the page to wipe out any service workers that are still lingering
+        cy.visit("/");
+        cy.clearServiceWorkers();
+    });
+
+    after(() => {
+        // Ensure that service worker caches are cleared out when tests end, so that the test suite can reload with a fresh copy
+        cy.clearServiceWorkerCaches();
+    });
+
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
         cy.clock(FIRST_DAY_MS + DAY_MS * 2 + (DAY_MS * 1) / 2, ["Date"]);
+        cy.intercept("/config.json", {
+            statusCode: 200,
+            body: {
+                debugMenu: false,
+                serviceWorker: false
+            },
+        });
         cy.visit("/", {
             onBeforeLoad: () => {
                 window.localStorage.setItem("played_before", true);
@@ -513,5 +533,26 @@ describe("misc", () => {
 
             cy.contains("Changelog").should("not.exist");
         });
-    })
+    });
+
+    describe("new version available", () => {
+        beforeEach(() => {
+            cy.intercept("/config.json", {
+                statusCode: 200,
+                body: {
+                    debugMenu: false,
+                    serviceWorker: true
+                },
+            });
+            cy.reload();
+        });
+
+        it("should prompt player to update if there's a newer version of the game available", () => {
+            throw new Error("TODO: Implement this test");
+        });
+
+        it("should not prompt player to update if they are on the latest version", () => {
+            throw new Error("TODO: Implement this test");
+        });
+    });
 });

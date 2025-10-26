@@ -12,6 +12,13 @@ describe("how to play", () => {
         cy.intercept("/words.txt", {
             fixture: "words.txt",
         });
+        cy.intercept("/config.json", {
+            statusCode: 200,
+            body: {
+                debugMenu: false,
+                serviceWorker: false
+            },
+        });
         cy.clearBrowserCache();
         cy.clearServiceWorkerCaches();
         cy.visit("/", {

@@ -21,7 +21,8 @@ mkdir -p $OUTPUT_DIR
 
 cat <<EOF > $OUTPUT_DIR/config.json
 {
-    "env": "dev"
+    "debugMenu": true,
+    "serviceWorker": false
 }
 EOF
 
