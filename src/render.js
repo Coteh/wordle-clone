@@ -223,10 +223,12 @@ const renderDialog = (content, options) => {
 
         const closeBtn = clone.querySelector("button.close");
         if (options.closable || options.closable == null) {
-            // delegate close action to DialogManager so it can pop the next dialog
+            // Add a slight delay before adding the event listener to prevent the
+            // dialog from closing immediately if enter key was pressed to open the dialog
             setTimeout(() => {
                 closeBtn.addEventListener("click", (e) => {
                     e.preventDefault();
+                    // delegate close action to DialogManager if available, so it can pop the next dialog
                     if (window.DialogManager && typeof window.DialogManager.closeCurrent === "function") {
                         window.DialogManager.closeCurrent();
                     } else {

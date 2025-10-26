@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Unknown error occurred", e);
             errorContent.innerText = e.message;
         }
-        window.DialogManager.show(elem, { fadeIn: true, closable: false }, "regular", {}, false);
+        window.DialogManager.show(elem, { fadeIn: true, closable: false }, "regular", {}, true);
     }
 
     gameLoaded = true;
