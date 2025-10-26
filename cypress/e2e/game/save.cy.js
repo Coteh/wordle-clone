@@ -510,7 +510,7 @@ describe("retrieving saved progress", () => {
                         win.localStorage.setItem("played_before", true);
                         // set to an old version to trigger update prompt
                         win.localStorage.setItem("last_version", "1.0.0");
-                        // preload a completed (win) game so end-game dialog would be emitted on load
+                        // preload a completed (lose) game so end-game dialog would be emitted on load
                         win.localStorage.setItem("ended", true);
                         win.localStorage.setItem("lives", 0);
                         // a final losing attempt

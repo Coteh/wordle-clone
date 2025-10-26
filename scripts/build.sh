@@ -15,7 +15,7 @@ mkdir -p $OUTPUT_DIR/images
 ./scripts/transform_index_html.sh "$OUTPUT_DIR" "$DEPLOY_ENV"
 ./scripts/transform_sw.sh "$OUTPUT_DIR"
 
-if [ "$DEPLOY_ENV" == "DEV" ]; then
+if [ "$DEPLOY_ENV" = "DEV" ]; then
     cat <<EOF > $OUTPUT_DIR/config.json
 {
     "debugMenu": true
