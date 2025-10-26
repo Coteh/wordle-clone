@@ -265,7 +265,7 @@ describe("dialogs", () => {
         });
 
         it("rehydrates dialog event listeners after being stacked and restored", () => {
-            // Serve dev config so debug link appears
+            // Serve config with debug menu option set to true so debug link appears
             cy.intercept("/config.json", {
                 statusCode: 200,
                 body: {
