@@ -372,4 +372,399 @@ describe("retrieving saved progress", () => {
         cy.contains("You lose!").should("be.visible");
         cy.contains("word was leafy").should("be.visible");
     });
+
+    // TODO: These tests need service worker enabled in order to serve cached page with an updated sw.js to trigger the update prompt
+    describe.skip("saved progress with an update prompt", () => {
+        describe("won game", () => {
+            it('should display win dialog first, then display the update prompt once closed', () => {
+                // Spy on changelog to ensure that changelog is fetched successfully
+                cy.intercept("GET", "/CHANGELOG.html").as("getChangelog");
+
+                // Reload page but preload localStorage so both an ended game and an old last_version exist
+                cy.visit("/", {
+                    onBeforeLoad: (win) => {
+                        // mark played before so version prompt is eligible
+                        win.localStorage.setItem("played_before", true);
+                        // set to an old version to trigger update prompt
+                        win.localStorage.setItem("last_version", "1.0.0");
+                        // preload a completed (win) game so end-game dialog would be emitted on load
+                        win.localStorage.setItem("ended", true);
+                        win.localStorage.setItem("lives", 3);
+                        // a final winning attempt
+                        win.localStorage.setItem(
+                            "attempts",
+                            JSON.stringify([
+                                [
+                                    {
+                                        letter: "a",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "l",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "p",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "h",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                ],
+                                [
+                                    {
+                                        letter: "m",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "y",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "o",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "r",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                ],
+                                [
+                                    {
+                                        letter: "l",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "e",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "f",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "y",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                ],
+                            ])
+                        );
+                    },
+                });
+                cy.waitForGameReady();
+
+                // The win dialog should be visible first
+                cy.contains("You win!").should("be.visible");
+
+                // Close the end-game dialog
+                cy.get(".dialog > .close").click();
+
+                // After closing, the update prompt should now be displayed
+                cy.get(".dialog").contains("New version available").should("be.visible");
+
+                // Click "Yes" on the update prompt to open changelog
+                cy.get(".dialog").contains("Yes").click();
+
+                // Ensure changelog request was attempted and dialog shows changelog content
+                cy.wait("@getChangelog");
+                cy.get(".dialog").contains("Changelog").should("be.visible");
+            });
+        });
+        describe("lost game", () => {
+            it('should display lose dialog first, then display the update prompt once closed', () => {
+                // Spy on changelog to ensure that changelog is fetched successfully
+                cy.intercept("GET", "/CHANGELOG.html").as("getChangelog");
+
+                // Reload page but preload localStorage so both an ended game and an old last_version exist
+                cy.visit("/", {
+                    onBeforeLoad: (win) => {
+                        // mark played before so version prompt is eligible
+                        win.localStorage.setItem("played_before", true);
+                        // set to an old version to trigger update prompt
+                        win.localStorage.setItem("last_version", "1.0.0");
+                        // preload a completed (win) game so end-game dialog would be emitted on load
+                        win.localStorage.setItem("ended", true);
+                        win.localStorage.setItem("lives", 0);
+                        // a final losing attempt
+                        win.localStorage.setItem(
+                            "attempts",
+                            JSON.stringify(new Array(6).fill([
+                                {
+                                    letter: "a",
+                                    correct: false,
+                                    within: true,
+                                },
+                                {
+                                    letter: "l",
+                                    correct: false,
+                                    within: true,
+                                },
+                                {
+                                    letter: "p",
+                                    correct: false,
+                                    within: false,
+                                },
+                                {
+                                    letter: "h",
+                                    correct: false,
+                                    within: false,
+                                },
+                                {
+                                    letter: "a",
+                                    correct: false,
+                                    within: false,
+                                },
+                            ]))
+                        );
+                    },
+                });
+                cy.waitForGameReady();
+
+                // The lose dialog should be visible first
+                cy.contains("You lose!").should("be.visible");
+
+                // Close the end-game dialog
+                cy.get(".dialog > .close").click();
+
+                // After closing, the update prompt should now be displayed
+                cy.get(".dialog").contains("New version available").should("be.visible");
+
+                // Click "Yes" on the update prompt to open changelog
+                cy.get(".dialog").contains("Yes").click();
+
+                // Ensure changelog request was attempted and dialog shows changelog content
+                cy.wait("@getChangelog");
+                cy.get(".dialog").contains("Changelog").should("be.visible");
+            });
+        });
+    });
+    
+    describe("saved progress with a changelog prompt", () => {
+        describe("won game", () => {
+            it('should display the win dialog first, then the changelog prompt once closed', () => {
+                // Spy on changelog to ensure that changelog is fetched successfully
+                cy.intercept("GET", "/CHANGELOG.html").as("getChangelog");
+
+                // First reload the page with an older version
+                cy.visit("/", {
+                    onBeforeLoad: (win) => {
+                        // mark played before so version prompt is eligible
+                        win.localStorage.setItem("played_before", true);
+                        // set to an old version to trigger update prompt
+                        win.localStorage.setItem("last_version", "1.0.0");
+                        // preload a completed (win) game so end-game dialog would be emitted on load
+                        win.localStorage.setItem("ended", true);
+                        win.localStorage.setItem("lives", 3);
+                        // a final winning attempt
+                        win.localStorage.setItem(
+                            "attempts",
+                            JSON.stringify([
+                                [
+                                    {
+                                        letter: "a",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "l",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "p",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "h",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                ],
+                                [
+                                    {
+                                        letter: "m",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "y",
+                                        correct: false,
+                                        within: true,
+                                    },
+                                    {
+                                        letter: "o",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "r",
+                                        correct: false,
+                                        within: false,
+                                    },
+                                ],
+                                [
+                                    {
+                                        letter: "l",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "e",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "a",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "f",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                    {
+                                        letter: "y",
+                                        correct: true,
+                                        within: false,
+                                    },
+                                ],
+                            ])
+                        );
+                    },
+                });
+                cy.waitForGameReady();
+
+                // The win dialog should be displayed first
+                cy.contains("You win!").should("be.visible");
+
+                // Close the end-game dialog
+                cy.get(".dialog > .close").click();
+
+                // The changelog prompt will then be displayed
+                cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+                // Click "Yes" on the update prompt to open changelog
+                cy.get(".dialog").contains("Yes").click();
+
+                // Ensure changelog request was attempted and dialog shows changelog content
+                cy.wait("@getChangelog");
+                cy.get(".dialog").contains("Changelog").should("be.visible");
+
+                cy.get(".dialog").within(() => {
+                    cy.get(".close").should("be.visible").click();
+                });
+            });
+        });
+        describe("lost game", () => {
+            it('should display the lose dialog first, then the changelog prompt once closed', () => {
+                // Spy on changelog to ensure that changelog is fetched successfully
+                cy.intercept("GET", "/CHANGELOG.html").as("getChangelog");
+
+                // First reload the page with an older version
+                cy.visit("/", {
+                    onBeforeLoad: (win) => {
+                        // mark played before so version prompt is eligible
+                        win.localStorage.setItem("played_before", true);
+                        // set to an old version to trigger update prompt
+                        win.localStorage.setItem("last_version", "1.0.0");
+                        // preload a completed (lose) game so end-game dialog would be emitted on load
+                        win.localStorage.setItem("ended", true);
+                        win.localStorage.setItem("lives", 0);
+                        // a final losing attempt
+                        win.localStorage.setItem(
+                            "attempts",
+                            JSON.stringify(new Array(6).fill([
+                                {
+                                    letter: "a",
+                                    correct: false,
+                                    within: true,
+                                },
+                                {
+                                    letter: "l",
+                                    correct: false,
+                                    within: true,
+                                },
+                                {
+                                    letter: "p",
+                                    correct: false,
+                                    within: false,
+                                },
+                                {
+                                    letter: "h",
+                                    correct: false,
+                                    within: false,
+                                },
+                                {
+                                    letter: "a",
+                                    correct: false,
+                                    within: false,
+                                },
+                            ]))
+                        );
+                    },
+                });
+                cy.waitForGameReady();
+
+                // The lose dialog should be displayed first
+                cy.contains("You lose!").should("be.visible");
+
+                // Close the end-game dialog
+                cy.get(".dialog > .close").click();
+
+                // The changelog prompt will then be displayed
+                cy.get(".dialog").contains("Updated to version").should("be.visible");
+
+                // Click "Yes" on the update prompt to open changelog
+                cy.get(".dialog").contains("Yes").click();
+
+                // Ensure changelog request was attempted and dialog shows changelog content
+                cy.wait("@getChangelog");
+                cy.get(".dialog").contains("Changelog").should("be.visible");
+
+                cy.get(".dialog").within(() => {
+                    cy.get(".close").should("be.visible").click();
+                });
+            });
+        });
+    });
 });

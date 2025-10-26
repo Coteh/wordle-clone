@@ -225,15 +225,18 @@ const renderDialog = (content, options) => {
 
         const closeBtn = clone.querySelector("button.close");
         if (options.closable || options.closable == null) {
-            // Add a slight delay before adding the event listener to prevent the
-            // dialog from closing immediately if enter key was pressed to open the dialog
+            // delegate close action to DialogManager so it can pop the next dialog
             setTimeout(() => {
                 closeBtn.addEventListener("click", (e) => {
                     e.preventDefault();
-                    const dialog = document.querySelector(".dialog");
-                    dialog.close();
-                    dialog.remove();
-                    overlayBackElem.style.display = "none";
+                    if (window.DialogManager && typeof window.DialogManager.closeCurrent === "function") {
+                        window.DialogManager.closeCurrent();
+                    } else {
+                        // fallback behaviour
+                        const dialog = document.querySelector(".dialog");
+                        if (dialog) { try { dialog.close(); } catch (err) {} dialog.remove(); }
+                        overlayBackElem.style.display = "none";
+                    }
                     // Restore normal theme color when closing dialog
                     themeManager.applyNormalThemeColor();
                     // Remove focus from any button that might have opened the dialog

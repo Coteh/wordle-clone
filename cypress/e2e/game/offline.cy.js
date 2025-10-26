@@ -1,6 +1,8 @@
 const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 
+import { version } from "../../../package.json";
+
 describe("offline support", () => {
     beforeEach(() => {
         cy.goOnline();
@@ -10,24 +12,31 @@ describe("offline support", () => {
         cy.intercept("/words.txt", {
             fixture: "words.txt",
         });
-        cy.clearBrowserCache();
-        cy.clearServiceWorkerCaches();
-        cy.visit("/", {
-            onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+        cy.intercept("/config.json", {
+            statusCode: 200,
+            body: {
+                debugMenu: false,
+                serviceWorker: true
             },
         });
-        cy.waitForGameReady();
+        cy.clearBrowserCache();
+        cy.clearServiceWorkerCaches();
     });
     afterEach(() => {
         cy.goOnline();
         cy.clearServiceWorkers();
     });
 
+    // TODO: Fix this test. Might need to preload more assets in service worker?
     it("can allow the game to be played offline", () => {
         cy.goOffline();
-        cy.reload();
-
+        
+        cy.visit("/", {
+            onBeforeLoad: () => {
+                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("last_version", version);
+            },
+        });
         cy.waitForGameReady();
 
         cy.keyboardItem("l").click();
