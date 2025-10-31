@@ -275,6 +275,11 @@ const renderPromptDialog = (content, options) => {
 
     const dialog = clone.querySelector(".dialog");
 
+    if (!('HTMLDialogElement' in window)) {
+        console.warn("The <dialog> element is not supported in this browser. Applying polyfill...");
+        dialogPolyfill.registerDialog(dialog);
+    }
+
     const dialogContent = clone.querySelector(".dialog-content");
     dialogContent.appendChild(content);
 
