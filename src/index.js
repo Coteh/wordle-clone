@@ -107,65 +107,69 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         renderWin() {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
-            const shareButton = winElem.querySelector(".share-button");
-            const copyButton = winElem.querySelector(".clipboard-button");
-            shareButton.addEventListener("click", async (e) => {
-                e.preventDefault();
-                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
-                    highContrastMode,
-                    hardMode: gameState.wonHardMode,
+            const rehydrate = (renderedDialog) => {
+                const shareButton = renderedDialog.querySelector(".share-button");
+                const copyButton = renderedDialog.querySelector(".clipboard-button");
+                shareButton.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                        highContrastMode,
+                        hardMode: gameState.wonHardMode,
+                    });
+                    if (!await triggerShare(shareText)) {
+                        console.log("Triggering share not successful, swapping out for copy to clipboard button...");
+                        copyButton.style.display = "";
+                        shareButton.style.display = "none";
+                    }
                 });
-                if (!await triggerShare(shareText)) {
-                    console.log("Triggering share not successful, swapping out for copy to clipboard button...");
-                    copyButton.style.display = "";
-                    shareButton.style.display = "none";
-                }
-            });
-            copyButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
-                    highContrastMode,
-                    hardMode: gameState.wonHardMode,
+                copyButton.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                        highContrastMode,
+                        hardMode: gameState.wonHardMode,
+                    });
+                    copyShareText(shareText);
                 });
-                copyShareText(shareText);
-            });
-            const nextDate = getNextDate();
-            updateCountdown(winElem.querySelector(".countdown"), nextDate);
-            setCountdownInterval(nextDate);
+                const nextDate = getNextDate();
+                updateCountdown(renderedDialog.querySelector(".countdown"), nextDate);
+                setCountdownInterval(nextDate);
+            };
             // If rendered during initial load, ensure it can preempt current prompt (processImmediate)
             const processImmediate = !gameLoaded;
-            window.DialogManager.show(winElem, { fadeIn: true, closable: true }, "regular", {}, processImmediate);
+            window.DialogManager.show(winElem, { fadeIn: true, closable: true }, "regular", { rehydrate }, processImmediate);
         },
         renderGameOver(word) {
             const loseElem = createDialogContentFromTemplate("#lose-dialog-content");
-            loseElem.querySelector("#word").innerText = word;
-            const shareButton = loseElem.querySelector(".share-button");
-            const copyButton = loseElem.querySelector(".clipboard-button")
-            shareButton.addEventListener("click", async (e) => {
-                e.preventDefault();
-                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
-                    highContrastMode,
-                    hardMode,
+            const rehydrate = (renderedDialog) => {
+                renderedDialog.querySelector("#word").innerText = word;
+                const shareButton = renderedDialog.querySelector(".share-button");
+                const copyButton = renderedDialog.querySelector(".clipboard-button")
+                shareButton.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                        highContrastMode,
+                        hardMode,
+                    });
+                    if (!await triggerShare(shareText)) {
+                        console.log("Triggering share not successful, swapping out for copy to clipboard button...");
+                        copyButton.style.display = "";
+                        shareButton.style.display = "none";
+                    }
                 });
-                if (!await triggerShare(shareText)) {
-                    console.log("Triggering share not successful, swapping out for copy to clipboard button...");
-                    copyButton.style.display = "";
-                    shareButton.style.display = "none";
-                }
-            });
-            copyButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
-                    highContrastMode,
-                    hardMode,
+                copyButton.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const shareText = generateShareText(day, gameState.attempts, STARTING_LIVES, {
+                        highContrastMode,
+                        hardMode,
+                    });
+                    copyShareText(shareText);
                 });
-                copyShareText(shareText);
-            });
-            const nextDate = getNextDate();
-            updateCountdown(loseElem.querySelector(".countdown"), nextDate);
-            setCountdownInterval(nextDate);
+                const nextDate = getNextDate();
+                updateCountdown(renderedDialog.querySelector(".countdown"), nextDate);
+                setCountdownInterval(nextDate);
+            };
             const processImmediate = !gameLoaded;
-            window.DialogManager.show(loseElem, { fadeIn: true, closable: true }, "regular", {}, processImmediate);
+            window.DialogManager.show(loseElem, { fadeIn: true, closable: true }, "regular", { rehydrate }, processImmediate);
         },
         renderInput(key) {
             const elem = document.querySelector(
