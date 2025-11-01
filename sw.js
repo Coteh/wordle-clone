@@ -31,9 +31,27 @@ self.addEventListener("install", (event) => {
         addResourcesToCache([
             "/",
             "/index.html",
+            "/CHANGELOG.html",
+            "/config.json",
+            "/images/rotate-device.png",
+            "/vendor/dialog-polyfill.css",
+            "/words.txt",
+            "/index.css",
             "/src/index.js",
-            "/CHANGELOG.html"
-            // TODO: Add all other assets here?
+            "/src/share/index.js",
+            "/src/share/browser.js",
+            "/src/storage/index.js",
+            "/src/storage/browser.js",
+            "/src/consts.js",
+            "/src/datetime.js",
+            "/src/dialogManager.js",
+            "/src/game.js",
+            "/src/preferences.js",
+            "/src/render.js",
+            "/vendor/snow.js",
+            "/vendor/dialog-polyfill.js",
+            "/vendor/feather.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js",
         ]),
     )
 });
