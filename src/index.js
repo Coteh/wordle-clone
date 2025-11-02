@@ -717,19 +717,18 @@ const registerServiceWorker = async () => {
                 if (!reg) return;
                 if (reg.waiting) return callback();
                 reg.addEventListener('updatefound', () => {
-                    // TODO: If an update was found, but no service worker has been installed previously, then don't prompt update
-                    if (reg.installing) {
-                        console.log("current state before state change event", reg.installing.state)
-                        reg.installing.addEventListener('statechange', () => {
-                            if (reg.active) {
-                                console.log("the active one", reg.active, reg.active.state)
-                            }
-                            if (reg.waiting) {
-                                console.log("the waiting one", reg.waiting, reg.waiting.state)
-                                callback();
-                            }
-                        });
+                    const newWorker = reg.installing;
+                    if (!newWorker) {
+                        return;
                     }
+                    console.log("newWorker before state change", newWorker.state)
+                    reg.installing.addEventListener('statechange', () => {
+                        console.log("newWorker after state change", newWorker.state)
+                        console.log("reg active", reg.active)
+                        if (newWorker.state === "installed" && reg.active) {
+                            callback();
+                        }
+                    });
                 });
             }
 
