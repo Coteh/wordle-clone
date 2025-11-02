@@ -706,7 +706,7 @@ const registerServiceWorker = async () => {
                     "prompt",
                     {
                         onConfirm: () => {
-                            console.log("going to refresh! (waiting)", registration.waiting)
+                            console.log("Triggering service worker activation...");
                             registration.waiting.postMessage("skipWaiting");
                         },
                     }
@@ -721,11 +721,11 @@ const registerServiceWorker = async () => {
                     if (!newWorker) {
                         return;
                     }
-                    console.log("newWorker before state change", newWorker.state)
-                    reg.installing.addEventListener('statechange', () => {
-                        console.log("newWorker after state change", newWorker.state)
-                        console.log("reg active", reg.active)
+                    console.log(`New service worker detected with state '${newWorker.state}', going to listen for state changes...`);
+                    newWorker.addEventListener('statechange', () => {
+                        console.log(`New service worker state changed to ${newWorker.state}`);
                         if (newWorker.state === "installed" && reg.active) {
+                            console.log("There is already an active service worker, triggering update prompt...");
                             callback();
                         }
                     });
@@ -739,12 +739,6 @@ const registerServiceWorker = async () => {
             } else if (registration.active) {
                 console.log("Service worker active");
             }
-
-            // Just a test event listener to observe the waiting and installing states of registration
-            // TODO: Remove this later
-            registration.addEventListener('updatefound', () => {
-                console.log("updatefound (waiting, installing)", registration.waiting, registration.installing);
-            });
 
             listenForWaitingServiceWorker(registration, promptUserToRefresh);
 
