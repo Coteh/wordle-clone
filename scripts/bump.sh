@@ -23,7 +23,7 @@ fi
 rm index.html.bak
 
 # Perform npm version bump, using --no-git-tag-version so that everything can be committed together
-npm version $NEW_VERSION_NUMBER --no-git-tag-version
+pnpm version $NEW_VERSION_NUMBER --no-git-tag-version
 
 git add index.html package.json package-lock.json
 
