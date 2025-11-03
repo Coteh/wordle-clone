@@ -2,17 +2,27 @@ name: CI
 on: [push]
 jobs:
   test-game-logic:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        node-version: [20]
     steps:
       - run: echo "Checking out ${{ github.ref }} from ${{ github.repository }}."
       - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Run node -v
-        run: node -v
-      - name: Run npm install
-        run: npm install
+        uses: actions/checkout@v5
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
       - name: Run test
-        run: npm run test-ci
+        run: pnpm run test-ci
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -43,7 +53,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: edge
-          start: npm run devs -- -L
+          start: pnpm run devs -- -L
           wait-on: 'https://localhost:5501'
       - name: Upload test results
         if: always()

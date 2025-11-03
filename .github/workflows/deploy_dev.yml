@@ -4,12 +4,12 @@ on: [push]
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     # Checkout the code
     - name: Checkout Code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # Install ImageMagick
     - name: Install Ghostscript
@@ -20,16 +20,21 @@ jobs:
         cache: true
 
     # Build and process files
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
       with:
-          node-version: 20
+        version: 10
+    - name: Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 20
+        cache: "pnpm"
     - name: Install dependencies
-      run: npm install
+      run: pnpm install
     - name: Regenerate word list for dev build
       run: ./scripts/gen_word_list.sh
     - name: Build
-      run: npm run build -- DEV
+      run: pnpm run build -- DEV
 
     # Deploy to Cloudflare Pages
     - name: Publish to Cloudflare Pages
