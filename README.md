@@ -43,10 +43,10 @@ Can be played on either the browser or the command line.
 
 ### CLI
 
-Assuming you have [Node.js](https://nodejs.org) and npm installed, run the following command to install the game:
+Assuming you have [Node.js](https://nodejs.org/en/download/) and [pnpm](https://pnpm.io/installation) installed, run the following command to install the game:
 
-```
-npm install -g wordle-clone
+```sh
+pnpm install -g wordle-clone
 ```
 
 Now you can run it using the following command:
@@ -108,21 +108,21 @@ You can use the command `wordle data -s` to find the state file on your machine,
 
 Uninstalling the game and all its data from your machine is as simple as deleting those underlying directories, then running:
 
-```
-npm uninstall -g wordle-clone
+```sh
+pnpm uninstall -g wordle-clone
 ```
 
 ## Development
 
 Clone this repository, then run the following:
 
-```
-npm install
+```sh
+pnpm install
 ```
 
 It's also a good idea to scramble the words when working on the project, to prevent spoilers:
 
-```
+```sh
 ./scripts/gen_word_list.sh
 ```
 
@@ -137,7 +137,7 @@ git update-index --assume-unchanged words.txt
 At this point, run the following to start a local dev server:
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 The game should render when navigating to http://localhost:5500.
@@ -205,7 +205,7 @@ The root certificate authority (CA) file also needs to be installed on the devic
 Then run the following to start up the local HTTPS server:
 
 ```sh
-npm run devs
+pnpm run devs
 ```
 
 The game should render when navigating to https://localhost:5501.
@@ -234,7 +234,7 @@ The dev server always creates icons with the "LOCAL" label. For builds, any labe
 
 Example:
 ```sh
-npm run build -- DEV
+pnpm run build DEV
 ```
 
 This command creates icons with the "DEV" label and copies them to the build output.
@@ -243,22 +243,22 @@ This command creates icons with the "DEV" label and copies them to the build out
 
 Run the following to launch unit tests:
 
-```
-npm run test
+```sh
+pnpm run test
 ```
 
 Cypress tests can be accessed by running the following:
 
-```
-npm run cypress open
+```sh
+pnpm run cypress open
 ```
 
 This will launch the tests in the Cypress UI. 
 
 Alternatively, you can run the tests directly on CLI:
 
-```
-npm run cypress run
+```sh
+pnpm run cypress run
 ```
 
 ## Future Additions
