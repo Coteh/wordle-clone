@@ -46,6 +46,12 @@ Assuming you have [Node.js](https://nodejs.org/en/download/) and [pnpm](https://
 pnpm install -g wordle-clone
 ```
 
+You can also install the game using npm:
+
+```sh
+npm install -g wordle-clone
+```
+
 Now you can run it using the following command:
 
 ```
@@ -106,7 +112,11 @@ You can use the command `wordle data -s` to find the state file on your machine,
 Uninstalling the game and all its data from your machine is as simple as deleting those underlying directories, then running:
 
 ```sh
+# pnpm
 pnpm uninstall -g wordle-clone
+
+# npm
+npm uninstall -g wordle-clone
 ```
 
 ## Development
