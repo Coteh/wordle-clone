@@ -3,6 +3,33 @@ const COMMIT_HASH = '<commit hash>';
 const REVISION = '0';
 const CACHE_NAME = `wordle-clone-v${VERSION_NUMBER}-${COMMIT_HASH}-${REVISION}`;
 
+// Resources to precache during install
+const PRECACHE_URLS = [
+    "/",
+    "/index.html",
+    "/CHANGELOG.html",
+    "/config.json",
+    "/images/rotate-device.png",
+    "/vendor/dialog-polyfill.css",
+    "/words.txt",
+    "/index.css",
+    "/src/index.js",
+    "/src/share/index.js",
+    "/src/share/browser.js",
+    "/src/storage/index.js",
+    "/src/storage/browser.js",
+    "/src/consts.js",
+    "/src/datetime.js",
+    "/src/dialogManager.js",
+    "/src/game.js",
+    "/src/preferences.js",
+    "/src/render.js",
+    "/vendor/snow.js",
+    "/vendor/dialog-polyfill.js",
+    "/vendor/feather.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js",
+];
+
 const addResourcesToCache = async (resources) => {
     const cache = await caches.open(CACHE_NAME);
     await cache.addAll(resources);
@@ -27,33 +54,7 @@ const cacheFirst = async (request, event) => {
 };
 
 self.addEventListener("install", (event) => {
-    event.waitUntil(
-        addResourcesToCache([
-            "/",
-            "/index.html",
-            "/CHANGELOG.html",
-            "/config.json",
-            "/images/rotate-device.png",
-            "/vendor/dialog-polyfill.css",
-            "/words.txt",
-            "/index.css",
-            "/src/index.js",
-            "/src/share/index.js",
-            "/src/share/browser.js",
-            "/src/storage/index.js",
-            "/src/storage/browser.js",
-            "/src/consts.js",
-            "/src/datetime.js",
-            "/src/dialogManager.js",
-            "/src/game.js",
-            "/src/preferences.js",
-            "/src/render.js",
-            "/vendor/snow.js",
-            "/vendor/dialog-polyfill.js",
-            "/vendor/feather.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js",
-        ]),
-    )
+    event.waitUntil(addResourcesToCache(PRECACHE_URLS));
 });
 
 self.addEventListener("activate", (event) => {
