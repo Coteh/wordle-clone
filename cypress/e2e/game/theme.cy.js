@@ -25,18 +25,22 @@ describe("theme", () => {
         cy.get(".settings-link").click();
 
         cy.get("body").should("have.class", "");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
 
         cy.get(".setting.theme-switch").click();
 
         cy.get("body").should("have.class", "light");
+        cy.get("body").should("have.css", "background-color", "rgb(255, 255, 255)");
 
         cy.get(".setting.theme-switch").click();
 
         cy.get("body").should("have.class", "snow");
+        cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
 
         cy.get(".setting.theme-switch").click();
 
         cy.get("body").should("have.class", "");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
     });
 
     it("should set the light theme on page reload if it's enabled in local storage", () => {
@@ -53,6 +57,7 @@ describe("theme", () => {
         cy.waitForGameReady();
 
         cy.get("body").should("have.class", "light");
+        cy.get("body").should("have.css", "background-color", "rgb(255, 255, 255)");
     });
 
     it("should set the snow theme on page reload if it's enabled in local storage", () => {
@@ -69,6 +74,7 @@ describe("theme", () => {
         cy.waitForGameReady();
 
         cy.get("body").should("have.class", "snow");
+        cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
     });
 
     it("should set the dark theme on page reload if it's enabled in local storage", () => {
@@ -85,6 +91,7 @@ describe("theme", () => {
         cy.waitForGameReady();
 
         cy.get("body").should("have.class", "");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
     });
 
     it("should default to dark theme if no entry exists in local storage for theme", () => {
@@ -96,6 +103,7 @@ describe("theme", () => {
         cy.waitForGameReady();
 
         cy.get("body").should("have.class", "");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
     });
 
     it("should default to dark theme if theme is set to invalid value in local storage", () => {
@@ -112,5 +120,6 @@ describe("theme", () => {
         cy.waitForGameReady();
 
         cy.get("body").should("have.class", "");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
     });
 });
