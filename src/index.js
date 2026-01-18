@@ -344,6 +344,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
         }
         document.querySelector("meta[name='theme-color']").content = themeColor;
+        // Set body background color for iOS 26+ compatibility (which no longer respects theme-color meta tag)
+        document.body.style.backgroundColor = themeColor;
         selectedTheme = theme;
     };
 
