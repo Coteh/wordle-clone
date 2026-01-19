@@ -232,6 +232,10 @@ const renderDialog = (content, options) => {
                     dialog.close();
                     dialog.remove();
                     overlayBackElem.style.display = "none";
+                    // Restore normal theme color when closing dialog
+                    if (typeof applyNormalThemeColorFromDOM === "function") {
+                        applyNormalThemeColorFromDOM();
+                    }
                 });
             });
         } else {
@@ -254,6 +258,11 @@ const renderDialog = (content, options) => {
     }
 
     dialog.show();
+    
+    // Apply dimmed theme color when dialog is opened
+    if (typeof applyDimmedThemeColorFromDOM === "function") {
+        applyDimmedThemeColorFromDOM();
+    }
 };
 
 const renderNotification = (msg) => {
