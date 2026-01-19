@@ -3,6 +3,9 @@
  * Handles theme color calculations and meta tag updates
  */
 
+// Regex pattern for parsing RGB/RGBA colors (supports decimal values)
+const RGB_REGEX = /rgba?\((\d*\.?\d+),\s*(\d*\.?\d+),\s*(\d*\.?\d+)(?:,\s*([\d.]+))?\)/;
+
 /**
  * Get the overlay color and alpha from the overlay element
  * @returns {{color: string, alpha: number}} Overlay color and alpha value
@@ -14,7 +17,7 @@ function getOverlayColorAndAlpha() {
         const bgColor = computedStyle.backgroundColor;
         
         // Parse rgba to get alpha - handles both integer and decimal RGB values
-        const match = bgColor.match(/rgba?\((\d*\.?\d+),\s*(\d*\.?\d+),\s*(\d*\.?\d+)(?:,\s*([\d.]+))?\)/);
+        const match = bgColor.match(RGB_REGEX);
         if (match) {
             const r = Math.round(parseFloat(match[1]));
             const g = Math.round(parseFloat(match[2]));
@@ -40,13 +43,15 @@ function getOverlayColorAndAlpha() {
  * @returns {string} RGB color string
  */
 function getThemeColorFromCSS(theme) {
+    // Fallback colors if DOM access fails
+    const fallbackColors = {
+        dark: "rgb(0, 0, 0)",
+        light: "rgb(255, 255, 255)",
+        snow: "rgb(2, 0, 36)"
+    };
+    
     // Check if document.body exists
     if (!document.body) {
-        const fallbackColors = {
-            dark: "rgb(0, 0, 0)",
-            light: "rgb(255, 255, 255)",
-            snow: "rgb(2, 0, 36)"
-        };
         return fallbackColors[theme] || fallbackColors.dark;
     }
     
@@ -61,37 +66,40 @@ function getThemeColorFromCSS(theme) {
     }
     // dark theme uses :root variables (no class needed)
     
-    document.body.appendChild(tempElem);
-    const computedStyle = window.getComputedStyle(tempElem);
-    
-    // Get the background color from CSS variable
-    let bgColor = computedStyle.getPropertyValue("--background-color").trim();
-    
-    // For snow theme, use fallback color if gradient is defined
-    if (theme === "snow" && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
-        bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
+    try {
+        document.body.appendChild(tempElem);
+        const computedStyle = window.getComputedStyle(tempElem);
+        
+        // Get the background color from CSS variable
+        let bgColor = computedStyle.getPropertyValue("--background-color").trim();
+        
+        // For snow theme, use fallback color if gradient is defined
+        if (theme === "snow" && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
+            bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
+        }
+        
+        // If CSS variable returns a named color or hex, convert to rgb
+        if (bgColor && !bgColor.startsWith("rgb")) {
+            // Apply to temp element and get computed color
+            tempElem.style.backgroundColor = bgColor;
+            // Reuse computedStyle by getting a fresh reference after style change
+            const updatedStyle = window.getComputedStyle(tempElem);
+            bgColor = updatedStyle.backgroundColor;
+        }
+        
+        // Return the color if valid, otherwise fallback
+        if (bgColor && bgColor !== "rgba(0, 0, 0, 0)") {
+            return bgColor;
+        }
+    } finally {
+        // Ensure cleanup even if an error occurs
+        if (tempElem.parentNode) {
+            document.body.removeChild(tempElem);
+        }
     }
-    
-    // If CSS variable returns a named color or hex, convert to rgb
-    if (bgColor && !bgColor.startsWith("rgb")) {
-        // Apply to temp element and get computed color
-        tempElem.style.backgroundColor = bgColor;
-        bgColor = window.getComputedStyle(tempElem).backgroundColor;
-    }
-    
-    document.body.removeChild(tempElem);
     
     // Fallback to hardcoded values if CSS variables not available
-    if (!bgColor || bgColor === "rgba(0, 0, 0, 0)") {
-        const fallbackColors = {
-            dark: "rgb(0, 0, 0)",
-            light: "rgb(255, 255, 255)",
-            snow: "rgb(2, 0, 36)"
-        };
-        return fallbackColors[theme] || fallbackColors.dark;
-    }
-    
-    return bgColor;
+    return fallbackColors[theme] || fallbackColors.dark;
 }
 
 /**
