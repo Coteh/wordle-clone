@@ -13,12 +13,12 @@ function getOverlayColorAndAlpha() {
         const computedStyle = window.getComputedStyle(overlayElem);
         const bgColor = computedStyle.backgroundColor;
         
-        // Parse rgba to get alpha
-        const match = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        // Parse rgba to get alpha - handles both integer and decimal RGB values
+        const match = bgColor.match(/rgba?\((\d*\.?\d+),\s*(\d*\.?\d+),\s*(\d*\.?\d+)(?:,\s*([\d.]+))?\)/);
         if (match) {
-            const r = match[1];
-            const g = match[2];
-            const b = match[3];
+            const r = Math.round(parseFloat(match[1]));
+            const g = Math.round(parseFloat(match[2]));
+            const b = Math.round(parseFloat(match[3]));
             const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
             return {
                 color: `rgba(${r}, ${g}, ${b}, ${a})`,
@@ -40,6 +40,16 @@ function getOverlayColorAndAlpha() {
  * @returns {string} RGB color string
  */
 function getThemeColorFromCSS(theme) {
+    // Check if document.body exists
+    if (!document.body) {
+        const fallbackColors = {
+            dark: "rgb(0, 0, 0)",
+            light: "rgb(255, 255, 255)",
+            snow: "rgb(2, 0, 36)"
+        };
+        return fallbackColors[theme] || fallbackColors.dark;
+    }
+    
     // Create a temporary element with the theme class to read CSS variables
     const tempElem = document.createElement("div");
     tempElem.style.display = "none";
@@ -58,7 +68,7 @@ function getThemeColorFromCSS(theme) {
     let bgColor = computedStyle.getPropertyValue("--background-color").trim();
     
     // For snow theme, use fallback color if gradient is defined
-    if (theme === "snow" && bgColor.includes("gradient")) {
+    if (theme === "snow" && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
         bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
     }
     
