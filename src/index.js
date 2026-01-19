@@ -231,7 +231,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // In this case, it may be better to leave this as-is and always have the backdrop close so that players can still play.
         overlayBackElem.style.display = "none";
         // Restore normal theme color when closing dialog
-        applyNormalThemeColor(selectedTheme);
+        if (typeof applyNormalThemeColor === "function") {
+            applyNormalThemeColor(selectedTheme);
+        }
     };
 
     const handleKeyInput = (key, ctrlKey, metaKey) => {
@@ -350,10 +352,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isDialogOpen = dialog && overlayBack && overlayBack.style.display !== "none";
         
         // Apply dimmed or normal theme color based on dialog state
-        if (isDialogOpen) {
-            applyDimmedThemeColor(theme);
-        } else {
-            applyNormalThemeColor(theme);
+        if (typeof applyDimmedThemeColor === "function" && typeof applyNormalThemeColor === "function") {
+            if (isDialogOpen) {
+                applyDimmedThemeColor(theme);
+            } else {
+                applyNormalThemeColor(theme);
+            }
         }
     };
 
