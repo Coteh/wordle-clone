@@ -230,6 +230,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // but if an invalid dialog is being passed, it might not be on the screen either.
         // In this case, it may be better to leave this as-is and always have the backdrop close so that players can still play.
         overlayBackElem.style.display = "none";
+        // Restore normal theme color when closing dialog
+        applyNormalThemeColor(selectedTheme);
     };
 
     const handleKeyInput = (key, ctrlKey, metaKey) => {
@@ -332,21 +334,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (theme !== DARK_MODE) {
             document.body.classList.add(theme);
         }
-        let themeColor = "#000";
         if (snowEmbed) snowEmbed.style.display = "none";
         switch (theme) {
             case LIGHT_MODE:
-                themeColor = "#FFF";
                 break;
             case SNOW_THEME:
-                themeColor = "#020024";
                 if (snowEmbed) snowEmbed.style.display = "initial";
                 break;
         }
-        document.querySelector("meta[name='theme-color']").content = themeColor;
-        // Set body background color for iOS 26+ compatibility (which no longer respects theme-color meta tag)
-        document.body.style.backgroundColor = themeColor;
         selectedTheme = theme;
+        
+        // Check if a dialog is currently open
+        const dialog = document.querySelector(".dialog");
+        const overlayBack = document.querySelector(".overlay-back");
+        const isDialogOpen = dialog && overlayBack && overlayBack.style.display !== "none";
+        
+        // Apply dimmed or normal theme color based on dialog state
+        if (isDialogOpen) {
+            applyDimmedThemeColor(theme);
+        } else {
+            applyNormalThemeColor(theme);
+        }
     };
 
     const selectableKeyboards = [QWERTY_KEYBOARD, DVORAK_KEYBOARD, ALPHABETICAL_KEYBOARD];
