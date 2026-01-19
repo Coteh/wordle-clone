@@ -90,7 +90,7 @@ function updateThemeColor(color) {
     if (metaTag) {
         metaTag.content = hexColor;
     }
-    // Set body background color for iOS 26+ compatibility
+    // Set body background color for iOS 26+ compatibility (which no longer respects theme-color meta tag)
     document.body.style.backgroundColor = hexColor;
 }
 
