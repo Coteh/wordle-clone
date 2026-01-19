@@ -3,15 +3,86 @@
  * Handles theme color calculations and meta tag updates
  */
 
-const OVERLAY_COLOR = "rgba(0, 0, 0, 0.5)";
-const OVERLAY_ALPHA = 0.5;
+/**
+ * Get the overlay color and alpha from the overlay element
+ * @returns {{color: string, alpha: number}} Overlay color and alpha value
+ */
+function getOverlayColorAndAlpha() {
+    const overlayElem = document.querySelector(".overlay-back");
+    if (overlayElem) {
+        const computedStyle = window.getComputedStyle(overlayElem);
+        const bgColor = computedStyle.backgroundColor;
+        
+        // Parse rgba to get alpha
+        const match = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        if (match) {
+            const r = match[1];
+            const g = match[2];
+            const b = match[3];
+            const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
+            return {
+                color: `rgba(${r}, ${g}, ${b}, ${a})`,
+                alpha: a
+            };
+        }
+    }
+    
+    // Fallback to hardcoded values if element not found
+    return {
+        color: "rgba(0, 0, 0, 0.5)",
+        alpha: 0.5
+    };
+}
 
-// Theme background colors (must match CSS variables)
-const THEME_COLORS = {
-    dark: "rgb(0, 0, 0)", // #000
-    light: "rgb(255, 255, 255)", // #FFF
-    snow: "rgb(2, 0, 36)", // #020024
-};
+/**
+ * Get the background color for a given theme from CSS variables
+ * @param {string} theme - Theme name (dark, light, snow)
+ * @returns {string} RGB color string
+ */
+function getThemeColorFromCSS(theme) {
+    // Create a temporary element with the theme class to read CSS variables
+    const tempElem = document.createElement("div");
+    tempElem.style.display = "none";
+    
+    if (theme === "light") {
+        tempElem.className = "light";
+    } else if (theme === "snow") {
+        tempElem.className = "snow";
+    }
+    // dark theme uses :root variables (no class needed)
+    
+    document.body.appendChild(tempElem);
+    const computedStyle = window.getComputedStyle(tempElem);
+    
+    // Get the background color from CSS variable
+    let bgColor = computedStyle.getPropertyValue("--background-color").trim();
+    
+    // For snow theme, use fallback color if gradient is defined
+    if (theme === "snow" && bgColor.includes("gradient")) {
+        bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
+    }
+    
+    // If CSS variable returns a named color or hex, convert to rgb
+    if (bgColor && !bgColor.startsWith("rgb")) {
+        // Apply to temp element and get computed color
+        tempElem.style.backgroundColor = bgColor;
+        bgColor = window.getComputedStyle(tempElem).backgroundColor;
+    }
+    
+    document.body.removeChild(tempElem);
+    
+    // Fallback to hardcoded values if CSS variables not available
+    if (!bgColor || bgColor === "rgba(0, 0, 0, 0)") {
+        const fallbackColors = {
+            dark: "rgb(0, 0, 0)",
+            light: "rgb(255, 255, 255)",
+            snow: "rgb(2, 0, 36)"
+        };
+        return fallbackColors[theme] || fallbackColors.dark;
+    }
+    
+    return bgColor;
+}
 
 /**
  * Blend two colors together based on alpha transparency
@@ -67,7 +138,7 @@ function rgbToHex(rgb) {
  * @returns {string} RGB color string
  */
 function getThemeColor(theme) {
-    return THEME_COLORS[theme] || THEME_COLORS.dark;
+    return getThemeColorFromCSS(theme);
 }
 
 /**
@@ -77,7 +148,8 @@ function getThemeColor(theme) {
  */
 function getDimmedThemeColor(theme) {
     const themeColor = getThemeColor(theme);
-    return blendColors(OVERLAY_COLOR, themeColor, OVERLAY_ALPHA);
+    const overlay = getOverlayColorAndAlpha();
+    return blendColors(overlay.color, themeColor, overlay.alpha);
 }
 
 /**
