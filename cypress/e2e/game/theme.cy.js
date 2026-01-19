@@ -122,4 +122,158 @@ describe("theme", () => {
         cy.get("body").should("have.class", "");
         cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
     });
+
+    it("should set the correct meta theme-color for dark theme", () => {
+        cy.get("body").should("have.class", "");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
+    });
+
+    it("should set the correct meta theme-color for light theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+    });
+
+    it("should set the correct meta theme-color for snow theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".setting.theme-switch").click();
+
+        cy.get("body").should("have.class", "snow");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
+    });
+
+    it("should apply dimmed theme-color when a dialog is opened in dark theme", () => {
+        cy.get("body").should("have.class", "");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
+
+        cy.get(".help-link").click();
+
+        // Dimmed dark: blend rgba(0,0,0,0.5) over rgb(0,0,0) = rgb(0,0,0) = #000000
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
+    });
+
+    it("should apply dimmed theme-color when a dialog is opened in light theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".settings .close").click();
+
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+
+        cy.get(".help-link").click();
+
+        // Dimmed light: blend rgba(0,0,0,0.5) over rgb(255,255,255) = rgb(128,128,128) = #808080
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#808080");
+    });
+
+    it("should apply dimmed theme-color when a dialog is opened in snow theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".settings .close").click();
+
+        cy.get("body").should("have.class", "snow");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
+
+        cy.get(".help-link").click();
+
+        // Dimmed snow: blend rgba(0,0,0,0.5) over rgb(2,0,36) = rgb(1,0,18) = #010012
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#010012");
+    });
+
+    it("should restore normal theme-color when dialog is closed", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".settings .close").click();
+
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+
+        cy.get(".help-link").click();
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#808080");
+
+        cy.get(".dialog .close").click();
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+    });
+
+    it("should restore normal theme-color when dialog is closed via overlay click", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".settings .close").click();
+
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+
+        cy.get(".help-link").click();
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#808080");
+
+        cy.get("body").click({ position: "left" });
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+    });
+
+    it("should restore normal theme-color when dialog is closed via escape key", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".settings .close").click();
+
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+
+        cy.get(".help-link").click();
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#808080");
+
+        cy.get("body").type("{esc}");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+    });
+
+    it("should apply dimmed theme-color for new theme when switching themes while dialog is open", () => {
+        // Open settings, keep it open (it's not a dialog, it's a separate pane)
+        cy.get(".settings-link").click();
+        
+        // Initially dark theme
+        cy.get("body").should("have.class", "");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
+
+        // Open a dialog (help)
+        cy.get(".settings .close").click();
+        cy.get(".help-link").click();
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
+        
+        // Close dialog
+        cy.get(".dialog .close").click();
+
+        // Open settings again
+        cy.get(".settings-link").click();
+        
+        // Switch to light theme
+        cy.get(".setting.theme-switch").click();
+        cy.get("body").should("have.class", "light");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
+        
+        // Keep settings open, open help dialog on top
+        cy.get(".settings .close").click();
+        cy.get(".help-link").click();
+        
+        // Should have dimmed light color
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#808080");
+        
+        // Close dialog, go back to settings
+        cy.get(".dialog .close").click();
+        cy.get(".settings-link").click();
+        
+        // Switch to snow theme while settings is open
+        cy.get(".setting.theme-switch").click();
+        cy.get("body").should("have.class", "snow");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
+        
+        // Close settings, open help dialog
+        cy.get(".settings .close").click();
+        cy.get(".help-link").click();
+        
+        // Should have dimmed snow color
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#010012");
+    });
 });
