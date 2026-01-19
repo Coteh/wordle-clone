@@ -22,8 +22,16 @@ const THEME_COLORS = {
  */
 function blendColors(topColor, bottomColor, alphaTop) {
     // Extract RGB components from the top and bottom colors
-    const top = topColor.match(/\d+/g).map(Number);
-    const bottom = bottomColor.match(/\d+/g).map(Number);
+    const topMatch = topColor.match(/\d+/g);
+    const bottomMatch = bottomColor.match(/\d+/g);
+    
+    if (!topMatch || !bottomMatch) {
+        console.warn("Invalid color format in blendColors:", topColor, bottomColor);
+        return bottomColor; // Return bottom color as fallback
+    }
+    
+    const top = topMatch.map(Number);
+    const bottom = bottomMatch.map(Number);
     
     // Calculate the resulting RGB values
     const r = Math.round(alphaTop * top[0] + (1 - alphaTop) * bottom[0]);
@@ -40,7 +48,13 @@ function blendColors(topColor, bottomColor, alphaTop) {
  * @returns {string} Color in hex format (e.g., "#000000")
  */
 function rgbToHex(rgb) {
-    const values = rgb.match(/\d+/g).map(Number);
+    const match = rgb.match(/\d+/g);
+    if (!match || match.length < 3) {
+        console.warn("Invalid rgb format in rgbToHex:", rgb);
+        return "#000000"; // Return black as fallback
+    }
+    
+    const values = match.map(Number);
     const r = values[0].toString(16).padStart(2, '0');
     const g = values[1].toString(16).padStart(2, '0');
     const b = values[2].toString(16).padStart(2, '0');
