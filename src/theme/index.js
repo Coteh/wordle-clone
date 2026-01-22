@@ -6,8 +6,6 @@ const RGB_REGEX = /rgba?\((\d*\.?\d+),\s*(\d*\.?\d+),\s*(\d*\.?\d+)(?:,\s*([\d.]
  * theme color calculations, and meta tag updates
  */
 class ThemeManager {
-    static instance = undefined;
-
     /**
      * Retrieve ThemeManager singleton instance. A new one is created if it hasn't been already.
      * @returns {ThemeManager} ThemeManager singleton instance
