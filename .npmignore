@@ -12,6 +12,7 @@ build/
 src/share/browser.js
 src/storage/browser.js
 src/render.js
+src/theme/*
 
 favicon.ico
 icon*
