@@ -147,10 +147,10 @@ class ThemeManager {
         const tempElem = document.createElement("div");
         tempElem.style.display = "none";
         
-        if (theme === "light") {
-            tempElem.className = "light";
-        } else if (theme === "snow") {
-            tempElem.className = "snow";
+        if (theme === LIGHT_MODE) {
+            tempElem.className = LIGHT_MODE;
+        } else if (theme === SNOW_THEME) {
+            tempElem.className = SNOW_THEME;
         }
         // dark theme uses :root variables (no class needed)
         
@@ -162,7 +162,7 @@ class ThemeManager {
             let bgColor = computedStyle.getPropertyValue("--background-color").trim();
             
             // For snow theme, use fallback color if gradient is defined
-            if (theme === "snow" && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
+            if (theme === SNOW_THEME && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
                 bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
             }
             
