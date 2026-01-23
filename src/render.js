@@ -210,6 +210,8 @@ const renderDialog = (content, options) => {
     const dialogContent = clone.querySelector(".dialog-content");
     dialogContent.appendChild(content);
 
+    const themeManager = ThemeManager.getInstance();
+
     if (options) {
         if (options.fadeIn) {
             dialog.style.opacity = "0";
@@ -232,6 +234,8 @@ const renderDialog = (content, options) => {
                     dialog.close();
                     dialog.remove();
                     overlayBackElem.style.display = "none";
+                    // Restore normal theme color when closing dialog
+                    themeManager.applyNormalThemeColor();
                 });
             });
         } else {
@@ -254,6 +258,9 @@ const renderDialog = (content, options) => {
     }
 
     dialog.show();
+    
+    // Apply dimmed theme color when dialog is opened
+    themeManager.applyDimmedThemeColor();
 };
 
 const renderNotification = (msg) => {

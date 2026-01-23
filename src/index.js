@@ -66,6 +66,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     let day;
     let gameLoaded = false;
 
+    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME];
+    let themeManager = ThemeManager.getInstance();
+    themeManager.setSelectableThemes(selectableThemes);
+
     const wordleRenderer = {
         renderInitialState(attempts) {
             attempts.forEach((attempt, index) => {
@@ -230,6 +234,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // but if an invalid dialog is being passed, it might not be on the screen either.
         // In this case, it may be better to leave this as-is and always have the backdrop close so that players can still play.
         overlayBackElem.style.display = "none";
+        // Restore normal theme color when closing dialog
+        themeManager.applyNormalThemeColor();
     };
 
     const handleKeyInput = (key, ctrlKey, metaKey) => {
@@ -317,37 +323,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     let snowEmbed = document.getElementById("embedim--snow");
     if (snowEmbed) snowEmbed.style.display = "none";
 
-    let selectedTheme = DARK_MODE;
     let selectedKeyboard = QWERTY_KEYBOARD;
     let highContrastMode = false;
     let hardMode = false;
-
-    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME];
-
-    const switchTheme = (theme) => {
-        if (!theme || !selectableThemes.includes(theme)) {
-            theme = DARK_MODE;
-        }
-        document.body.classList.remove(selectedTheme);
-        if (theme !== DARK_MODE) {
-            document.body.classList.add(theme);
-        }
-        let themeColor = "#000";
-        if (snowEmbed) snowEmbed.style.display = "none";
-        switch (theme) {
-            case LIGHT_MODE:
-                themeColor = "#FFF";
-                break;
-            case SNOW_THEME:
-                themeColor = "#020024";
-                if (snowEmbed) snowEmbed.style.display = "initial";
-                break;
-        }
-        document.querySelector("meta[name='theme-color']").content = themeColor;
-        // Set body background color for iOS 26+ compatibility (which no longer respects theme-color meta tag)
-        document.body.style.backgroundColor = themeColor;
-        selectedTheme = theme;
-    };
 
     const selectableKeyboards = [QWERTY_KEYBOARD, DVORAK_KEYBOARD, ALPHABETICAL_KEYBOARD];
 
@@ -365,9 +343,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             let enabled = false;
             if (elem.classList.contains(`${THEME_PREFERENCE_NAME}-switch`)) {
                 const toggle = setting.querySelector(".toggle");
-                const themeIndex = selectableThemes.indexOf(selectedTheme);
+                const themeIndex = selectableThemes.indexOf(themeManager.getSelectedTheme());
                 const nextTheme = selectableThemes[(themeIndex + 1) % selectableThemes.length];
-                switchTheme(nextTheme);
+                themeManager.switchTheme(nextTheme);
                 savePreferenceValue(THEME_PREFERENCE_NAME, nextTheme);
                 toggle.innerText = nextTheme;
             } else if (elem.classList.contains(HIGH_CONTRAST_PREFERENCE_NAME)) {
@@ -417,10 +395,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     initPreferences();
-    switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
+    themeManager.switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
     switchKeyboard(getPreferenceValue(KEYBOARD_PREFERENCE_NAME));
     const themeSetting = document.querySelector(`.setting.${THEME_PREFERENCE_NAME}-switch`);
-    themeSetting.querySelector(".toggle").innerText = selectedTheme;
+    themeSetting.querySelector(".toggle").innerText = themeManager.getSelectedTheme();
     const keyboardSetting = document.querySelector(`.setting.${KEYBOARD_PREFERENCE_NAME}-switch`);
     keyboardSetting.querySelector(".toggle").innerText = selectedKeyboard === QWERTY_KEYBOARD ? selectedKeyboard.toUpperCase() : selectedKeyboard;
     if (getPreferenceValue(HIGH_CONTRAST_PREFERENCE_NAME) === SETTING_ENABLED) {
