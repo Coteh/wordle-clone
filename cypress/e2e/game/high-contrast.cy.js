@@ -96,7 +96,7 @@ describe("high contrast mode", { browser: 'chrome' }, () => {
         cy.get("body").should("not.have.class", "high-contrast");
     });
 
-    it("should recolour the tiles and share feature as high contrast when high contrast is enabled", { browser: 'chrome' }, () => {
+    it("should recolour the tiles and share feature as high contrast when high contrast is enabled", () => {
         cy.get(".help-link").click();
 
         cy.get(".sample > .box.within").should(
