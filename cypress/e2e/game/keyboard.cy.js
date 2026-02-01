@@ -6,7 +6,7 @@ const FIRST_DAY_MS = 1647993600000;
 
 const KEY_HOLD_TIMEOUT_MS = 500;
 
-describe("keyboard", () => {
+describe("keyboard", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631

@@ -38,7 +38,7 @@ const KEYS_ARR = [
     "backspace",
 ];
 
-describe("gameplay", () => {
+describe("gameplay", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631

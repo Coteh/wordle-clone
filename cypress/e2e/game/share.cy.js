@@ -7,7 +7,7 @@ const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 
 // NOTE: If viewing this set of tests on Cypress UI, make sure the browser is active and you've allowed clipboard access when prompted
-describe("sharing results", () => {
+describe("sharing results", { browser: 'chrome' }, () => {
     beforeEach(() => {
         cy.grantClipboardPermission();
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work

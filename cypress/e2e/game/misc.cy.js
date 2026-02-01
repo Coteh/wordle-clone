@@ -237,7 +237,7 @@ describe("misc", () => {
         });
     });
 
-    describe("cache-less tests", () => {
+    describe("cache-less tests", { browser: 'chrome' }, () => {
         // https://github.com/cypress-io/cypress/issues/14459#issuecomment-765630421
         before(() => {
             Cypress.automation("remote:debugger:protocol", {

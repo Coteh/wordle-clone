@@ -6,7 +6,7 @@ const DAY_MS = 86400000;
 // March 23 2022 - initial release date
 const FIRST_DAY_MS = 1647993600000;
 
-describe("high contrast mode", () => {
+describe("high contrast mode", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
@@ -96,7 +96,7 @@ describe("high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
     });
 
-    it("should recolour the tiles and share feature as high contrast when high contrast is enabled", () => {
+    it("should recolour the tiles and share feature as high contrast when high contrast is enabled", { browser: 'chrome' }, () => {
         cy.get(".help-link").click();
 
         cy.get(".sample > .box.within").should(

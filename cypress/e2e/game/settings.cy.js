@@ -6,7 +6,7 @@ const DAY_MS = 86400000;
 // March 23 2022 - initial release date
 const FIRST_DAY_MS = 1647993600000;
 
-describe("settings", () => {
+describe("settings", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631

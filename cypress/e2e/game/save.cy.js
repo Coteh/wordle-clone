@@ -5,7 +5,7 @@ const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 const FIRST_DAY = 19074;
 
-describe("retrieving saved progress", () => {
+describe("retrieving saved progress", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631

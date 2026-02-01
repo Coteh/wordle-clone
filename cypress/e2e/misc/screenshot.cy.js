@@ -5,7 +5,7 @@ const FIRST_DAY_MS = 1647993600000;
 
 const INPUT_DELAY_MS = 100;
 
-describe("misc", () => {
+describe("misc", { browser: 'chrome' }, () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
         // https://github.com/cypress-io/cypress/issues/7455#issuecomment-635278631
