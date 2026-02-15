@@ -237,9 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Restore normal theme color when closing dialog
         themeManager.applyNormalThemeColor();
         // Remove focus from any button that might have opened the dialog
-        if (document.activeElement) {
-            document.activeElement.blur();
-        }
+        document.activeElement.blur();
     };
 
     const handleKeyInput = (key, ctrlKey, metaKey) => {
