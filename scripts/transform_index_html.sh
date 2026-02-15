@@ -19,7 +19,7 @@ fi
 # Remove canonical link in dev builds
 if [ "$IS_DEV" = "true" ]; then
     sed -i.bak -r -e "/<link.+rel=\"canonical\">/d" "$OUTPUT_DIR/index.html"
-    
+
     if [ $? != 0 ]; then
         >&2 echo "Failure removing canonical link from index.html"
         exit 1

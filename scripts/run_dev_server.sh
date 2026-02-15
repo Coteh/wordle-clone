@@ -9,9 +9,9 @@ OUTPUT_DIR=./build
 MAGICK=magick
 
 # Create build directory to put modified files in
-mkdir -p $OUTPUT_DIR
+mkdir -p "$OUTPUT_DIR"
 
-./scripts/transform_index_html.sh $OUTPUT_DIR true
+./scripts/transform_index_html.sh "$OUTPUT_DIR" true
 
 # If ImageMagick is installed on the system, then perform app icon modification so that it has a label on it
 if [ -x "$(command -v $MAGICK)" ]; then
