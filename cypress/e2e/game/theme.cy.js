@@ -15,7 +15,7 @@ describe("theme", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -47,7 +47,7 @@ describe("theme", () => {
         cy.get("body").should("not.have.class", "light");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 theme: "light",
             })
@@ -64,7 +64,7 @@ describe("theme", () => {
         cy.get("body").should("not.have.class", "snow");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 theme: "snow",
             })
@@ -81,7 +81,7 @@ describe("theme", () => {
         cy.get("body").should("have.class", "");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 theme: "dark",
             })
@@ -97,7 +97,7 @@ describe("theme", () => {
     it("should default to dark theme if no entry exists in local storage for theme", () => {
         cy.get("body").should("have.class", "");
 
-        window.localStorage.removeItem("preferences");
+        window.localStorage.removeItem("wc_preferences");
 
         cy.reload();
         cy.waitForGameReady();
@@ -110,7 +110,7 @@ describe("theme", () => {
         cy.get("body").should("have.class", "");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 theme: "invalid",
             })

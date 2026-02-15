@@ -1,10 +1,11 @@
-const ATTEMPTS_KEY = "attempts";
-const LIVES_KEY = "lives";
-const DAY_KEY = "day";
-const ENDED_KEY = "ended";
-const PLAYED_BEFORE_KEY = "played_before";
-const PREFERENCES_KEY = "preferences";
-const WON_HARD_MODE_KEY = "won_hard_mode";
+const PREFIX = "wc_";
+const ATTEMPTS_KEY = PREFIX + "attempts";
+const LIVES_KEY = PREFIX + "lives";
+const DAY_KEY = PREFIX + "day";
+const ENDED_KEY = PREFIX + "ended";
+const PLAYED_BEFORE_KEY = PREFIX + "played_before";
+const PREFERENCES_KEY = PREFIX + "preferences";
+const WON_HARD_MODE_KEY = PREFIX + "won_hard_mode";
 
 if (typeof process !== "undefined") {
     module.exports = {

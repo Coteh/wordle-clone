@@ -17,7 +17,7 @@ describe("settings", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -64,14 +64,14 @@ describe("settings", () => {
 
         cy.get(".settings-item.high-contrast .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.null;
+            expect(win.localStorage.getItem("wc_preferences")).to.be.null;
         });
 
         cy.get(".settings-item.high-contrast").click();
 
         cy.get(".settings-item.high-contrast .knob").should("have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["high-contrast"]: "enabled",
                 })
@@ -81,7 +81,7 @@ describe("settings", () => {
 
     it("should reenable a setting if it's set to enabled in local storage and page is reloaded", () => {
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 ["high-contrast"]: "enabled",
             })
@@ -136,13 +136,13 @@ describe("settings", () => {
     });
 
     it("should handle preferences value in local storage being in invalid state", () => {
-        window.localStorage.setItem("preferences", "invalid");
+        window.localStorage.setItem("wc_preferences", "invalid");
 
         cy.reload();
         cy.waitForGameReady();
 
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql("{}");
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql("{}");
         });
     });
 
@@ -155,14 +155,14 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.null;
+            expect(win.localStorage.getItem("wc_preferences")).to.be.null;
         });
 
         cy.get(".settings-item.hard-mode").click();
 
         cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "enabled",
                 })
@@ -173,7 +173,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "disabled",
                 })
@@ -194,7 +194,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.null;
+            expect(win.localStorage.getItem("wc_preferences")).to.be.null;
         });
 
         cy.get(".settings-item.hard-mode").click();
@@ -203,16 +203,16 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.null;
+            expect(win.localStorage.getItem("wc_preferences")).to.be.null;
         });
     });
 
     it("should be able to toggle easy mode if game is in progress", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
                 window.localStorage.setItem(
-                    "preferences",
+                    "wc_preferences",
                     JSON.stringify({
                         ["hard-mode"]: "enabled",
                     })
@@ -232,7 +232,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "enabled",
                 })
@@ -245,7 +245,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "disabled",
                 })
@@ -276,14 +276,14 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.null;
+            expect(win.localStorage.getItem("wc_preferences")).to.be.null;
         });
 
         cy.get(".settings-item.hard-mode").click();
 
         cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "enabled",
                 })
@@ -294,9 +294,9 @@ describe("settings", () => {
     it("should be able to toggle easy mode if game is over", () => {
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
                 window.localStorage.setItem(
-                    "preferences",
+                    "wc_preferences",
                     JSON.stringify({
                         ["hard-mode"]: "enabled",
                     })
@@ -326,7 +326,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "enabled",
                 })
@@ -339,7 +339,7 @@ describe("settings", () => {
 
         cy.get(".settings-item.hard-mode .knob").should("not.have.class", "enabled");
         cy.window().then((win) => {
-            expect(win.localStorage.getItem("preferences")).to.be.eql(
+            expect(win.localStorage.getItem("wc_preferences")).to.be.eql(
                 JSON.stringify({
                     ["hard-mode"]: "disabled",
                 })

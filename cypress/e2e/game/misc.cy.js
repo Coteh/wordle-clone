@@ -15,7 +15,7 @@ describe("misc", () => {
         cy.clock(FIRST_DAY_MS + DAY_MS * 2 + (DAY_MS * 1) / 2, ["Date"]);
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
     });
@@ -145,7 +145,7 @@ describe("misc", () => {
                     Object.defineProperty(win.navigator, "userAgent", {
                         value: MOBILE_DEVICE_USER_AGENT,
                     });
-                    window.localStorage.setItem("played_before", false);
+                    window.localStorage.setItem("wc_played_before", false);
                 },
             }); // visit the page
             cy.get("#landscape-overlay") // get the rotate device overlay element
@@ -167,7 +167,7 @@ describe("misc", () => {
                         value: MOBILE_DEVICE_USER_AGENT,
                     });
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             theme: "snow",
                         })

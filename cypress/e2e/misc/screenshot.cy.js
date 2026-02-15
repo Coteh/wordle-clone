@@ -12,7 +12,7 @@ describe("misc", () => {
         cy.clock(FIRST_DAY_MS + DAY_MS * 2 + (DAY_MS * 1) / 2, ["Date"]);
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
     });
