@@ -84,4 +84,27 @@ describe("how to play", () => {
         cy.inputRow(1).inputCell(4).inputLetter().should("have.text", "l");
         cy.inputRow(1).inputCell(5).inputLetter().should("have.text", "o");
     });
+
+    it("should not reopen when pressing enter after closing dialog on first load (COT-63)", () => {
+        // On first load, the how to play dialog automatically appears
+        cy.contains("How to play").should("be.visible");
+
+        // Close the dialog by clicking the X button
+        cy.get(".dialog > .close").click();
+        cy.get(".dialog").should("not.exist");
+
+        // Type some letters and press enter to submit a word
+        cy.get("body").type("world{enter}");
+
+        // The dialog should not reopen
+        cy.get(".dialog").should("not.exist");
+        cy.contains("How to play").should("not.exist");
+
+        // The word should be submitted (first row should have input)
+        cy.inputRow(1).inputCell(1).inputLetter().should("have.text", "w");
+        cy.inputRow(1).inputCell(2).inputLetter().should("have.text", "o");
+        cy.inputRow(1).inputCell(3).inputLetter().should("have.text", "r");
+        cy.inputRow(1).inputCell(4).inputLetter().should("have.text", "l");
+        cy.inputRow(1).inputCell(5).inputLetter().should("have.text", "d");
+    });
 });
