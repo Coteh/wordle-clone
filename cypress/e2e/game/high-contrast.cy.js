@@ -17,7 +17,7 @@ describe("high contrast mode", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -41,7 +41,7 @@ describe("high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 ["high-contrast"]: "enabled",
             })
@@ -57,7 +57,7 @@ describe("high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 ["high-contrast"]: "disabled",
             })
@@ -72,7 +72,7 @@ describe("high contrast mode", () => {
     it("should not set the high contrast mode if no entry exists in local storage for high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
 
-        window.localStorage.removeItem("preferences");
+        window.localStorage.removeItem("wc_preferences");
 
         cy.reload();
         cy.waitForGameReady();
@@ -84,7 +84,7 @@ describe("high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 ["high-contrast"]: "invalid",
             })
@@ -111,7 +111,7 @@ describe("high contrast mode", () => {
         );
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 ["high-contrast"]: "enabled",
             })

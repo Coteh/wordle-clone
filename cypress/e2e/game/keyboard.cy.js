@@ -17,7 +17,7 @@ describe("keyboard", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -55,7 +55,7 @@ describe("keyboard", () => {
         cy.get(".keyboard").should("not.contain.text", "PYFGCRL");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 "keyboard": "dvorak",
             })
@@ -71,7 +71,7 @@ describe("keyboard", () => {
         cy.get(".keyboard").should("not.contain.text", "ABCDEFGHIJK");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 keyboard: "alphabetical",
             })
@@ -87,7 +87,7 @@ describe("keyboard", () => {
         cy.get(".keyboard").should("contain.text", "QWERTY");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 keyboard: "qwerty",
             })
@@ -102,7 +102,7 @@ describe("keyboard", () => {
     it("should default to QWERTY keyboard if no entry exists in local storage for keyboard", () => {
         cy.get(".keyboard").should("contain.text", "QWERTY");
 
-        window.localStorage.removeItem("preferences");
+        window.localStorage.removeItem("wc_preferences");
 
         cy.reload();
         cy.waitForGameReady();
@@ -114,7 +114,7 @@ describe("keyboard", () => {
         cy.get(".keyboard").should("contain.text", "QWERTY");
 
         window.localStorage.setItem(
-            "preferences",
+            "wc_preferences",
             JSON.stringify({
                 keyboard: "invalid",
             })

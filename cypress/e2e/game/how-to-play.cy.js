@@ -15,7 +15,7 @@ describe("how to play", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", false);
+                window.localStorage.setItem("wc_played_before", false);
             },
         });
         cy.waitForGameReady();

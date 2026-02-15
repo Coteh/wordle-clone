@@ -19,7 +19,7 @@ describe("sharing results", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -360,7 +360,7 @@ describe("sharing results", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "enabled",
                         })
@@ -406,7 +406,7 @@ describe("sharing results", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "enabled",
                         })
@@ -426,7 +426,7 @@ describe("sharing results", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "enabled",
                         })
@@ -450,7 +450,7 @@ describe("sharing results", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "disabled",
                         })
@@ -506,7 +506,7 @@ describe("sharing results", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "enabled",
                             ["high-contrast"]: "enabled",

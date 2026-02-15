@@ -49,7 +49,7 @@ describe("gameplay", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
+                window.localStorage.setItem("wc_played_before", true);
             },
         });
         cy.waitForGameReady();
@@ -1030,7 +1030,7 @@ describe("gameplay", () => {
             cy.visit("/", {
                 onBeforeLoad: () => {
                     window.localStorage.setItem(
-                        "preferences",
+                        "wc_preferences",
                         JSON.stringify({
                             ["hard-mode"]: "enabled",
                         })

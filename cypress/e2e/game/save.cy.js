@@ -16,12 +16,12 @@ describe("retrieving saved progress", () => {
         cy.clearBrowserCache();
         cy.visit("/", {
             onBeforeLoad: () => {
-                window.localStorage.setItem("played_before", true);
-                window.localStorage.setItem("day", FIRST_DAY + 1);
-                window.localStorage.setItem("lives", 4);
-                window.localStorage.setItem("ended", false);
+                window.localStorage.setItem("wc_played_before", true);
+                window.localStorage.setItem("wc_day", FIRST_DAY + 1);
+                window.localStorage.setItem("wc_lives", 4);
+                window.localStorage.setItem("wc_ended", false);
                 window.localStorage.setItem(
-                    "attempts",
+                    "wc_attempts",
                     JSON.stringify([
                         [
                             {
@@ -115,7 +115,7 @@ describe("retrieving saved progress", () => {
     });
 
     it("should clear old progress if currently saved progress was made on a different day", () => {
-        window.localStorage.setItem("day", FIRST_DAY + 0);
+        window.localStorage.setItem("wc_day", FIRST_DAY + 0);
 
         cy.reload();
         cy.waitForGameReady();
@@ -139,10 +139,10 @@ describe("retrieving saved progress", () => {
     });
 
     it("should handle recovering a win state", () => {
-        window.localStorage.setItem("lives", 3);
-        window.localStorage.setItem("ended", true);
+        window.localStorage.setItem("wc_lives", 3);
+        window.localStorage.setItem("wc_ended", true);
         window.localStorage.setItem(
-            "attempts",
+            "wc_attempts",
             JSON.stringify([
                 [
                     {
@@ -235,10 +235,10 @@ describe("retrieving saved progress", () => {
     });
 
     it("should handle recovering a lose state", () => {
-        window.localStorage.setItem("lives", 0);
-        window.localStorage.setItem("ended", true);
+        window.localStorage.setItem("wc_lives", 0);
+        window.localStorage.setItem("wc_ended", true);
         window.localStorage.setItem(
-            "attempts",
+            "wc_attempts",
             JSON.stringify(
                 new Array(6).fill([
                     {
@@ -344,9 +344,9 @@ describe("retrieving saved progress", () => {
     // if the state is invalid, depending on what type of state corruption it is, give an error instead of reinitializing state
     // so that the players don't potentially lose their stats
     it.skip("should handle invalid state", () => {
-        window.localStorage.setItem("lives", 3);
-        window.localStorage.setItem("ended", true);
-        window.localStorage.setItem("attempts", JSON.stringify([[]]));
+        window.localStorage.setItem("wc_lives", 3);
+        window.localStorage.setItem("wc_ended", true);
+        window.localStorage.setItem("wc_attempts", JSON.stringify([[]]));
 
         cy.reload();
         cy.waitForGameReady();
