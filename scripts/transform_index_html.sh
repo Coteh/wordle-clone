@@ -1,6 +1,7 @@
 #!/bin/sh
 
 OUTPUT_DIR="$1"
+IS_DEV="$2"
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 
@@ -13,6 +14,16 @@ sed -i.bak -r -e "s/(<.+ class=\"commit-hash\">)(.+)(<\/.+>)/\1$COMMIT_HASH\3/g"
 if [ $? != 0 ]; then
     >&2 echo "Failure building index.html"
     exit 1
+fi
+
+# Remove canonical link in dev builds
+if [ "$IS_DEV" = "true" ]; then
+    sed -i.bak -r -e "/<link.+rel=\"canonical\">/d" $OUTPUT_DIR/index.html
+    
+    if [ $? != 0 ]; then
+        >&2 echo "Failure removing canonical link from index.html"
+        exit 1
+    fi
 fi
 
 rm $OUTPUT_DIR/index.html.bak
