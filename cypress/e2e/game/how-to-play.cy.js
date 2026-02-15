@@ -57,4 +57,31 @@ describe("how to play", () => {
         cy.get(".dialog").should("not.exist");
         cy.get(".overlay-back").should("not.be.visible");
     });
+
+    it("should not reopen when pressing enter after closing dialog (COT-63)", () => {
+        cy.reload();
+        cy.waitForGameReady();
+
+        // Open the how to play dialog
+        cy.get(".help-link").click();
+        cy.contains("How to play").should("be.visible");
+
+        // Close the dialog by clicking the X button
+        cy.get(".dialog > .close").click();
+        cy.get(".dialog").should("not.exist");
+
+        // Type some letters and press enter to submit a word
+        cy.get("body").type("hello{enter}");
+
+        // The dialog should not reopen
+        cy.get(".dialog").should("not.exist");
+        cy.contains("How to play").should("not.exist");
+
+        // The word should be submitted (first row should have input)
+        cy.inputRow(1).inputCell(1).inputLetter().should("have.text", "h");
+        cy.inputRow(1).inputCell(2).inputLetter().should("have.text", "e");
+        cy.inputRow(1).inputCell(3).inputLetter().should("have.text", "l");
+        cy.inputRow(1).inputCell(4).inputLetter().should("have.text", "l");
+        cy.inputRow(1).inputCell(5).inputLetter().should("have.text", "o");
+    });
 });
