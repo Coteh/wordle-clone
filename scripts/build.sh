@@ -12,10 +12,10 @@ mkdir -p $OUTPUT_DIR/vendor
 mkdir -p $OUTPUT_DIR/images
 
 # Pass true to transform script if DEPLOY_ENV is set (non-prod build)
-if [ "$DEPLOY_ENV" != "" ]; then
-    ./scripts/transform_index_html.sh $OUTPUT_DIR true
+if [ -n "$DEPLOY_ENV" ]; then
+    ./scripts/transform_index_html.sh "$OUTPUT_DIR" true
 else
-    ./scripts/transform_index_html.sh $OUTPUT_DIR
+    ./scripts/transform_index_html.sh "$OUTPUT_DIR"
 fi
 
 cp index.css $OUTPUT_DIR
