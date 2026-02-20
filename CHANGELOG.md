@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Browser interface and/or status bar colour will dim alongside the rest of the game's elements when a dialog is open
+
+### Fixed
+
+- Help dialog reopening when player clicked on it previously then pressed enter to submit a word
+- Status bar colour on iOS 26 not matching the selected theme's colour
+
 ## [1.4.0] - 2025-01-20
 
 ### Added
