@@ -396,6 +396,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
+    const migrated = migrateLocalStorage();
+
     initPreferences();
     themeManager.switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
     switchKeyboard(getPreferenceValue(KEYBOARD_PREFERENCE_NAME));
@@ -513,6 +515,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderDialog(elem, {
             fadeIn: true,
             closable: false,
+        });
+    }
+
+    if (migrated) {
+        renderDialog(createDialogContentFromTemplate("#migration-dialog-content"), {
+            fadeIn: true,
+            closable: true,
         });
     }
 
