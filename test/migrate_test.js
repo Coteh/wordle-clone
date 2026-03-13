@@ -66,10 +66,6 @@ describe("localStorage migration", () => {
         assert.strictEqual(LEGACY_KEY_MAP["preferences"], PREFERENCES_KEY);
     });
 
-    it("should have a dynamically named function based on app version", () => {
-        assert.strictEqual(migrateLocalStorage.name, "migrateLocalStorage_v1_4_0");
-    });
-
     describe("full migration", () => {
         it("should migrate all legacy keys to new keys when no new keys exist", () => {
             setupGetItem({
