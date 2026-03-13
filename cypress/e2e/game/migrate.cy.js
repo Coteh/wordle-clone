@@ -153,30 +153,7 @@ describe("localStorage migration", () => {
             cy.contains("Your save data has been migrated").should("be.visible");
         });
 
-        it("should not migrate game state keys when legacy day is outdated", () => {
-            cy.visit("/", {
-                onBeforeLoad: (win) => {
-                    win.localStorage.setItem("played_before", "true");
-                    win.localStorage.setItem("attempts", ATTEMPTS);
-                    win.localStorage.setItem("lives", "4");
-                    // Use a stale day (different from current)
-                    win.localStorage.setItem("day", String(FIRST_DAY));
-                    win.localStorage.setItem("ended", "false");
-                    win.localStorage.setItem("won_hard_mode", "false");
-                },
-            });
-            cy.waitForGameReady();
-
-            cy.window().then((win) => {
-                expect(win.localStorage.getItem("wc_attempts")).to.be.null;
-                expect(win.localStorage.getItem("wc_lives")).to.be.null;
-                expect(win.localStorage.getItem("wc_day")).to.be.null;
-                expect(win.localStorage.getItem("wc_ended")).to.be.null;
-                expect(win.localStorage.getItem("wc_won_hard_mode")).to.be.null;
-            });
-        });
-
-        it("should still migrate preference keys when legacy game state is outdated", () => {
+        it("should not migrate game state keys but still migrate preference keys when legacy day is outdated", () => {
             cy.visit("/", {
                 onBeforeLoad: (win) => {
                     win.localStorage.setItem("played_before", "true");
@@ -184,6 +161,9 @@ describe("localStorage migration", () => {
                     // Stale game state
                     win.localStorage.setItem("day", String(FIRST_DAY));
                     win.localStorage.setItem("attempts", ATTEMPTS);
+                    win.localStorage.setItem("lives", "4");
+                    win.localStorage.setItem("ended", "false");
+                    win.localStorage.setItem("won_hard_mode", "false");
                 },
             });
             cy.waitForGameReady();
@@ -191,12 +171,17 @@ describe("localStorage migration", () => {
             cy.contains("Your save data has been migrated").should("be.visible");
 
             cy.window().then((win) => {
+                // Preference keys should be migrated
                 expect(win.localStorage.getItem("wc_played_before")).to.equal("true");
                 expect(win.localStorage.getItem("wc_preferences")).to.equal(
                     JSON.stringify({ theme: "dark" })
                 );
                 // Game state should NOT be migrated due to stale day
                 expect(win.localStorage.getItem("wc_attempts")).to.be.null;
+                expect(win.localStorage.getItem("wc_lives")).to.be.null;
+                expect(win.localStorage.getItem("wc_day")).to.be.null;
+                expect(win.localStorage.getItem("wc_ended")).to.be.null;
+                expect(win.localStorage.getItem("wc_won_hard_mode")).to.be.null;
             });
         });
     });

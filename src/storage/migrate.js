@@ -54,9 +54,11 @@ const migrateLocalStorage_v1_4_0 = function () {
     return migrated;
 };
 
+const migrateLocalStorage = migrateLocalStorage_v1_4_0;
+
 if (typeof process !== "undefined") {
     module.exports = {
-        migrateLocalStorage: migrateLocalStorage_v1_4_0,
+        migrateLocalStorage,
         LEGACY_KEY_MAP,
     };
 }
