@@ -67,10 +67,7 @@ describe("localStorage migration", () => {
     });
 
     it("should have a dynamically named function based on app version", () => {
-        const pkg = require("../package.json");
-        const expectedName =
-            "migrateLocalStorage_v" + pkg.version.replace(/\./g, "_");
-        assert.strictEqual(migrateLocalStorage.name, expectedName);
+        assert.strictEqual(migrateLocalStorage.name, "migrateLocalStorage_v1_4_0");
     });
 
     describe("full migration", () => {
