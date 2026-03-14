@@ -657,8 +657,8 @@ const initInstallBanner = ({
 };
 
 initInstallBanner({
-    position: "bottom",            // "top" | "bottom"
-    dismissOnOutsideInteraction: true, // false lets the player keep playing with the banner open
+    position: "top",            // "top" | "bottom"
+    dismissOnOutsideInteraction: false, // false lets the player keep playing with the banner open
 });
 
 const registerServiceWorker = async () => {
