@@ -712,6 +712,12 @@ body a > .commit-hash {
 }
 
 /* PWA Install Banner */
+#install-banner-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 199; /* below banner (200), above everything else */
+}
+
 .install-banner {
     position: fixed;
     bottom: 0;

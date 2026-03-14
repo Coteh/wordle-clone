@@ -535,8 +535,10 @@ const initInstallBanner = () => {
 
     const installBtn = document.getElementById("install-btn");
     const dismissBtn = document.getElementById("install-dismiss");
+    const bannerOverlay = document.getElementById("install-banner-overlay");
 
     const showBanner = () => {
+        bannerOverlay.style.display = "block";
         banner.style.display = "flex";
         // Double rAF to ensure display:flex is applied before transition starts
         requestAnimationFrame(() => {
@@ -548,6 +550,7 @@ const initInstallBanner = () => {
         banner.classList.remove("visible");
         setTimeout(() => {
             banner.style.display = "none";
+            bannerOverlay.style.display = "none";
         }, 350);
         if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
     };

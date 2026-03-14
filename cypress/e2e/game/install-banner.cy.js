@@ -141,6 +141,27 @@ describe("install banner", () => {
                         .null;
                 });
             });
+
+            it("should not register the key tap as game input", () => {
+                cy.inputRowShouldBeEmpty(1);
+            });
+        });
+
+        describe("overlay blocking game input while banner is visible", () => {
+            it("should be present while the banner is visible", () => {
+                cy.get("#install-banner", {
+                    timeout: BANNER_APPEAR_TIMEOUT,
+                }).should("be.visible");
+                cy.get("#install-banner-overlay").should("be.visible");
+            });
+
+            it("should be removed once the banner is hidden", () => {
+                cy.get("#install-banner", {
+                    timeout: BANNER_APPEAR_TIMEOUT,
+                }).should("be.visible");
+                cy.get("#install-dismiss").click();
+                cy.get("#install-banner-overlay").should("not.be.visible");
+            });
         });
     });
 
