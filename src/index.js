@@ -555,6 +555,15 @@ const initInstallBanner = () => {
         if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
     };
 
+    // Prevent the browser from synthesizing mousedown/mouseup/click events
+    // from touches on the overlay. Without this, those synthetic events fire
+    // shortly after touchend and can reach the keyboard key underneath once
+    // the overlay is gone. The touchstart still bubbles to the document-level
+    // handler which closes the banner.
+    bannerOverlay.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+    });
+
     dismissBtn.addEventListener("click", () => hideBanner(true));
 
     // Only close when the banner is actually visible, so interactions elsewhere

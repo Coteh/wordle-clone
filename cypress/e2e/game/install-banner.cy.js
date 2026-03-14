@@ -142,23 +142,35 @@ describe("install banner", () => {
                 });
             });
 
-            it("should not register the key tap as game input", () => {
-                cy.inputRowShouldBeEmpty(1);
-            });
         });
 
         describe("overlay blocking game input while banner is visible", () => {
-            it("should be present while the banner is visible", () => {
+            beforeEach(() => {
                 cy.get("#install-banner", {
                     timeout: BANNER_APPEAR_TIMEOUT,
                 }).should("be.visible");
+            });
+
+            it("should be present while the banner is visible", () => {
                 cy.get("#install-banner-overlay").should("be.visible");
             });
 
-            it("should be removed once the banner is hidden", () => {
-                cy.get("#install-banner", {
-                    timeout: BANNER_APPEAR_TIMEOUT,
-                }).should("be.visible");
+            it("should intercept taps over the keyboard and not register them as game input", () => {
+                // On a real device the overlay sits on top of the keyboard (z-index 199).
+                // Triggering touchstart on the overlay (rather than directly on the key)
+                // matches what actually happens: the touch hits the overlay first, calling
+                // e.preventDefault() to suppress synthetic mouse events, while the banner
+                // closes via the bubbled document touchstart listener.
+                cy.get("#install-banner-overlay").trigger("touchstart");
+                cy.inputRowShouldBeEmpty(1);
+            });
+
+            it("should close the banner when tapped", () => {
+                cy.get("#install-banner-overlay").trigger("touchstart");
+                cy.get("#install-banner").should("not.be.visible");
+            });
+
+            it("should be hidden once the banner is dismissed", () => {
                 cy.get("#install-dismiss").click();
                 cy.get("#install-banner-overlay").should("not.be.visible");
             });
