@@ -223,6 +223,11 @@ describe("localStorage migration", () => {
             cy.waitForGameReady();
 
             cy.contains("Your save data has been migrated").should("not.exist");
+
+            cy.window().then((win) => {
+                // Verify that existing wc_ prefixed entries were not overwritten
+                expect(win.localStorage.getItem("wc_played_before")).to.equal("true");
+            });
         });
     });
 });
