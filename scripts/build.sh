@@ -11,9 +11,9 @@ mkdir -p $OUTPUT_DIR/src/theme
 mkdir -p $OUTPUT_DIR/vendor
 mkdir -p $OUTPUT_DIR/images
 
-# Pass true to transform script if DEPLOY_ENV is set (non-prod build)
+# Pass DEPLOY_ENV to transform script if set (non-prod build)
 if [ -n "$DEPLOY_ENV" ]; then
-    ./scripts/transform_index_html.sh "$OUTPUT_DIR" true
+    ./scripts/transform_index_html.sh "$OUTPUT_DIR" "$DEPLOY_ENV"
 else
     ./scripts/transform_index_html.sh "$OUTPUT_DIR"
 fi
