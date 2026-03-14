@@ -50,9 +50,9 @@ describe("how to play", () => {
         cy.get(".dialog").should("be.visible");
         cy.get(".overlay-back").should("be.visible");
 
-        // Need to use cypress-real-events realType method to simulate a "real" enter key press to trigger the exact scenario
-        // that happens in real browser where the browser is still focused on the help link at this point and triggers the help dialog again.
-        cy.get(".help-link").realType("{enter}");
+        // Use cy.press to dispatch a real Enter key event to the browser window while the help link is focused,
+        // triggering the exact scenario that happens in a real browser where the help dialog is toggled again.
+        cy.press(Cypress.Keyboard.Keys.ENTER);
 
         cy.get(".dialog").should("not.exist");
         cy.get(".overlay-back").should("not.be.visible");
