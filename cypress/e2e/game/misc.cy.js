@@ -246,12 +246,12 @@ describe("misc", () => {
             });
         });
 
-        // This test has issues with interception of the feather-icons dependency, it occasionally gets cached.
+        // This test has issues with interception of the lucide dependency, it occasionally gets cached.
         // Turning off caching for this test.
-        it("should be able to be played if feather icons could not load", () => {
-            cy.intercept("/vendor/feather.min.js", {
+        it("should be able to be played if lucide icons could not load", () => {
+            cy.intercept("/vendor/lucide.min.js", {
                 statusCode: 500,
-            }).as("feather");
+            }).as("lucide");
 
             cy.intercept("/words.txt", {
                 fixture: "words.txt",
@@ -259,7 +259,7 @@ describe("misc", () => {
             cy.reload();
             cy.waitForGameReady();
 
-            cy.wait("@feather");
+            cy.wait("@lucide");
 
             // Can still make inputs
 
@@ -272,7 +272,7 @@ describe("misc", () => {
             // Substitute "icons" are placed on the page
 
             cy.get(".help-link").should("contain.text", "?");
-            // NTS: cy.keyboardItem("backspace") won't work because it selects the feather element and feather isn't loaded
+            // NTS: cy.keyboardItem("backspace") won't work because it selects the lucide element and lucide isn't loaded
             cy.get(".keyboard > .keyboard-row:last-child > .keyboard-item:last-child").should(
                 "contain.text",
                 "←"

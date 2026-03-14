@@ -318,6 +318,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const overlayBackElem = document.querySelector(".overlay-back");
     overlayBackElem.addEventListener("click", (e) => {
+        // If the install banner is visible, let its own outside-click handler
+        // handle this click (closing the banner) without also closing the dialog.
+        const installBanner = document.getElementById("install-banner");
+        if (installBanner && installBanner.classList.contains("visible")) return;
         const dialog = document.querySelector(".dialog");
         closeDialog(dialog, overlayBackElem);
     });
@@ -518,3 +522,173 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     gameLoaded = true;
 });
+
+const initInstallBanner = ({
+    // "top" slides in from the top of the screen; "bottom" from the bottom.
+    position = "bottom",
+    // When true (default) an overlay sits over the whole page so that any
+    // outside interaction dismisses the banner and nothing underneath is
+    // activated.  When false, outside interactions still dismiss the banner
+    // UNLESS the touched element matches a selector in interactionWhitelist —
+    // useful for letting the player keep playing while the banner is open.
+    dismissOnOutsideInteraction = true,
+    // CSS selectors for elements that should NOT dismiss the banner when
+    // clicked/tapped (only honoured when dismissOnOutsideInteraction is false).
+    interactionWhitelist = [],
+} = {}) => {
+    const DISMISSED_KEY = "wc_install_dismissed";
+    const banner = document.getElementById("install-banner");
+    if (!banner) return;
+
+    // Don't show if already dismissed or running as installed PWA
+    if (localStorage.getItem(DISMISSED_KEY)) return;
+    if (window.matchMedia("(display-mode: standalone)").matches) return;
+    if (window.navigator.standalone) return; // iOS standalone
+
+    if (position === "top") {
+        banner.classList.add("install-banner--top");
+    }
+
+    const installBtn = document.getElementById("install-btn");
+    const dismissBtn = document.getElementById("install-dismiss");
+    const bannerOverlay = document.getElementById("install-banner-overlay");
+
+    const showBanner = () => {
+        if (dismissOnOutsideInteraction) bannerOverlay.style.display = "block";
+        banner.style.display = "flex";
+        // Double rAF to ensure display:flex is applied before transition starts
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => banner.classList.add("visible"));
+        });
+    };
+
+    const hideBanner = (permanent) => {
+        banner.classList.remove("visible");
+        setTimeout(() => {
+            banner.style.display = "none";
+            if (dismissOnOutsideInteraction) bannerOverlay.style.display = "none";
+        }, 350);
+        if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
+    };
+
+    // touchstart is needed in addition to click because keyboard keys call
+    // e.preventDefault() on touchstart, which suppresses the synthetic click
+    // event on mobile — meaning click alone would never fire for key taps.
+    if (dismissOnOutsideInteraction) {
+        // Overlay sits over the whole page.  Any outside touch/click dismisses
+        // the banner; the overlay prevents the element underneath from also
+        // activating.  e.preventDefault() on the overlay's touchstart stops the
+        // browser synthesizing mousedown/mouseup/click that could ghost-click the
+        // keyboard key once the overlay is removed.
+        bannerOverlay.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+        });
+
+        const handleOutsideInteraction = (e) => {
+            if (banner.classList.contains("visible") && !banner.contains(e.target)) {
+                hideBanner(false);
+            }
+        };
+        document.addEventListener("click", handleOutsideInteraction);
+        document.addEventListener("touchstart", handleOutsideInteraction);
+    } else {
+        // No overlay — game elements receive events normally.  Dismiss the
+        // banner for any outside interaction except those matching the whitelist
+        // (e.g. keyboard keys so the player can keep typing).
+        const handleOutsideInteraction = (e) => {
+            if (!banner.classList.contains("visible") || banner.contains(e.target)) return;
+            const isWhitelisted = interactionWhitelist.some(
+                (selector) => e.target.closest(selector) !== null
+            );
+            if (!isWhitelisted) hideBanner(false);
+        };
+        document.addEventListener("click", handleOutsideInteraction);
+        document.addEventListener("touchstart", handleOutsideInteraction);
+    }
+
+    dismissBtn.addEventListener("click", () => hideBanner(true));
+
+    // If the initial "How to Play" dialog is open when the banner wants to appear,
+    // defer showing until after it closes, then wait a short grace period.
+    let initialHtpClosed = false;
+    let pendingShow = false;
+    const HTP_GRACE_PERIOD_MS = 2000;
+
+    const dialogObserver = new MutationObserver(() => {
+        if (!document.querySelector(".dialog") && !initialHtpClosed) {
+            initialHtpClosed = true;
+            dialogObserver.disconnect();
+            if (pendingShow) {
+                pendingShow = false;
+                setTimeout(showBanner, HTP_GRACE_PERIOD_MS);
+            }
+        }
+    });
+
+    // Show immediately, or defer if the initial HTP dialog is currently open.
+    const showOrDefer = () => {
+        if (document.querySelector(".dialog") && !initialHtpClosed) {
+            pendingShow = true;
+            dialogObserver.observe(document.body, { childList: true, subtree: true });
+        } else {
+            showBanner();
+        }
+    };
+
+    // iOS detection
+    const isIOS =
+        /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+    if (isIOS) {
+        const bannerText = banner.querySelector(".install-banner-text");
+        if (bannerText) bannerText.style.display = "none";
+        installBtn.style.display = "none";
+        const iosMsg = document.createElement("span");
+        iosMsg.className = "install-banner-ios";
+        iosMsg.style.flex = "1";
+        iosMsg.innerHTML =
+            'To install, tap <i data-lucide="share" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> &rarr; <strong>Add to Home Screen</strong>';
+        banner.insertBefore(iosMsg, dismissBtn);
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+        setTimeout(showOrDefer, 1500);
+    } else {
+        let deferredPrompt = null;
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(showOrDefer, 1500);
+        });
+
+        installBtn.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            hideBanner(true);
+        });
+
+        window.addEventListener("appinstalled", () => hideBanner(true));
+    }
+};
+
+initInstallBanner({
+    position: "top",                   // "top" | "bottom"
+    dismissOnOutsideInteraction: false, // false = whitelist approach (game stays playable)
+    interactionWhitelist: ["#keyboard"], // (used when dismissOnOutsideInteraction: false)
+});
+
+const registerServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+        try {
+            await navigator.serviceWorker.register("/sw.js", {
+                scope: "/",
+            });
+        } catch (e) {
+            console.error("Service worker registration failed", e);
+        }
+    }
+};
+
+registerServiceWorker();

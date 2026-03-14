@@ -26,7 +26,7 @@
 
 Cypress.Commands.add("keyboardItem", (key) => {
     if (key === "backspace") {
-        return cy.get(".keyboard-item").get(".feather.feather-delete").parent().parent();
+        return cy.get(".keyboard-item").get(".lucide.lucide-delete").parent().parent();
     }
     cy.get(".keyboard-item")
         .contains(new RegExp(`^${key.toUpperCase()}$`))
