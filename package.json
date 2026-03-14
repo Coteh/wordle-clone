@@ -17,6 +17,9 @@
     "cypress": "cypress",
     "cypress:run": "cypress run --spec 'cypress/e2e/**/*.cy.js' --browser chrome"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "keywords": [],
   "author": "James Cote (Coteh)",
   "license": "MIT",

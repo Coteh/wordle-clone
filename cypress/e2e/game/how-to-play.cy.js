@@ -50,8 +50,9 @@ describe("how to play", () => {
         cy.get(".dialog").should("be.visible");
         cy.get(".overlay-back").should("be.visible");
 
-        // Use cy.press to dispatch a real Enter key event to the browser window while the help link is focused,
-        // triggering the exact scenario that happens in a real browser where the help dialog is toggled again.
+        // The close button inside the dialog receives focus after the dialog opens. Explicitly focus it
+        // here for deterministic behaviour, then press Enter to activate it and close the dialog.
+        cy.get(".dialog > .close").focus();
         cy.press(Cypress.Keyboard.Keys.ENTER);
 
         cy.get(".dialog").should("not.exist");

@@ -111,6 +111,8 @@ npm uninstall -g wordle-clone
 
 ## Development
 
+Requires Node.js ≥ 20.
+
 Clone this repository, then run the following:
 
 ```
