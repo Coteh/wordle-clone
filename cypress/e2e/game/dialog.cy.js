@@ -166,7 +166,6 @@ describe("dialogs", () => {
             cy.visit("/", {
                 onBeforeLoad: (win) => {
                     win.localStorage.setItem("wc_played_before", true);
-                    win.localStorage.setItem("wc_debug", "true");
                 },
             });
             cy.waitForGameReady();

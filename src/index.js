@@ -282,9 +282,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const debugLink = document.querySelector(".debug-link#debug");
     if (debugLink) {
-        if (localStorage.getItem("wc_debug") === "true") {
-            debugLink.style.display = "";
-        }
         debugLink.addEventListener("click", (e) => {
             e.preventDefault();
             const debugDialogElem = createDialogContentFromTemplate("#debug-dialog-content");
