@@ -170,7 +170,7 @@ describe("dialogs", () => {
             });
             cy.waitForGameReady();
             cy.get(".debug-link#debug").click();
-            cy.contains("OK Dialog").click();
+            cy.contains("Migration Dialog").click();
         });
 
         it("can be closed by clicking the OK button", () => {

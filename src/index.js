@@ -285,8 +285,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         debugLink.addEventListener("click", (e) => {
             e.preventDefault();
             const debugDialogElem = createDialogContentFromTemplate("#debug-dialog-content");
-            const okDialogBtn = debugDialogElem.querySelector("button.ok-dialog");
-            okDialogBtn.addEventListener("click", () => {
+            const migrationDialogBtn = debugDialogElem.querySelector("button.migrate-dialog");
+            migrationDialogBtn.addEventListener("click", () => {
                 renderDialog(createDialogContentFromTemplate("#migration-dialog-content"), {
                     fadeIn: true,
                     closable: true,
