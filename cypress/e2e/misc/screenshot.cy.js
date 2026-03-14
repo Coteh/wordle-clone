@@ -24,7 +24,13 @@ describe("misc", () => {
             fixture: "readme-screenshot-words.txt",
         });
         cy.clearBrowserCache();
-        cy.reload();
+        cy.visit("/", {
+            onBeforeLoad: (contentWindow) => {
+                contentWindow.document.addEventListener("DOMContentLoaded", () => {
+                    contentWindow.document.querySelector("#debug.debug-link").style.display = "none";
+                });
+            },
+        });
         cy.waitForGameReady();
 
         cy.wait(1000);
