@@ -45,6 +45,25 @@ describe("localStorage migration", () => {
             cy.contains("email").should("be.visible");
         });
 
+        it("should close migration dialog when OK button is clicked", () => {
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    win.localStorage.setItem("played_before", "true");
+                    win.localStorage.setItem("preferences", JSON.stringify({ theme: "dark" }));
+                    win.localStorage.setItem("attempts", ATTEMPTS);
+                    win.localStorage.setItem("lives", "4");
+                    win.localStorage.setItem("day", String(FIRST_DAY + 1));
+                    win.localStorage.setItem("ended", "false");
+                    win.localStorage.setItem("won_hard_mode", "false");
+                },
+            });
+            cy.waitForGameReady();
+
+            cy.contains("Your save data has been migrated").should("be.visible");
+            cy.get(".dialog .ok").click();
+            cy.get(".dialog").should("not.exist");
+        });
+
         it("should migrate game state to new keys when legacy day is current", () => {
             cy.visit("/", {
                 onBeforeLoad: (win) => {
