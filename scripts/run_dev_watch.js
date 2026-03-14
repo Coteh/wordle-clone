@@ -6,7 +6,7 @@ const fs = require("fs");
 
 chokidar.watch('index.html').on("change", (path) => {
     console.log(`Transforming ${path}...`);
-    execFile("./scripts/transform_index_html.sh", ["./build"], (exec, stdout, stderr) => {
+    execFile("./scripts/transform_index_html.sh", ["./build", "true"], (exec, stdout, stderr) => {
         if (stderr) {
             console.error(stderr);
         }

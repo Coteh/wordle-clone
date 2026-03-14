@@ -24,6 +24,14 @@ if [ "$IS_DEV" = "true" ]; then
         >&2 echo "Failure removing canonical link from index.html"
         exit 1
     fi
+
+    # Show the debug link in dev builds by removing the display:none style
+    sed -i.bak -r -e "s|(class=\"debug-link[^\"]*\" href=\"[^\"]*\") style=\"display:none\"|\1|g" "$OUTPUT_DIR/index.html"
+
+    if [ $? != 0 ]; then
+        >&2 echo "Failure showing debug link in index.html"
+        exit 1
+    fi
 fi
 
 rm -f "$OUTPUT_DIR/index.html.bak"
