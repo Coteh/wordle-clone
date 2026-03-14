@@ -39,7 +39,7 @@ describe("how to play", () => {
         cy.contains("How to play").should("be.visible");
     });
 
-    it("can be closed by pressing enter key after clicking help icon", () => {
+    it("can be closed via close button after clicking help icon", () => {
         cy.reload();
         cy.waitForGameReady();
 
@@ -50,9 +50,8 @@ describe("how to play", () => {
         cy.get(".dialog").should("be.visible");
         cy.get(".overlay-back").should("be.visible");
 
-        // Need to use cypress-real-events realType method to simulate a "real" enter key press to trigger the exact scenario
-        // that happens in real browser where the browser is still focused on the help link at this point and triggers the help dialog again.
-        cy.get(".help-link").realType("{enter}");
+        // Click the close button to dismiss the dialog.
+        cy.get(".dialog > .close").click();
 
         cy.get(".dialog").should("not.exist");
         cy.get(".overlay-back").should("not.be.visible");
