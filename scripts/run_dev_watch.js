@@ -10,6 +10,8 @@ chokidar.watch('index.html').on("change", (path) => {
         if (stderr) {
             console.error(stderr);
         }
+        process.stdout.write(stdout);
+        console.log(`Successfully transformed ${path}.`);
     });
 });
 
@@ -21,5 +23,6 @@ chokidar.watch('CHANGELOG.md').on("change", (path) => {
             return;
         }
         fs.writeFileSync("./build/CHANGELOG.html", stdout);
+        console.log(`Successfully generated ${path} as HTML.`);
     });
 });
