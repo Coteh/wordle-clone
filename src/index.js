@@ -280,6 +280,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         handleKeyInput(e.key.toLowerCase(), e.ctrlKey, e.metaKey);
     });
 
+    const debugLink = document.querySelector(".debug-link#debug");
+    if (debugLink) {
+        if (localStorage.getItem("wc_debug") === "true") {
+            debugLink.style.display = "";
+        }
+        debugLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            const debugDialogElem = createDialogContentFromTemplate("#debug-dialog-content");
+            const okDialogBtn = debugDialogElem.querySelector("button.ok-dialog");
+            okDialogBtn.addEventListener("click", () => {
+                renderDialog(createDialogContentFromTemplate("#migration-dialog-content"), {
+                    fadeIn: true,
+                    closable: true,
+                });
+            });
+            renderDialog(debugDialogElem, {
+                fadeIn: true,
+                closable: true,
+            });
+            debugLink.blur();
+        });
+    }
+
     const helpLink = document.querySelector(".help-link");
     helpLink.addEventListener("click", (e) => {
         e.preventDefault();

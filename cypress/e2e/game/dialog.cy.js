@@ -147,6 +147,74 @@ describe("dialogs", () => {
             cy.get(".dialog").should("not.exist");
             cy.get(".overlay-back").should("not.be.visible");
         });
+
+        it("functions without an OK button", () => {
+            // The How to Play dialog does not have an OK button
+            cy.get(".dialog").should("be.visible");
+            cy.get(".dialog .ok").should("not.exist");
+
+            // Dialog can still be closed via X button
+            cy.get(".dialog > .close").click();
+
+            cy.get(".dialog").should("not.exist");
+            cy.get(".overlay-back").should("not.be.visible");
+        });
+    });
+
+    describe("closable dialogs with OK button", () => {
+        beforeEach(() => {
+            cy.visit("/", {
+                onBeforeLoad: (win) => {
+                    win.localStorage.setItem("wc_played_before", true);
+                    win.localStorage.setItem("wc_debug", "true");
+                },
+            });
+            cy.waitForGameReady();
+            cy.get(".debug-link#debug").click();
+            cy.contains("OK Dialog").click();
+        });
+
+        it("can be closed by clicking the OK button", () => {
+            cy.get(".dialog").should("be.visible");
+            cy.get(".overlay-back").should("be.visible");
+
+            cy.get(".dialog .ok").should("be.visible").click();
+
+            cy.get(".dialog").should("not.exist");
+            cy.get(".overlay-back").should("not.be.visible");
+        });
+
+        it("can still be closed by clicking the X button", () => {
+            cy.get(".dialog").should("be.visible");
+            cy.get(".overlay-back").should("be.visible");
+
+            cy.get(".dialog > .close").click();
+
+            cy.get(".dialog").should("not.exist");
+            cy.get(".overlay-back").should("not.be.visible");
+        });
+
+        it("can still be closed by clicking outside the dialog", () => {
+            cy.get(".dialog").should("be.visible");
+            cy.get(".overlay-back").should("be.visible");
+
+            cy.get("body").click({
+                position: "left",
+            });
+
+            cy.get(".dialog").should("not.exist");
+            cy.get(".overlay-back").should("not.be.visible");
+        });
+
+        it("can still be closed by pressing escape key", () => {
+            cy.get(".dialog").should("be.visible");
+            cy.get(".overlay-back").should("be.visible");
+
+            cy.get("body").type("{esc}");
+
+            cy.get(".dialog").should("not.exist");
+            cy.get(".overlay-back").should("not.be.visible");
+        });
     });
 
     describe("non-closable dialogs", () => {

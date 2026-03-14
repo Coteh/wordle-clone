@@ -38,6 +38,9 @@
                 </span>
                 <span class="space"></span>
                 <div class="icon-bar">
+                    <a id="debug" class="debug-link link-icon" href="#" style="display:none">
+                        <i data-feather="tool"></i>
+                    </a>
                     <a class="help-link link-icon" href="#">
                         <i data-feather="help-circle"></i>
                     </a>
@@ -244,6 +247,10 @@
                 If anything looks off, please reach out to me by <a href="mailto:james.cote.730@gmail.com" target="_blank">email</a> and I'll take a look.
             </span>
             <button class="button ok"><span>OK</span></button>
+        </template>
+        <template id="debug-dialog-content">
+            <h3>Debug</h3>
+            <button class="button ok-dialog"><span>OK Dialog</span></button>
         </template>
         <script src="src/consts.js"></script>
         <script src="src/theme/snow.js"></script>
