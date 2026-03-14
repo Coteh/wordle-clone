@@ -4,9 +4,11 @@ const chokidar = require("chokidar");
 const { execFile } = require("child_process");
 const fs = require("fs");
 
+const DEPLOY_ENV = process.argv[2];
+
 chokidar.watch('index.html').on("change", (path) => {
     console.log(`Transforming ${path}...`);
-    execFile("./scripts/transform_index_html.sh", ["./build", "LOCAL"], (exec, stdout, stderr) => {
+    execFile("./scripts/transform_index_html.sh", ["./build", DEPLOY_ENV], (exec, stdout, stderr) => {
         if (stderr) {
             console.error(stderr);
         }

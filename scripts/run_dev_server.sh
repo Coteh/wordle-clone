@@ -30,7 +30,7 @@ done
 
 # Setup the watch server
 # (no need to track the PID and terminate it on SIGINT, it will be cleaned up automatically when this script terminates)
-./scripts/run_dev_watch.js &
+./scripts/run_dev_watch.js "$DEPLOY_ENV" &
 
 DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
 
