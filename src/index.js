@@ -555,9 +555,12 @@ const initInstallBanner = () => {
         /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
 
     if (isIOS) {
+        const bannerText = banner.querySelector(".install-banner-text");
+        if (bannerText) bannerText.style.display = "none";
         installBtn.style.display = "none";
         const iosMsg = document.createElement("span");
         iosMsg.className = "install-banner-ios";
+        iosMsg.style.flex = "1";
         iosMsg.innerHTML =
             'Tap <span aria-hidden="true" style="font-size:1.1em">&#x2B06;</span> then <strong>Add to Home Screen</strong>';
         banner.insertBefore(iosMsg, dismissBtn);
