@@ -740,6 +740,15 @@ body a > .commit-hash {
     transform: translateY(0);
 }
 
+.install-banner--top {
+    top: 0;
+    bottom: auto;
+    border-top: none;
+    border-bottom: 1px solid var(--gray-2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-100%);
+}
+
 .install-banner-text {
     flex: 1;
     font-size: 0.9rem;

@@ -523,7 +523,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     gameLoaded = true;
 });
 
-const initInstallBanner = () => {
+const initInstallBanner = ({
+    // "top" slides in from the top of the screen; "bottom" from the bottom.
+    position = "bottom",
+    // When false the banner stays open while the player interacts with the game;
+    // clicking or tapping outside the banner will not dismiss it.
+    dismissOnOutsideInteraction = true,
+} = {}) => {
     const DISMISSED_KEY = "wc_install_dismissed";
     const banner = document.getElementById("install-banner");
     if (!banner) return;
@@ -533,12 +539,16 @@ const initInstallBanner = () => {
     if (window.matchMedia("(display-mode: standalone)").matches) return;
     if (window.navigator.standalone) return; // iOS standalone
 
+    if (position === "top") {
+        banner.classList.add("install-banner--top");
+    }
+
     const installBtn = document.getElementById("install-btn");
     const dismissBtn = document.getElementById("install-dismiss");
     const bannerOverlay = document.getElementById("install-banner-overlay");
 
     const showBanner = () => {
-        bannerOverlay.style.display = "block";
+        if (dismissOnOutsideInteraction) bannerOverlay.style.display = "block";
         banner.style.display = "flex";
         // Double rAF to ensure display:flex is applied before transition starts
         requestAnimationFrame(() => {
@@ -550,34 +560,36 @@ const initInstallBanner = () => {
         banner.classList.remove("visible");
         setTimeout(() => {
             banner.style.display = "none";
-            bannerOverlay.style.display = "none";
+            if (dismissOnOutsideInteraction) bannerOverlay.style.display = "none";
         }, 350);
         if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
     };
 
-    // Prevent the browser from synthesizing mousedown/mouseup/click events
-    // from touches on the overlay. Without this, those synthetic events fire
-    // shortly after touchend and can reach the keyboard key underneath once
-    // the overlay is gone. The touchstart still bubbles to the document-level
-    // handler which closes the banner.
-    bannerOverlay.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-    });
+    if (dismissOnOutsideInteraction) {
+        // Prevent the browser from synthesizing mousedown/mouseup/click events
+        // from touches on the overlay. Without this, those synthetic events fire
+        // shortly after touchend and can reach the keyboard key underneath once
+        // the overlay is gone. The touchstart still bubbles to the document-level
+        // handler which closes the banner.
+        bannerOverlay.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+        });
+
+        // Only close when the banner is actually visible, so interactions elsewhere
+        // while the banner is hidden don't interfere with anything.
+        // touchstart is needed in addition to click because keyboard keys call
+        // e.preventDefault() on touchstart, which suppresses the synthetic click
+        // event on mobile — meaning click alone would never fire for key taps.
+        const handleOutsideInteraction = (e) => {
+            if (banner.classList.contains("visible") && !banner.contains(e.target)) {
+                hideBanner(false);
+            }
+        };
+        document.addEventListener("click", handleOutsideInteraction);
+        document.addEventListener("touchstart", handleOutsideInteraction);
+    }
 
     dismissBtn.addEventListener("click", () => hideBanner(true));
-
-    // Only close when the banner is actually visible, so interactions elsewhere
-    // while the banner is hidden don't interfere with anything.
-    // touchstart is needed in addition to click because keyboard keys call
-    // e.preventDefault() on touchstart, which suppresses the synthetic click
-    // event on mobile — meaning click alone would never fire for key taps.
-    const handleOutsideInteraction = (e) => {
-        if (banner.classList.contains("visible") && !banner.contains(e.target)) {
-            hideBanner(false);
-        }
-    };
-    document.addEventListener("click", handleOutsideInteraction);
-    document.addEventListener("touchstart", handleOutsideInteraction);
 
     // If the initial "How to Play" dialog is open when the banner wants to appear,
     // defer showing until after it closes, then wait a short grace period.
@@ -644,7 +656,10 @@ const initInstallBanner = () => {
     }
 };
 
-initInstallBanner();
+initInstallBanner({
+    position: "bottom",            // "top" | "bottom"
+    dismissOnOutsideInteraction: true, // false lets the player keep playing with the banner open
+});
 
 const registerServiceWorker = async () => {
     if ("serviceWorker" in navigator) {
