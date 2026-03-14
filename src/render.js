@@ -249,6 +249,21 @@ const renderDialog = (content, options) => {
         }
     }
 
+    const okBtn = clone.querySelector("button.ok");
+    if (okBtn) {
+        okBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const dialog = document.querySelector(".dialog");
+            dialog.close();
+            dialog.remove();
+            overlayBackElem.style.display = "none";
+            // Restore normal theme color when closing dialog
+            themeManager.applyNormalThemeColor();
+            // Remove focus from any button that might have opened the dialog
+            document.activeElement.blur();
+        });
+    }
+
     document.body.appendChild(clone);
 
     overlayBackElem.style.display = "block";
