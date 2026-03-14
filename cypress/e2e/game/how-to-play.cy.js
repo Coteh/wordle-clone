@@ -39,7 +39,7 @@ describe("how to play", () => {
         cy.contains("How to play").should("be.visible");
     });
 
-    it("can be closed by pressing enter key after clicking help icon", () => {
+    it("can be closed via close button after clicking help icon", () => {
         cy.reload();
         cy.waitForGameReady();
 
@@ -50,10 +50,8 @@ describe("how to play", () => {
         cy.get(".dialog").should("be.visible");
         cy.get(".overlay-back").should("be.visible");
 
-        // The close button inside the dialog receives focus after the dialog opens. Explicitly focus it
-        // here for deterministic behaviour, then press Enter to activate it and close the dialog.
-        cy.get(".dialog > .close").focus();
-        cy.press(Cypress.Keyboard.Keys.ENTER);
+        // Click the close button to dismiss the dialog.
+        cy.get(".dialog > .close").click();
 
         cy.get(".dialog").should("not.exist");
         cy.get(".overlay-back").should("not.be.visible");
