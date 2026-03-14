@@ -526,9 +526,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 const initInstallBanner = ({
     // "top" slides in from the top of the screen; "bottom" from the bottom.
     position = "bottom",
-    // When false the banner stays open while the player interacts with the game;
-    // clicking or tapping outside the banner will not dismiss it.
+    // When true (default) an overlay sits over the whole page so that any
+    // outside interaction dismisses the banner and nothing underneath is
+    // activated.  When false, outside interactions still dismiss the banner
+    // UNLESS the touched element matches a selector in interactionWhitelist —
+    // useful for letting the player keep playing while the banner is open.
     dismissOnOutsideInteraction = true,
+    // CSS selectors for elements that should NOT dismiss the banner when
+    // clicked/tapped (only honoured when dismissOnOutsideInteraction is false).
+    interactionWhitelist = [],
 } = {}) => {
     const DISMISSED_KEY = "wc_install_dismissed";
     const banner = document.getElementById("install-banner");
@@ -565,25 +571,36 @@ const initInstallBanner = ({
         if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
     };
 
+    // touchstart is needed in addition to click because keyboard keys call
+    // e.preventDefault() on touchstart, which suppresses the synthetic click
+    // event on mobile — meaning click alone would never fire for key taps.
     if (dismissOnOutsideInteraction) {
-        // Prevent the browser from synthesizing mousedown/mouseup/click events
-        // from touches on the overlay. Without this, those synthetic events fire
-        // shortly after touchend and can reach the keyboard key underneath once
-        // the overlay is gone. The touchstart still bubbles to the document-level
-        // handler which closes the banner.
+        // Overlay sits over the whole page.  Any outside touch/click dismisses
+        // the banner; the overlay prevents the element underneath from also
+        // activating.  e.preventDefault() on the overlay's touchstart stops the
+        // browser synthesizing mousedown/mouseup/click that could ghost-click the
+        // keyboard key once the overlay is removed.
         bannerOverlay.addEventListener("touchstart", (e) => {
             e.preventDefault();
         });
 
-        // Only close when the banner is actually visible, so interactions elsewhere
-        // while the banner is hidden don't interfere with anything.
-        // touchstart is needed in addition to click because keyboard keys call
-        // e.preventDefault() on touchstart, which suppresses the synthetic click
-        // event on mobile — meaning click alone would never fire for key taps.
         const handleOutsideInteraction = (e) => {
             if (banner.classList.contains("visible") && !banner.contains(e.target)) {
                 hideBanner(false);
             }
+        };
+        document.addEventListener("click", handleOutsideInteraction);
+        document.addEventListener("touchstart", handleOutsideInteraction);
+    } else {
+        // No overlay — game elements receive events normally.  Dismiss the
+        // banner for any outside interaction except those matching the whitelist
+        // (e.g. keyboard keys so the player can keep typing).
+        const handleOutsideInteraction = (e) => {
+            if (!banner.classList.contains("visible") || banner.contains(e.target)) return;
+            const isWhitelisted = interactionWhitelist.some(
+                (selector) => e.target.closest(selector) !== null
+            );
+            if (!isWhitelisted) hideBanner(false);
         };
         document.addEventListener("click", handleOutsideInteraction);
         document.addEventListener("touchstart", handleOutsideInteraction);
@@ -657,8 +674,9 @@ const initInstallBanner = ({
 };
 
 initInstallBanner({
-    position: "top",            // "top" | "bottom"
-    dismissOnOutsideInteraction: false, // false lets the player keep playing with the banner open
+    position: "top",                   // "top" | "bottom"
+    dismissOnOutsideInteraction: false, // false = whitelist approach (game stays playable)
+    interactionWhitelist: ["#keyboard"], // (used when dismissOnOutsideInteraction: false)
 });
 
 const registerServiceWorker = async () => {
