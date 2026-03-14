@@ -318,6 +318,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const overlayBackElem = document.querySelector(".overlay-back");
     overlayBackElem.addEventListener("click", (e) => {
+        // If the install banner is visible, let its own outside-click handler
+        // handle this click (closing the banner) without also closing the dialog.
+        const installBanner = document.getElementById("install-banner");
+        if (installBanner && installBanner.classList.contains("visible")) return;
         const dialog = document.querySelector(".dialog");
         closeDialog(dialog, overlayBackElem);
     });
@@ -550,9 +554,40 @@ const initInstallBanner = () => {
 
     dismissBtn.addEventListener("click", () => hideBanner(true));
 
+    // Only close when the banner is actually visible, so clicks elsewhere
+    // while the banner is hidden don't interfere with anything.
     document.addEventListener("click", (e) => {
-        if (!banner.contains(e.target)) hideBanner(false);
+        if (banner.classList.contains("visible") && !banner.contains(e.target)) {
+            hideBanner(false);
+        }
     });
+
+    // If the initial "How to Play" dialog is open when the banner wants to appear,
+    // defer showing until after it closes, then wait a short grace period.
+    let initialHtpClosed = false;
+    let pendingShow = false;
+    const HTP_GRACE_PERIOD_MS = 2000;
+
+    const dialogObserver = new MutationObserver(() => {
+        if (!document.querySelector(".dialog") && !initialHtpClosed) {
+            initialHtpClosed = true;
+            dialogObserver.disconnect();
+            if (pendingShow) {
+                pendingShow = false;
+                setTimeout(showBanner, HTP_GRACE_PERIOD_MS);
+            }
+        }
+    });
+
+    // Show immediately, or defer if the initial HTP dialog is currently open.
+    const showOrDefer = () => {
+        if (document.querySelector(".dialog") && !initialHtpClosed) {
+            pendingShow = true;
+            dialogObserver.observe(document.body, { childList: true, subtree: true });
+        } else {
+            showBanner();
+        }
+    };
 
     // iOS detection
     const isIOS =
@@ -566,15 +601,18 @@ const initInstallBanner = () => {
         iosMsg.className = "install-banner-ios";
         iosMsg.style.flex = "1";
         iosMsg.innerHTML =
-            'Tap <span aria-hidden="true" style="font-size:1.1em">&#x2B06;</span> then <strong>Add to Home Screen</strong>';
+            'Tap <i data-feather="share-2" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> then <strong>Add to Home Screen</strong>';
         banner.insertBefore(iosMsg, dismissBtn);
-        setTimeout(showBanner, 1500);
+        if (typeof feather !== "undefined") {
+            feather.replace();
+        }
+        setTimeout(showOrDefer, 1500);
     } else {
         let deferredPrompt = null;
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            setTimeout(showBanner, 1500);
+            setTimeout(showOrDefer, 1500);
         });
 
         installBtn.addEventListener("click", async () => {

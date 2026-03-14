@@ -722,7 +722,8 @@ body a > .commit-hash {
     align-items: center;
     gap: 0.75rem;
     padding: 0.85rem 1rem;
-    background-color: var(--fallback-background-color);
+    background-color: var(--dialog-background-color);
+    color: var(--text-color);
     border-top: 1px solid var(--gray-2);
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(100%);
