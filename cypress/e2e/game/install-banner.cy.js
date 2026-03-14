@@ -119,6 +119,29 @@ describe("install banner", () => {
                 }).should("be.visible");
             });
         });
+
+        describe("closing temporarily by tapping a keyboard key", () => {
+            beforeEach(() => {
+                cy.get("#install-banner", {
+                    timeout: BANNER_APPEAR_TIMEOUT,
+                }).should("be.visible");
+                // Keyboard keys call e.preventDefault() on touchstart, which suppresses
+                // the synthetic click event on mobile — the banner must also listen for
+                // touchstart on the document, not just click.
+                cy.keyboardItem("a").trigger("touchstart");
+            });
+
+            it("should hide the banner", () => {
+                cy.get("#install-banner").should("not.be.visible");
+            });
+
+            it("should not save anything to localStorage", () => {
+                cy.window().then((win) => {
+                    expect(win.localStorage.getItem(INSTALL_DISMISSED_KEY)).to.be
+                        .null;
+                });
+            });
+        });
     });
 
     describe("when already permanently dismissed", () => {

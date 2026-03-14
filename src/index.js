@@ -554,13 +554,18 @@ const initInstallBanner = () => {
 
     dismissBtn.addEventListener("click", () => hideBanner(true));
 
-    // Only close when the banner is actually visible, so clicks elsewhere
+    // Only close when the banner is actually visible, so interactions elsewhere
     // while the banner is hidden don't interfere with anything.
-    document.addEventListener("click", (e) => {
+    // touchstart is needed in addition to click because keyboard keys call
+    // e.preventDefault() on touchstart, which suppresses the synthetic click
+    // event on mobile — meaning click alone would never fire for key taps.
+    const handleOutsideInteraction = (e) => {
         if (banner.classList.contains("visible") && !banner.contains(e.target)) {
             hideBanner(false);
         }
-    });
+    };
+    document.addEventListener("click", handleOutsideInteraction);
+    document.addEventListener("touchstart", handleOutsideInteraction);
 
     // If the initial "How to Play" dialog is open when the banner wants to appear,
     // defer showing until after it closes, then wait a short grace period.
