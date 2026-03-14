@@ -17,7 +17,7 @@
             crossorigin="anonymous"
         ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>
-        <script src="vendor/feather.min.js"></script>
+        <script src="vendor/lucide.min.js"></script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3QNNES1C4Y"></script>
         <script>
@@ -39,10 +39,10 @@
                 <span class="space"></span>
                 <div class="icon-bar">
                     <a class="help-link link-icon" href="#">
-                        <i data-feather="help-circle"></i>
+                        <i data-lucide="help-circle"></i>
                     </a>
                     <a class="settings-link link-icon" href="#">
-                        <i data-feather="settings"></i>
+                        <i data-lucide="settings"></i>
                     </a>
                 </div>
             </nav>
@@ -59,7 +59,7 @@
             </div>
             <div class="settings pane" style="display:none">
                 <h1>Settings</h1>
-                <button class="close"><i data-feather="x"></i></button>
+                <button class="close"><i data-lucide="x"></i></button>
                 <div class="space"></div>
                 <div class="settings-item-group">
                     <div class="settings-item setting theme-switch">
@@ -144,7 +144,7 @@
         </div>
         <template id="dialog">
             <dialog class="dialog">
-                <button class="close"><i data-feather="x"></i></button>
+                <button class="close"><i data-lucide="x"></i></button>
                 <div class="dialog-content">
                 </div>
             </dialog>
@@ -159,11 +159,11 @@
         <template id="win-dialog-content">
             <span>You win!</span>
             <button class="button share-button">
-                <i data-feather="share-2"></i>
+                <i data-lucide="share-2"></i>
                 <span>Share</span>
             </button>
             <button class="button clipboard-button" style="display:none">
-                <i data-feather="clipboard"></i>
+                <i data-lucide="clipboard"></i>
                 <span>Copy to Clipboard</span>
             </button>
             <div class="next-wordle">
@@ -176,11 +176,11 @@
             <span>The word was <b id="word"></b></span>
             <span>Try again next time!</span>
             <button class="button share-button">
-                <i data-feather="share-2"></i>
+                <i data-lucide="share-2"></i>
                 <span>Share</span>
             </button>
             <button class="button clipboard-button" style="display:none">
-                <i data-feather="clipboard"></i>
+                <i data-lucide="clipboard"></i>
                 <span>Copy to Clipboard</span>
             </button>
             <div class="next-wordle">
@@ -256,12 +256,12 @@
         <script src="vendor/snow.js" defer></script>
         <script src="vendor/dialog-polyfill.js" defer></script>
         <script>
-            if (typeof feather !== "undefined") {
-                feather.replace();
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
             } else {
-                document.querySelector("[data-feather='help-circle']").innerText = "?";
-                document.querySelector("[data-feather='settings']").innerText = "⚙";
-                document.querySelector(".settings [data-feather='x']").innerText = "X";
+                document.querySelector("[data-lucide='help-circle']").innerText = "?";
+                document.querySelector("[data-lucide='settings']").innerText = "⚙";
+                document.querySelector(".settings [data-lucide='x']").innerText = "X";
             }
             
             if (typeof Sentry !== "undefined") {

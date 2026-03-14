@@ -168,7 +168,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
             });
             const letterElem = document.createElement("div");
             letterElem.innerHTML =
-                item === "backspace" ? `<i data-feather="delete"></i>` : item.toUpperCase();
+                item === "backspace" ? `<i data-lucide="delete"></i>` : item.toUpperCase();
             itemElem.appendChild(letterElem);
             rowElem.appendChild(itemElem);
         });
@@ -181,10 +181,10 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
     }
     parentElem.appendChild(container);
 
-    if (typeof feather !== "undefined") {
-        feather.replace();
+    if (typeof lucide !== "undefined") {
+        lucide.createIcons();
     } else {
-        document.querySelector("[data-feather='delete']").innerText = "←";
+        document.querySelector("[data-lucide='delete']").innerText = "←";
     }
 
     return container;
@@ -253,10 +253,10 @@ const renderDialog = (content, options) => {
 
     overlayBackElem.style.display = "block";
 
-    if (typeof feather !== "undefined") {
-        feather.replace();
+    if (typeof lucide !== "undefined") {
+        lucide.createIcons();
     } else {
-        document.querySelector(".dialog [data-feather='x']").innerText = "X";
+        document.querySelector(".dialog [data-lucide='x']").innerText = "X";
     }
 
     dialog.show();

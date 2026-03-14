@@ -601,10 +601,10 @@ const initInstallBanner = () => {
         iosMsg.className = "install-banner-ios";
         iosMsg.style.flex = "1";
         iosMsg.innerHTML =
-            'Tap <i data-feather="share-2" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> then <strong>Add to Home Screen</strong>';
+            'Tap <i data-lucide="share" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> then <strong>Add to Home Screen</strong>';
         banner.insertBefore(iosMsg, dismissBtn);
-        if (typeof feather !== "undefined") {
-            feather.replace();
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
         }
         setTimeout(showOrDefer, 1500);
     } else {

@@ -26,7 +26,7 @@ const PRECACHE_URLS = [
     "/src/render.js",
     "/vendor/snow.js",
     "/vendor/dialog-polyfill.js",
-    "/vendor/feather.min.js",
+    "/vendor/lucide.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js",
 ];
 
