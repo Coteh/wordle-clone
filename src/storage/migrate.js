@@ -59,6 +59,8 @@ const migrateLocalStorage = migrateLocalStorage_v1_4_0;
 if (typeof process !== "undefined") {
     module.exports = {
         migrateLocalStorage,
-        LEGACY_KEY_MAP,
     };
+    if (process.env.NODE_ENV === "test") {
+        module.exports.LEGACY_KEY_MAP = LEGACY_KEY_MAP;
+    }
 }
