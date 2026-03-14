@@ -5,6 +5,8 @@ const DAY_MS = 86400000;
 const FIRST_DAY_MS = 1647993600000;
 const FIRST_DAY = 19074;
 
+const MIGRATION_DIALOG_TEXT = "Your save data has been migrated";
+
 const ATTEMPTS = JSON.stringify([
     [
         { letter: "a", correct: false, within: true },
@@ -27,7 +29,7 @@ describe("localStorage migration", () => {
     });
 
     describe("full migration", () => {
-        it("should display migration dialog when all legacy keys are migrated", () => {
+        it("should display migration dialog when all legacy keys are migrated, and close when OK button is clicked", () => {
             cy.visit("/", {
                 onBeforeLoad: (win) => {
                     win.localStorage.setItem("played_before", "true");
@@ -41,25 +43,8 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("be.visible");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("be.visible");
             cy.contains("email").should("be.visible");
-        });
-
-        it("should close migration dialog when OK button is clicked", () => {
-            cy.visit("/", {
-                onBeforeLoad: (win) => {
-                    win.localStorage.setItem("played_before", "true");
-                    win.localStorage.setItem("preferences", JSON.stringify({ theme: "dark" }));
-                    win.localStorage.setItem("attempts", ATTEMPTS);
-                    win.localStorage.setItem("lives", "4");
-                    win.localStorage.setItem("day", String(FIRST_DAY + 1));
-                    win.localStorage.setItem("ended", "false");
-                    win.localStorage.setItem("won_hard_mode", "false");
-                },
-            });
-            cy.waitForGameReady();
-
-            cy.contains("Your save data has been migrated").should("be.visible");
             cy.get(".dialog .ok").click();
             cy.get(".dialog").should("not.exist");
         });
@@ -113,7 +98,7 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("not.exist");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("not.exist");
         });
 
         it("should not display migration dialog when all new keys already exist", () => {
@@ -131,7 +116,7 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("not.exist");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("not.exist");
         });
 
         it("should not overwrite existing new keys during migration", () => {
@@ -169,7 +154,7 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("be.visible");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("be.visible");
         });
 
         it("should not migrate game state keys but still migrate preference keys when legacy day is outdated", () => {
@@ -187,7 +172,7 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("be.visible");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("be.visible");
 
             cy.window().then((win) => {
                 // Preference keys should be migrated
@@ -222,7 +207,7 @@ describe("localStorage migration", () => {
             });
             cy.waitForGameReady();
 
-            cy.contains("Your save data has been migrated").should("not.exist");
+            cy.contains(MIGRATION_DIALOG_TEXT).should("not.exist");
 
             cy.window().then((win) => {
                 // Verify that existing wc_ prefixed entries were not overwritten
