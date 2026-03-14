@@ -676,7 +676,7 @@ const initInstallBanner = ({
         iosMsg.className = "install-banner-ios";
         iosMsg.style.flex = "1";
         iosMsg.innerHTML =
-            'To install, tap <i data-lucide="share" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> &rarr; <strong>Add to Home Screen</strong>';
+            'Tap <i data-lucide="share" style="display:inline-block;vertical-align:middle;width:1em;height:1em"></i> then <strong>Add to Home Screen</strong>';
         banner.insertBefore(iosMsg, dismissBtn);
         if (typeof lucide !== "undefined") {
             lucide.createIcons();
