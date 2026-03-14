@@ -550,6 +550,10 @@ const initInstallBanner = () => {
 
     dismissBtn.addEventListener("click", () => hideBanner(true));
 
+    document.addEventListener("click", (e) => {
+        if (!banner.contains(e.target)) hideBanner(false);
+    });
+
     // iOS detection
     const isIOS =
         /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
