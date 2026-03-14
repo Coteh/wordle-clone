@@ -1,7 +1,7 @@
 #!/bin/sh
 
 OUTPUT_DIR="$1"
-IS_DEV="$2"
+DEPLOY_ENV="$2"
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
 
@@ -17,21 +17,25 @@ if [ $? != 0 ]; then
 fi
 
 # Remove canonical link in non-prod builds
-if [ "$IS_DEV" = "true" ]; then
+if [ -n "$DEPLOY_ENV" ]; then
     sed -i.bak -r -e "/<link.+rel=\"canonical\">/d" "$OUTPUT_DIR/index.html"
 
     if [ $? != 0 ]; then
         >&2 echo "Failure removing canonical link from index.html"
         exit 1
     fi
-
-    # Show the debug link in dev builds by removing the display:none style
-    sed -i.bak -r -e "s|(class=\"debug-link[^\"]*\" href=\"[^\"]*\") style=\"display:none\"|\1|g" "$OUTPUT_DIR/index.html"
-
-    if [ $? != 0 ]; then
-        >&2 echo "Failure showing debug link in index.html"
-        exit 1
-    fi
 fi
+
+# Show the debug link in local dev builds
+case "$DEPLOY_ENV" in
+    LOCAL*)
+        sed -i.bak -r -e "s|(class=\"debug-link[^\"]*\" href=\"[^\"]*\") style=\"display:none\"|\1|g" "$OUTPUT_DIR/index.html"
+
+        if [ $? != 0 ]; then
+            >&2 echo "Failure showing debug link in index.html"
+            exit 1
+        fi
+        ;;
+esac
 
 rm -f "$OUTPUT_DIR/index.html.bak"
