@@ -52,5 +52,7 @@ else
     done
 fi
 
+./scripts/transform_sw.sh $OUTPUT_DIR
+
 # Generate changelog HTML and copy it to the build directory
 ./scripts/gen_changelog_html.js > $OUTPUT_DIR/CHANGELOG.html

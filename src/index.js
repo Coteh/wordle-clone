@@ -518,3 +518,82 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     gameLoaded = true;
 });
+
+const initInstallBanner = () => {
+    const DISMISSED_KEY = "wc_install_dismissed";
+    const banner = document.getElementById("install-banner");
+    if (!banner) return;
+
+    // Don't show if already dismissed or running as installed PWA
+    if (localStorage.getItem(DISMISSED_KEY)) return;
+    if (window.matchMedia("(display-mode: standalone)").matches) return;
+    if (window.navigator.standalone) return; // iOS standalone
+
+    const installBtn = document.getElementById("install-btn");
+    const dismissBtn = document.getElementById("install-dismiss");
+
+    const showBanner = () => {
+        banner.style.display = "flex";
+        // Double rAF to ensure display:flex is applied before transition starts
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => banner.classList.add("visible"));
+        });
+    };
+
+    const hideBanner = (permanent) => {
+        banner.classList.remove("visible");
+        setTimeout(() => {
+            banner.style.display = "none";
+        }, 350);
+        if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
+    };
+
+    dismissBtn.addEventListener("click", () => hideBanner(true));
+
+    // iOS detection
+    const isIOS =
+        /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+
+    if (isIOS) {
+        installBtn.style.display = "none";
+        const iosMsg = document.createElement("span");
+        iosMsg.className = "install-banner-ios";
+        iosMsg.innerHTML =
+            'Tap <span aria-hidden="true" style="font-size:1.1em">&#x2B06;</span> then <strong>Add to Home Screen</strong>';
+        banner.insertBefore(iosMsg, dismissBtn);
+        setTimeout(showBanner, 1500);
+    } else {
+        let deferredPrompt = null;
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            setTimeout(showBanner, 1500);
+        });
+
+        installBtn.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            hideBanner(true);
+        });
+
+        window.addEventListener("appinstalled", () => hideBanner(true));
+    }
+};
+
+initInstallBanner();
+
+const registerServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+        try {
+            await navigator.serviceWorker.register("/sw.js", {
+                scope: "/",
+            });
+        } catch (e) {
+            console.error("Service worker registration failed", e);
+        }
+    }
+};
+
+registerServiceWorker();
