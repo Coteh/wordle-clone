@@ -670,9 +670,9 @@ const initInstallBanner = ({
         }
     });
 
-    // Show immediately, or defer only if the How to Play dialog is currently open.
+    // Show immediately, or defer if any modal dialog is currently open.
     const showOrDefer = () => {
-        if (document.querySelector(".dialog .how-to-play") && !initialHtpClosed) {
+        if (document.querySelector(".dialog") && !initialHtpClosed) {
             pendingShow = true;
             dialogObserver.observe(document.body, { childList: true, subtree: true });
         } else {
