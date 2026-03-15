@@ -768,15 +768,16 @@ body a > .commit-hash {
     background: var(--fallback-background-color);
     background: var(--background-color);
     user-select: none;
-
-    /* Prevent high contrast mode from affecting card previews */
-    --correct-color: var(--green);
-    --within-color: var(--yellow);
-    --letter-selected-inverted-text-color: var(--white);
 }
 
 .theme-card.active {
     border-color: var(--active-card-border-color);
+}
+
+body.high-contrast .theme-card {
+    --correct-color: var(--orange);
+    --within-color: var(--blue);
+    --letter-selected-inverted-text-color: var(--black);
 }
 
 .theme-card-name {
