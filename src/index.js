@@ -312,16 +312,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const gamePane = document.querySelector(".game");
     const settingsPane = document.querySelector(".settings");
+    const themesPane = document.querySelector(".themes");
     const settingsLink = document.querySelector(".settings-link");
+
+    const showThemesPane = () => {
+        settingsPane.style.display = "none";
+        themesPane.style.display = "flex";
+        updateThemeCardActiveState();
+    };
+
+    const hideThemesPane = () => {
+        themesPane.style.display = "none";
+        settingsPane.style.display = "flex";
+    };
 
     const toggleSettings = () => {
         settingsLink.blur();
-        if (settingsPane.style.display === "none") {
-            gamePane.style.display = "none";
-            settingsPane.style.display = "flex";
-        } else {
+        if (settingsPane.style.display !== "none" || themesPane.style.display !== "none") {
             gamePane.style.display = "flex";
             settingsPane.style.display = "none";
+            themesPane.style.display = "none";
+        } else {
+            gamePane.style.display = "none";
+            settingsPane.style.display = "flex";
         }
     };
 
@@ -334,6 +347,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     settingsClose.addEventListener("click", (e) => {
         e.preventDefault();
         toggleSettings();
+    });
+
+    const themesClose = themesPane.querySelector(".close");
+    themesClose.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideThemesPane();
     });
 
     const overlayBackElem = document.querySelector(".overlay-back");
@@ -358,18 +377,105 @@ document.addEventListener("DOMContentLoaded", async () => {
         selectedKeyboard = keyboard;
     };
 
+    const PREVIEW_BOARD_ROWS = [
+        ["correct", "within", "incorrect", "correct", "incorrect"],
+        ["within", "correct", "incorrect", "correct", "incorrect"],
+        ["correct", "correct", "correct", "correct", "correct"],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+        ["", "", "", "", ""],
+    ];
+
+    const PREVIEW_KEYBOARD_ROWS = [
+        ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+        ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+        ["z", "x", "c", "v", "b", "n", "m"],
+    ];
+
+    const PREVIEW_LETTER_STATES = {
+        c: "correct", r: "within", n: "correct", s: "correct",
+        t: "correct", o: "correct", w: "correct", g: "incorrect",
+    };
+
+    const updateThemeCardActiveState = () => {
+        document.querySelectorAll(".theme-card").forEach((card) => {
+            if (card.dataset.theme === themeManager.getSelectedTheme()) {
+                card.classList.add("active");
+            } else {
+                card.classList.remove("active");
+            }
+        });
+    };
+
+    const buildThemeCards = () => {
+        const themeCardsElem = document.querySelector(".theme-cards");
+        selectableThemes.forEach((theme) => {
+            const card = document.createElement("div");
+            card.className = `theme-card ${theme}`;
+            card.dataset.theme = theme;
+            card.setAttribute("role", "button");
+            card.setAttribute("tabindex", "0");
+
+            const nameElem = document.createElement("span");
+            nameElem.className = "theme-card-name";
+            nameElem.innerText = theme;
+            card.appendChild(nameElem);
+
+            const boardElem = document.createElement("div");
+            boardElem.className = "theme-card-board";
+            PREVIEW_BOARD_ROWS.forEach((row) => {
+                const rowElem = document.createElement("div");
+                rowElem.className = "theme-card-row";
+                row.forEach((state) => {
+                    const box = document.createElement("div");
+                    box.className = `theme-card-box${state ? ` ${state}` : ""}`;
+                    rowElem.appendChild(box);
+                });
+                boardElem.appendChild(rowElem);
+            });
+            card.appendChild(boardElem);
+
+            const keyboardElem = document.createElement("div");
+            keyboardElem.className = "theme-card-keyboard";
+            PREVIEW_KEYBOARD_ROWS.forEach((row) => {
+                const rowElem = document.createElement("div");
+                rowElem.className = "theme-card-keyboard-row";
+                row.forEach((letter) => {
+                    const key = document.createElement("div");
+                    const state = PREVIEW_LETTER_STATES[letter] || "";
+                    key.className = `theme-card-key${state ? ` ${state}` : ""}`;
+                    rowElem.appendChild(key);
+                });
+                keyboardElem.appendChild(rowElem);
+            });
+            card.appendChild(keyboardElem);
+
+            const applyTheme = () => {
+                themeManager.switchTheme(theme);
+                savePreferenceValue(THEME_PREFERENCE_NAME, theme);
+                document.querySelector(`.setting.${THEME_PREFERENCE_NAME}-switch .toggle`).innerText = theme;
+                updateThemeCardActiveState();
+            };
+
+            card.addEventListener("click", applyTheme);
+            card.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    applyTheme();
+                }
+            });
+
+            themeCardsElem.appendChild(card);
+        });
+    };
+
     const settings = document.querySelectorAll(".setting");
     settings.forEach((setting) => {
         setting.addEventListener("click", (e) => {
             const elem = e.target;
             let enabled = false;
             if (elem.classList.contains(`${THEME_PREFERENCE_NAME}-switch`)) {
-                const toggle = setting.querySelector(".toggle");
-                const themeIndex = selectableThemes.indexOf(themeManager.getSelectedTheme());
-                const nextTheme = selectableThemes[(themeIndex + 1) % selectableThemes.length];
-                themeManager.switchTheme(nextTheme);
-                savePreferenceValue(THEME_PREFERENCE_NAME, nextTheme);
-                toggle.innerText = nextTheme;
+                showThemesPane();
             } else if (elem.classList.contains(HIGH_CONTRAST_PREFERENCE_NAME)) {
                 const knob = setting.querySelector(".knob");
                 enabled = highContrastMode = !highContrastMode;
@@ -421,6 +527,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initPreferences();
     themeManager.switchTheme(getPreferenceValue(THEME_PREFERENCE_NAME));
     switchKeyboard(getPreferenceValue(KEYBOARD_PREFERENCE_NAME));
+    buildThemeCards();
     const themeSetting = document.querySelector(`.setting.${THEME_PREFERENCE_NAME}-switch`);
     themeSetting.querySelector(".toggle").innerText = themeManager.getSelectedTheme();
     const keyboardSetting = document.querySelector(`.setting.${KEYBOARD_PREFERENCE_NAME}-switch`);
