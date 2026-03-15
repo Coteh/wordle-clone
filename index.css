@@ -763,7 +763,8 @@ body a > .commit-hash {
 
 .theme-cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 160px));
+    justify-content: center;
     gap: 1rem;
     padding: 0 1rem;
     width: 100%;
