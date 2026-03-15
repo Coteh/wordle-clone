@@ -771,6 +771,7 @@ body a > .commit-hash {
     overflow-y: auto;
     flex: 1;
     min-height: 0;
+    outline: none;
 }
 
 .theme-card {
@@ -790,13 +791,13 @@ body a > .commit-hash {
 
 .theme-card.snow {
     overflow: hidden;
+    background-clip: padding-box;
     --incorrect-color: var(--gray-2);
     --box-border-color: var(--gray-3);
     background:
-        radial-gradient(circle, rgba(255,255,255,0.85) 1.5px, transparent 1.5px) 4px 6px / 18px 16px,
-        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px) 14px 2px / 28px 22px,
-        radial-gradient(circle, rgba(255,255,255,0.75) 1.2px, transparent 1.2px) 9px 18px / 22px 30px,
-        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px) 22px 14px / 35px 18px,
+        radial-gradient(circle, rgba(255,255,255,0.85) 1.5px, transparent 1.5px) 6px 14px / 24px 22px,
+        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px) 21px 3px / 38px 28px,
+        radial-gradient(circle, rgba(255,255,255,0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
         linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
 }
 
