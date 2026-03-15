@@ -740,6 +740,12 @@ body a > .commit-hash {
     position: relative;
 }
 
+.themes > button.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .themes > button.close {
     position: absolute;
     top: 0;
