@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add theme selection pane with previews
 - Browser interface and/or status bar colour will dim alongside the rest of the game's elements when a dialog is open
 
 ### Fixed
