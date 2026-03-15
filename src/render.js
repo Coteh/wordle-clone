@@ -217,7 +217,6 @@ const renderDialog = (content, options) => {
             dialog.style.opacity = "0";
             dialog.style.top = "100%";
             setTimeout(() => {
-                const dialog = document.querySelector(".dialog");
                 dialog.style.opacity = "";
                 dialog.style.top = "";
             }, 10);
