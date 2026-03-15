@@ -62,6 +62,7 @@
             </div>
             <div class="themes pane" style="display:none">
                 <h1>Themes</h1>
+                <button class="back"><i data-feather="arrow-left"></i></button>
                 <button class="close"><i data-feather="x"></i></button>
                 <div class="space"></div>
                 <div class="theme-cards"></div>
@@ -282,6 +283,7 @@
                 document.querySelector("[data-feather='settings']").innerText = "⚙";
                 document.querySelector(".settings [data-feather='x']").innerText = "X";
                 document.querySelector(".themes [data-feather='x']").innerText = "X";
+                document.querySelector(".themes [data-feather='arrow-left']").innerText = "<";
             }
             
             if (typeof Sentry !== "undefined") {
