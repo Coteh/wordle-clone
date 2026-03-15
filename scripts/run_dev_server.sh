@@ -32,7 +32,7 @@ done
 # (no need to track the PID and terminate it on SIGINT, it will be cleaned up automatically when this script terminates)
 ./scripts/run_dev_watch.js "$DEPLOY_ENV" &
 
-DEV_SERVER="$DEV_SERVER --config ./config/serve.json"
+DEV_SERVER="$DEV_SERVER --config ./config/serve.json -L"
 
 # Serve the dev server
 if [ "$DEV_SERVER_TYPE" = "HTTPS" ]; then

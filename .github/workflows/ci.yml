@@ -56,7 +56,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: edge
-          start: pnpm run devs -- -L
+          start: pnpm run devs
           wait-on: 'https://localhost:5501'
       - name: Upload test results
         if: always()
