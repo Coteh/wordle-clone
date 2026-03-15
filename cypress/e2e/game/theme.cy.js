@@ -23,21 +23,22 @@ describe("theme", () => {
 
     it("should be able to select from any of the available themes", () => {
         cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
 
         cy.get("body").should("have.class", "");
         cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
 
-        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.light").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("body").should("have.css", "background-color", "rgb(255, 255, 255)");
 
-        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.snow").click();
 
         cy.get("body").should("have.class", "snow");
         cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
 
-        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.dark").click();
 
         cy.get("body").should("have.class", "");
         cy.get("body").should("have.css", "background-color", "rgb(0, 0, 0)");
@@ -131,6 +132,7 @@ describe("theme", () => {
     it("should set the correct meta theme-color for light theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.light").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
@@ -139,7 +141,7 @@ describe("theme", () => {
     it("should set the correct meta theme-color for snow theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.snow").click();
 
         cy.get("body").should("have.class", "snow");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
@@ -158,7 +160,8 @@ describe("theme", () => {
     it("should apply dimmed theme-color when a dialog is opened in light theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".settings .close").click();
+        cy.get(".theme-card.light").click();
+        cy.get(".themes .close").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
@@ -172,8 +175,8 @@ describe("theme", () => {
     it("should apply dimmed theme-color when a dialog is opened in snow theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".setting.theme-switch").click();
-        cy.get(".settings .close").click();
+        cy.get(".theme-card.snow").click();
+        cy.get(".themes .close").click();
 
         cy.get("body").should("have.class", "snow");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
@@ -187,7 +190,8 @@ describe("theme", () => {
     it("should restore normal theme-color when dialog is closed", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".settings .close").click();
+        cy.get(".theme-card.light").click();
+        cy.get(".themes .close").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
@@ -202,7 +206,8 @@ describe("theme", () => {
     it("should restore normal theme-color when dialog is closed via overlay click", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".settings .close").click();
+        cy.get(".theme-card.light").click();
+        cy.get(".themes .close").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
@@ -217,7 +222,8 @@ describe("theme", () => {
     it("should restore normal theme-color when dialog is closed via escape key", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".settings .close").click();
+        cy.get(".theme-card.light").click();
+        cy.get(".themes .close").click();
 
         cy.get("body").should("have.class", "light");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#ffffff");
