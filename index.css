@@ -789,6 +789,7 @@ body a > .commit-hash {
     background: var(--background-color);
     user-select: none;
     outline: none;
+    font: inherit;
 }
 
 .theme-card.snow {

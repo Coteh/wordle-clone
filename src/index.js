@@ -410,22 +410,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateThemeCardActiveState = () => {
         document.querySelectorAll(".theme-card").forEach((card) => {
-            if (card.dataset.theme === themeManager.getSelectedTheme()) {
-                card.classList.add("active");
-            } else {
-                card.classList.remove("active");
-            }
+            const isSelected = card.dataset.theme === themeManager.getSelectedTheme();
+            card.classList.toggle("active", isSelected);
+            card.setAttribute("aria-label", isSelected ? `${card.dataset.theme} (selected)` : card.dataset.theme);
         });
     };
 
     const buildThemeCards = () => {
         const themeCardsElem = document.querySelector(".theme-cards");
         selectableThemes.forEach((theme) => {
-            const card = document.createElement("div");
+            const card = document.createElement("button");
             card.className = `theme-card ${theme}`;
             card.dataset.theme = theme;
-            card.setAttribute("role", "button");
-            card.setAttribute("tabindex", "0");
 
             const nameElem = document.createElement("span");
             nameElem.className = "theme-card-name";
@@ -469,12 +465,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
 
             card.addEventListener("click", applyTheme);
-            card.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    applyTheme();
-                }
-            });
 
             themeCardsElem.appendChild(card);
         });
