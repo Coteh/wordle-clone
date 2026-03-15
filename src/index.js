@@ -326,6 +326,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         settingsPane.style.display = "flex";
     };
 
+    const closeThemesPane = () => {
+        themesPane.style.display = "none";
+        gamePane.style.display = "flex";
+    };
+
     const toggleSettings = () => {
         settingsLink.blur();
         if (settingsPane.style.display !== "none" || themesPane.style.display !== "none") {
@@ -349,10 +354,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         toggleSettings();
     });
 
+    const themesBack = themesPane.querySelector(".back");
+    themesBack.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideThemesPane();
+    });
+
     const themesClose = themesPane.querySelector(".close");
     themesClose.addEventListener("click", (e) => {
         e.preventDefault();
-        hideThemesPane();
+        closeThemesPane();
     });
 
     const overlayBackElem = document.querySelector(".overlay-back");
