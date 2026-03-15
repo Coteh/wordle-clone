@@ -757,6 +757,10 @@ body a > .commit-hash {
     right: 0;
 }
 
+.themes > .space {
+    flex: 0 0 0.5rem;
+}
+
 .theme-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -765,6 +769,8 @@ body a > .commit-hash {
     width: 100%;
     box-sizing: border-box;
     overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .theme-card {
@@ -779,6 +785,19 @@ body a > .commit-hash {
     background: var(--fallback-background-color);
     background: var(--background-color);
     user-select: none;
+    outline: none;
+}
+
+.theme-card.snow {
+    overflow: hidden;
+    --incorrect-color: var(--gray-2);
+    --box-border-color: var(--gray-3);
+    background:
+        radial-gradient(circle, rgba(255,255,255,0.85) 1.5px, transparent 1.5px) 4px 6px / 18px 16px,
+        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px) 14px 2px / 28px 22px,
+        radial-gradient(circle, rgba(255,255,255,0.75) 1.2px, transparent 1.2px) 9px 18px / 22px 30px,
+        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px) 22px 14px / 35px 18px,
+        linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
 }
 
 .theme-card.active {
