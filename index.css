@@ -744,6 +744,11 @@ body a > .commit-hash {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: transparent;
+    color: black;
 }
 
 .themes > button.close {
@@ -791,6 +796,10 @@ body.high-contrast .theme-card {
     font-weight: bold;
     font-size: 0.85rem;
     text-transform: capitalize;
+}
+
+.theme-card.snow .theme-card-name {
+    color: white;
 }
 
 .theme-card-board {
