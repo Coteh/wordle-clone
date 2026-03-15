@@ -748,7 +748,7 @@ body a > .commit-hash {
     width: 2.5rem;
     height: 2.5rem;
     background-color: transparent;
-    color: black;
+    color: var(--text-color);
 }
 
 .themes > button.close {
