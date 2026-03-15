@@ -292,6 +292,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     closable: true,
                 });
             });
+            const showInstallBannerBtn = debugDialogElem.querySelector("button.show-install-banner");
+            showInstallBannerBtn.addEventListener("click", () => {
+                // Force-show regardless of dismissed state; does not clear that state.
+                if (installBannerAPI) installBannerAPI.showBanner();
+            });
             renderDialog(debugDialogElem, {
                 fadeIn: true,
                 closable: true,
@@ -567,12 +572,11 @@ const initInstallBanner = ({
 } = {}) => {
     const DISMISSED_KEY = "wc_install_dismissed";
     const banner = document.getElementById("install-banner");
-    if (!banner) return;
+    if (!banner) return null;
 
-    // Don't show if already dismissed or running as installed PWA
-    if (localStorage.getItem(DISMISSED_KEY)) return;
-    if (window.matchMedia("(display-mode: standalone)").matches) return;
-    if (window.navigator.standalone) return; // iOS standalone
+    // Never show when already running as an installed PWA.
+    if (window.matchMedia("(display-mode: standalone)").matches) return null;
+    if (window.navigator.standalone) return null; // iOS standalone
 
     if (position === "top") {
         banner.classList.add("install-banner--top");
@@ -583,7 +587,13 @@ const initInstallBanner = ({
     const bannerOverlay = document.getElementById("install-banner-overlay");
 
     const showBanner = () => {
-        if (dismissOnOutsideInteraction) bannerOverlay.style.display = "block";
+        // Always use the overlay when a modal dialog is currently open so that
+        // the banner blocks interaction with it.  The overlay naturally sits above
+        // the dialog (z-index 199 vs 101), so clicking outside the banner hits the
+        // overlay — dismissing the banner — without reaching the dialog.  Once the
+        // banner (and its overlay) are gone the dialog becomes interactive again.
+        const needsOverlay = dismissOnOutsideInteraction || !!document.querySelector(".dialog");
+        if (needsOverlay) bannerOverlay.style.display = "block";
         banner.style.display = "flex";
         // Double rAF to ensure display:flex is applied before transition starts
         requestAnimationFrame(() => {
@@ -595,24 +605,26 @@ const initInstallBanner = ({
         banner.classList.remove("visible");
         setTimeout(() => {
             banner.style.display = "none";
-            if (dismissOnOutsideInteraction) bannerOverlay.style.display = "none";
+            bannerOverlay.style.display = "none";
         }, 350);
         if (permanent) localStorage.setItem(DISMISSED_KEY, "1");
     };
+
+    // Always set up the overlay's touchstart preventDefault so that if the overlay
+    // is shown (either from dismissOnOutsideInteraction:true or because a dialog was
+    // open), the browser doesn't synthesize ghost mousedown/click events that could
+    // reach elements underneath once the overlay is removed.
+    bannerOverlay.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+    });
 
     // touchstart is needed in addition to click because keyboard keys call
     // e.preventDefault() on touchstart, which suppresses the synthetic click
     // event on mobile — meaning click alone would never fire for key taps.
     if (dismissOnOutsideInteraction) {
         // Overlay sits over the whole page.  Any outside touch/click dismisses
-        // the banner; the overlay prevents the element underneath from also
-        // activating.  e.preventDefault() on the overlay's touchstart stops the
-        // browser synthesizing mousedown/mouseup/click that could ghost-click the
-        // keyboard key once the overlay is removed.
-        bannerOverlay.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-        });
-
+        // the banner and the overlay prevents the element underneath from also
+        // activating.
         const handleOutsideInteraction = (e) => {
             if (banner.classList.contains("visible") && !banner.contains(e.target)) {
                 hideBanner(false);
@@ -621,9 +633,11 @@ const initInstallBanner = ({
         document.addEventListener("click", handleOutsideInteraction);
         document.addEventListener("touchstart", handleOutsideInteraction);
     } else {
-        // No overlay — game elements receive events normally.  Dismiss the
-        // banner for any outside interaction except those matching the whitelist
-        // (e.g. keyboard keys so the player can keep typing).
+        // No overlay for normal gameplay — game elements receive events as usual.
+        // Dismiss the banner for any outside interaction except those matching the
+        // whitelist (e.g. keyboard keys so the player can keep typing).
+        // When a dialog is open the overlay IS shown (see showBanner), so taps on
+        // the overlay also reach this handler and correctly dismiss the banner.
         const handleOutsideInteraction = (e) => {
             if (!banner.classList.contains("visible") || banner.contains(e.target)) return;
             const isWhitelisted = interactionWhitelist.some(
@@ -639,6 +653,8 @@ const initInstallBanner = ({
 
     // If the initial "How to Play" dialog is open when the banner wants to appear,
     // defer showing until after it closes, then wait a short grace period.
+    // The migration dialog is intentionally excluded: the banner should appear on
+    // top of it (with its overlay blocking the dialog) rather than waiting.
     let initialHtpClosed = false;
     let pendingShow = false;
     const HTP_GRACE_PERIOD_MS = 2000;
@@ -654,14 +670,21 @@ const initInstallBanner = ({
         }
     });
 
-    // Show immediately, or defer if the initial HTP dialog is currently open.
+    // Show immediately, or defer only if the How to Play dialog is currently open.
     const showOrDefer = () => {
-        if (document.querySelector(".dialog") && !initialHtpClosed) {
+        if (document.querySelector(".dialog .how-to-play") && !initialHtpClosed) {
             pendingShow = true;
             dialogObserver.observe(document.body, { childList: true, subtree: true });
         } else {
             showBanner();
         }
+    };
+
+    // Auto-show is skipped if already dismissed; showBanner() is still available
+    // above for callers (e.g. the debug menu) that need to force a re-show.
+    const autoShow = () => {
+        if (localStorage.getItem(DISMISSED_KEY)) return;
+        showOrDefer();
     };
 
     // iOS detection
@@ -681,13 +704,13 @@ const initInstallBanner = ({
         if (typeof lucide !== "undefined") {
             lucide.createIcons();
         }
-        setTimeout(showOrDefer, 1500);
+        setTimeout(autoShow, 1500);
     } else {
         let deferredPrompt = null;
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            setTimeout(showOrDefer, 1500);
+            setTimeout(autoShow, 1500);
         });
 
         installBtn.addEventListener("click", async () => {
@@ -700,10 +723,12 @@ const initInstallBanner = ({
 
         window.addEventListener("appinstalled", () => hideBanner(true));
     }
+
+    return { showBanner };
 };
 
-initInstallBanner({
-    position: "top",                   // "top" | "bottom"
+const installBannerAPI = initInstallBanner({
+    position: "top",                    // "top" | "bottom"
     dismissOnOutsideInteraction: false, // false = whitelist approach (game stays playable)
     interactionWhitelist: ["#keyboard"], // (used when dismissOnOutsideInteraction: false)
 });
