@@ -763,8 +763,9 @@ body a > .commit-hash {
 
 .theme-cards {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 160px));
+    grid-template-columns: repeat(auto-fit, 160px);
     justify-content: center;
+    align-items: start;
     gap: 1rem;
     padding: 0 1rem;
     width: 100%;
