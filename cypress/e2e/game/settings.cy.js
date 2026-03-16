@@ -51,7 +51,7 @@ describe("settings", () => {
         cy.get(".keyboard").should("not.be.visible");
         cy.contains("Settings").should("be.visible");
 
-        cy.get(".close").click();
+        cy.get(".settings .close").click();
 
         cy.get(".keyboard").should("be.visible");
         cy.contains("Settings").should("not.be.visible");
@@ -117,12 +117,15 @@ describe("settings", () => {
         cy.contains("embed.im").should("not.be.visible");
 
         cy.get(".setting.theme-switch").click();
-        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.snow").click();
+        cy.get(".themes .back").click();
 
         cy.get("body").should("have.class", "snow");
         cy.contains("embed.im").should("be.visible");
 
         cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.dark").click();
+        cy.get(".themes .back").click();
 
         cy.get("body").should("not.have.class", "snow");
         cy.contains("embed.im").should("not.be.visible");

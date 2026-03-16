@@ -40,6 +40,8 @@
 
     --notification-background-color: var(--gray-7);
     --notification-text-color: var(--black);
+
+    --active-card-border-color: var(--white);
 }
 
 .light {
@@ -61,6 +63,8 @@
 
     --notification-background-color: var(--black);
     --notification-text-color: var(--white);
+
+    --active-card-border-color: var(--black);
 }
 
 .snow {
@@ -709,4 +713,185 @@ body a > .commit-hash {
 
 .knob.enabled > .knob-inside {
     left: 29px;
+}
+
+/* Dark theme scoping class (used on theme cards to enforce dark theme variables) */
+
+.dark {
+    --standard-color: var(--gray-5);
+    --standard-block-color: var(--black);
+    --correct-color: var(--green);
+    --within-color: var(--yellow);
+    --incorrect-color: var(--gray-2);
+    --box-border-color: var(--gray-3);
+    --box-border-color-highlighted: var(--gray-5);
+    --background-color: var(--black);
+    --fallback-background-color: var(--black);
+    --text-color: var(--white);
+    --letter-text-color: var(--white);
+    --letter-selected-text-color: var(--white);
+    --letter-selected-inverted-text-color: var(--white);
+    --active-card-border-color: var(--white);
+}
+
+/* Themes Pane */
+
+.themes {
+    position: relative;
+}
+
+.themes > button.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+.themes > button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.themes > .space {
+    flex: 0 0 0.5rem;
+}
+
+.theme-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 155px);
+    justify-content: center;
+    align-items: start;
+    gap: 1rem;
+    padding: 0 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    outline: none;
+}
+
+.theme-card {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    gap: 0.4rem;
+    background: var(--fallback-background-color);
+    background: var(--background-color);
+    user-select: none;
+    outline: none;
+    font: inherit;
+}
+
+.theme-card.snow {
+    overflow: hidden;
+    background-clip: padding-box;
+    --incorrect-color: var(--gray-2);
+    --box-border-color: var(--gray-3);
+    background:
+        radial-gradient(circle, rgba(255,255,255,0.85) 1.5px, transparent 1.5px) 6px 14px / 24px 22px,
+        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px) 21px 3px / 38px 28px,
+        radial-gradient(circle, rgba(255,255,255,0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
+        linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
+}
+
+.theme-card:focus-visible {
+    outline: 2px solid var(--active-card-border-color);
+    outline-offset: 2px;
+}
+
+.theme-card.active {
+    border-color: var(--active-card-border-color);
+}
+
+body.high-contrast .theme-card {
+    --correct-color: var(--orange);
+    --within-color: var(--blue);
+    --letter-selected-inverted-text-color: var(--black);
+}
+
+.theme-card-name {
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-transform: capitalize;
+}
+
+.theme-card.snow .theme-card-name {
+    color: white;
+}
+
+.theme-card-board {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.theme-card-row {
+    display: flex;
+    gap: 2px;
+}
+
+.theme-card-box {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--box-border-color);
+    background-color: var(--standard-block-color);
+}
+
+.theme-card-box.correct {
+    background-color: var(--correct-color);
+    border-color: transparent;
+}
+
+.theme-card-box.within {
+    background-color: var(--within-color);
+    border-color: transparent;
+}
+
+.theme-card-box.incorrect {
+    background-color: var(--incorrect-color);
+    border-color: transparent;
+}
+
+.theme-card-keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.theme-card-keyboard-row {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+}
+
+.theme-card-key {
+    height: 10px;
+    width: 8px;
+    border-radius: 1px;
+    background-color: var(--standard-color);
+}
+
+.theme-card-key.correct {
+    background-color: var(--correct-color);
+}
+
+.theme-card-key.within {
+    background-color: var(--within-color);
+}
+
+.theme-card-key.incorrect {
+    background-color: var(--incorrect-color);
 }
