@@ -67,16 +67,33 @@ describe("themes pane", () => {
         cy.contains("Themes").should("not.be.visible");
     });
 
-    it("should have a scrollable theme cards container", () => {
+    it("should scroll to reveal all theme cards on a small phone screen", () => {
+        cy.viewport(375, 480);
+
         cy.get(".theme-cards")
             .should("have.css", "overflow-y")
             .and("match", /auto|scroll/);
-    });
 
-    it("should have theme cards container constrained to pane height to allow scrolling", () => {
-        cy.get(".theme-cards").then(($el) => {
-            const el = $el[0];
-            expect(el.scrollHeight).to.be.at.least(el.clientHeight);
+        cy.get(".theme-cards").then(($container) => {
+            const container = $container[0];
+            expect(container.scrollHeight).to.be.greaterThan(container.clientHeight);
+
+            const containerRect = container.getBoundingClientRect();
+            const snowCard = container.querySelector(".theme-card.snow");
+            const snowRect = snowCard.getBoundingClientRect();
+            // Snow starts in view but its bottom is clipped by the container
+            expect(snowRect.top).to.be.lessThan(containerRect.bottom);
+            expect(snowRect.bottom).to.be.greaterThan(containerRect.bottom);
+        });
+
+        cy.get(".theme-cards").scrollTo("bottom");
+
+        cy.get(".theme-cards").then(($container) => {
+            const containerRect = $container[0].getBoundingClientRect();
+            const snowRect = $container[0]
+                .querySelector(".theme-card.snow")
+                .getBoundingClientRect();
+            expect(snowRect.bottom).to.be.at.most(containerRect.bottom);
         });
     });
 });
