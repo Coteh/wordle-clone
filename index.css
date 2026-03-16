@@ -769,6 +769,7 @@ body a > .commit-hash {
 .theme-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, 155px);
+    grid-auto-rows: 220px;
     justify-content: center;
     align-items: start;
     gap: 1rem;
@@ -792,6 +793,7 @@ body a > .commit-hash {
     gap: 0.4rem;
     background: var(--fallback-background-color);
     background: var(--background-color);
+    background-clip: padding-box;
     user-select: none;
     outline: none;
     font: inherit;
@@ -799,7 +801,6 @@ body a > .commit-hash {
 
 .theme-card.snow {
     overflow: hidden;
-    background-clip: padding-box;
     --incorrect-color: var(--gray-2);
     --box-border-color: var(--gray-3);
     background:
@@ -807,6 +808,7 @@ body a > .commit-hash {
         radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1px) 21px 3px / 38px 28px,
         radial-gradient(circle, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
         linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
+    background-clip: padding-box;
 }
 
 .theme-card:focus-visible {
