@@ -42,6 +42,7 @@
     --notification-text-color: var(--black);
 
     --active-card-border-color: var(--white);
+    --focused-card-border-color: var(--within-color);
 }
 
 .light {
@@ -80,6 +81,8 @@
     --correct-color: var(--orange);
     --within-color: var(--blue);
     --letter-selected-inverted-text-color: var(--black);
+
+    --focused-card-border-color: var(--within-color);
 }
 
 /* Main Content */
@@ -805,7 +808,7 @@ body a > .commit-hash {
 }
 
 .theme-card:focus-visible {
-    outline: 2px solid var(--active-card-border-color);
+    outline: 2px solid var(--focused-card-border-color);
     outline-offset: 2px;
 }
 
