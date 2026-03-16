@@ -68,7 +68,7 @@ describe("themes pane", () => {
     });
 
     it("should scroll to reveal all theme cards on a small phone screen", () => {
-        cy.viewport(375, 480);
+        cy.viewport(400, 480);
 
         cy.get(".theme-cards")
             .should("have.css", "overflow-y")
