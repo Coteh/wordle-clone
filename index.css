@@ -332,7 +332,9 @@ button.button > * {
 
     opacity: 1;
 
-    transition: top 0.5s, opacity 0.5s;
+    transition:
+        top 0.5s,
+        opacity 0.5s;
 }
 
 @media (max-width: 320px) {
@@ -801,9 +803,9 @@ body a > .commit-hash {
     --incorrect-color: var(--gray-2);
     --box-border-color: var(--gray-3);
     background:
-        radial-gradient(circle, rgba(255,255,255,0.85) 1.5px, transparent 1.5px) 6px 14px / 24px 22px,
-        radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px) 21px 3px / 38px 28px,
-        radial-gradient(circle, rgba(255,255,255,0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
+        radial-gradient(circle, rgba(255, 255, 255, 0.85) 1.5px, transparent 1.5px) 6px 14px / 24px 22px,
+        radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1px) 21px 3px / 38px 28px,
+        radial-gradient(circle, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
         linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
 }
 
