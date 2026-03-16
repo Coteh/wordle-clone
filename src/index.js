@@ -245,6 +245,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (dialog && key === "escape") {
             return closeDialog(dialog, overlayBackElem);
         }
+        if (gamePane.style.display === "none") {
+            return;
+        }
         if (dialog || gameState.ended || ctrlKey || metaKey) {
             return;
         }

@@ -804,6 +804,11 @@ body a > .commit-hash {
         linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
 }
 
+.theme-card:focus-visible {
+    outline: 2px solid var(--active-card-border-color);
+    outline-offset: 2px;
+}
+
 .theme-card.active {
     border-color: var(--active-card-border-color);
 }
