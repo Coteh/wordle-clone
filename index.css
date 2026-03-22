@@ -769,7 +769,7 @@ body a > .commit-hash {
 
 .theme-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 155px);
+    grid-template-columns: repeat(auto-fit, 150px);
     grid-auto-rows: 210px;
     justify-content: center;
     align-items: start;
