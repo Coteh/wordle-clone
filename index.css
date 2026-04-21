@@ -328,8 +328,12 @@ button.button > * {
     color: var(--text-color);
     border: 1px solid black;
     width: 300px;
+    max-height: 90vh;
     height: auto;
     margin: 0;
+
+    display: flex;
+    flex-direction: column;
 
     opacity: 1;
 
@@ -347,16 +351,13 @@ button.button > * {
 .dialog > div.dialog-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
-    height: 100%;
     padding: 2rem;
     box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: auto;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .dialog > div.dialog-content > div.dialog-text {
