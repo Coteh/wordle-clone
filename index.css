@@ -353,7 +353,6 @@ button.button > * {
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
-    padding: 2rem;
     box-sizing: border-box;
     overflow-y: auto;
     flex: 1;
