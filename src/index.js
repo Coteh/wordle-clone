@@ -624,9 +624,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             fadeIn: true,
             closable: true,
             style: {
-                width: "75%",
-                height: "75%",
-                maxWidth: "600px",
+                width: "calc(75% + 2em)",
+                height: "calc(75% + 2em)",
+                maxWidth: "640px",
             },
         });
     });
