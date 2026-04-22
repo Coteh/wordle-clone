@@ -327,7 +327,7 @@ button.button > * {
     background-color: var(--dialog-background-color);
     color: var(--text-color);
     border: 1px solid black;
-    width: 300px;
+    width: 340px;
     max-height: 90vh;
     height: auto;
     margin: 0;
@@ -345,7 +345,7 @@ button.button > * {
 
 @media (max-width: 320px) {
     .dialog {
-        width: 250px;
+        width: 290px;
     }
 }
 
@@ -356,7 +356,6 @@ button.button > * {
     width: 100%;
     padding: 2rem 2rem 0;
     box-sizing: border-box;
-    overflow-x: hidden;
     overflow-y: auto;
     flex: 1;
     min-height: 0;
