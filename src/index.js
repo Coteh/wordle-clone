@@ -94,8 +94,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             results.forEach((entry) => linkEntryToLetterMap(letterMap)(entry));
             renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState, selectedKeyboard);
         },
-        renderCheckError(error) {
-            renderNotification(getErrorMessage(error));
+        renderCheckError(error, userInput) {
+            renderNotification(getErrorMessage(error, userInput));
         },
         renderWin() {
             const winElem = createDialogContentFromTemplate("#win-dialog-content");
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 break;
             case "error":
-                return wordleRenderer.renderCheckError(data);
+                return wordleRenderer.renderCheckError(data, currentInput);
             case "lose":
                 return wordleRenderer.renderGameOver(data);
             case "lose_life":
