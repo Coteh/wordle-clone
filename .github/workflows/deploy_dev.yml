@@ -14,10 +14,22 @@ jobs:
     # Install ImageMagick
     - name: Install Ghostscript
       run: sudo apt-get update && sudo apt-get install -y ghostscript
-    - name: Set up ImageMagick
-      uses: mfinelli/setup-imagemagick@v5
-      with:
-        cache: true
+    # Install ImageMagick 7 from a pinned GitHub release AppImage:
+    # versioned and reproducible. Avoid mfinelli/setup-imagemagick, which
+    # pulls a rotating "latest" AppImage from imagemagick.org that 404s
+    # when the host rotates its binary. Runner has no FUSE, so the
+    # AppImage runs self-extracted (APPIMAGE_EXTRACT_AND_RUN).
+    - name: Install ImageMagick 7
+      env:
+        IMAGEMAGICK_VERSION: 7.1.2-26
+        IMAGEMAGICK_SHA256: 6366d353b81871929a653ad81158e805f3611d1be7836f2490b6afc38b64c92f
+      run: |
+        curl -fL "https://github.com/ImageMagick/ImageMagick/releases/download/${IMAGEMAGICK_VERSION}/ImageMagick-${IMAGEMAGICK_VERSION}-gcc-x86_64.AppImage" -o magick
+        echo "${IMAGEMAGICK_SHA256}  magick" | sha256sum --check
+        chmod +x magick
+        sudo mv magick /usr/local/bin/magick
+        echo "APPIMAGE_EXTRACT_AND_RUN=1" >> "$GITHUB_ENV"
+        APPIMAGE_EXTRACT_AND_RUN=1 magick -version
 
     # Build and process files
     - name: Install pnpm
