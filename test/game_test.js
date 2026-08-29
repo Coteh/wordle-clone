@@ -5,9 +5,12 @@ const {
     NOT_IN_WORD_LIST_ERROR_ID,
     WORD_NOT_PROVIDED_ERROR_ID,
     USER_INPUT_NOT_PROVIDED_ERROR_ID,
+    USER_RAN_OUT_OF_LIVES_ERROR_ID,
+    GAME_IS_OVER_ERROR_ID,
     PREV_STATE_NOT_MATCHING_ERROR_ID,
     getPositionWord,
     getHardModeErrorMessage,
+    getErrorMessage,
 } = require("../src/game");
 const assert = require("assert");
 const fs = require("fs");
@@ -764,5 +767,38 @@ describe("get word", () => {
             name: "Error",
             message: "Word list index out of bounds",
         });
+    });
+});
+
+describe("error messages", () => {
+    it("should return a message for each error id", () => {
+        assert.strictEqual(
+            getErrorMessage({ error: WORDS_DIFFERENT_LENGTH_ERROR_ID }, "beach"),
+            "Not enough letters"
+        );
+        assert.strictEqual(
+            getErrorMessage({ error: WORDS_DIFFERENT_LENGTH_ERROR_ID }, "beaches"),
+            "Too many letters"
+        );
+        assert.strictEqual(
+            getErrorMessage({ error: NOT_IN_WORD_LIST_ERROR_ID }),
+            "Not in word list"
+        );
+        assert.strictEqual(
+            getErrorMessage({ error: USER_INPUT_NOT_PROVIDED_ERROR_ID }),
+            "Input not provided"
+        );
+        assert.strictEqual(
+            getErrorMessage({ error: USER_RAN_OUT_OF_LIVES_ERROR_ID }),
+            "User ran out of lives"
+        );
+        assert.strictEqual(getErrorMessage({ error: GAME_IS_OVER_ERROR_ID }), "Game is over");
+        assert.strictEqual(
+            getErrorMessage({
+                error: PREV_STATE_NOT_MATCHING_ERROR_ID,
+                expected: { letter: "a", position: 0, unique: true },
+            }),
+            "1st letter must be A"
+        );
     });
 });
