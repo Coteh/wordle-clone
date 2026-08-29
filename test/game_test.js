@@ -789,6 +789,10 @@ describe("error messages", () => {
             "Input not provided"
         );
         assert.strictEqual(
+            getErrorMessage({ error: WORD_NOT_PROVIDED_ERROR_ID }),
+            "Word not provided to check against (this should not happen, post an issue on GitHub)"
+        );
+        assert.strictEqual(
             getErrorMessage({ error: USER_RAN_OUT_OF_LIVES_ERROR_ID }),
             "User ran out of lives"
         );

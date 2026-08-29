@@ -21,8 +21,8 @@ jobs:
     # AppImage runs self-extracted (APPIMAGE_EXTRACT_AND_RUN).
     - name: Install ImageMagick 7
       env:
-        IMAGEMAGICK_VERSION: 7.1.2-26
-        IMAGEMAGICK_SHA256: 6366d353b81871929a653ad81158e805f3611d1be7836f2490b6afc38b64c92f
+        IMAGEMAGICK_VERSION: 7.1.2-30
+        IMAGEMAGICK_SHA256: 372af8a3fd61ef5f15c6331cde3e21f840eb165d8b533f34ed05d68736dd682e
       run: |
         curl -fL "https://github.com/ImageMagick/ImageMagick/releases/download/${IMAGEMAGICK_VERSION}/ImageMagick-${IMAGEMAGICK_VERSION}-gcc-x86_64.AppImage" -o magick
         echo "${IMAGEMAGICK_SHA256}  magick" | sha256sum --check
