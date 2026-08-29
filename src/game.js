@@ -323,10 +323,10 @@ const initGame = async (_eventHandler) => {
 
 const submitWord = (gameState, currentInput, previousAttempt, hardMode) => {
     if (gameState.lives <= 0) {
-        return eventHandler("error", USER_RAN_OUT_OF_LIVES_ERROR_ID);
+        return eventHandler("error", { error: USER_RAN_OUT_OF_LIVES_ERROR_ID });
     }
     if (gameState.ended) {
-        return eventHandler("error", GAME_IS_OVER_ERROR_ID);
+        return eventHandler("error", { error: GAME_IS_OVER_ERROR_ID });
     }
     const result = checkForWord(currentInput, word, wordList, previousAttempt);
     if (result.error) {
@@ -371,6 +371,8 @@ if (typeof process !== "undefined") {
         NOT_IN_WORD_LIST_ERROR_ID,
         USER_INPUT_NOT_PROVIDED_ERROR_ID,
         WORD_NOT_PROVIDED_ERROR_ID,
+        USER_RAN_OUT_OF_LIVES_ERROR_ID,
+        GAME_IS_OVER_ERROR_ID,
         PREV_STATE_NOT_MATCHING_ERROR_ID,
     };
 }
