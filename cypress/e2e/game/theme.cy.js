@@ -38,6 +38,11 @@ describe("theme", () => {
         cy.get("body").should("have.class", "snow");
         cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
 
+        cy.get(".theme-card.fuji").click();
+
+        cy.get("body").should("have.class", "fuji");
+        cy.get("body").should("have.css", "background-color", "rgb(156, 201, 232)");
+
         cy.get(".theme-card.dark").click();
 
         cy.get("body").should("have.class", "");
@@ -76,6 +81,23 @@ describe("theme", () => {
 
         cy.get("body").should("have.class", "snow");
         cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
+    });
+
+    it("should set the fuji theme on page reload if it's enabled in local storage", () => {
+        cy.get("body").should("not.have.class", "fuji");
+
+        window.localStorage.setItem(
+            "wc_preferences",
+            JSON.stringify({
+                theme: "fuji",
+            })
+        );
+
+        cy.reload();
+        cy.waitForGameReady();
+
+        cy.get("body").should("have.class", "fuji");
+        cy.get("body").should("have.css", "background-color", "rgb(156, 201, 232)");
     });
 
     it("should set the dark theme on page reload if it's enabled in local storage", () => {
@@ -147,6 +169,15 @@ describe("theme", () => {
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
     });
 
+    it("should set the correct meta theme-color for fuji theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.fuji").click();
+
+        cy.get("body").should("have.class", "fuji");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#9cc9e8");
+    });
+
     it("should apply dimmed theme-color when a dialog is opened in dark theme", () => {
         cy.get("body").should("have.class", "");
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#000000");
@@ -185,6 +216,21 @@ describe("theme", () => {
 
         // Dimmed snow: blend rgba(0,0,0,0.5) over rgb(2,0,36) = rgb(1,0,18) = #010012
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#010012");
+    });
+
+    it("should apply dimmed theme-color when a dialog is opened in fuji theme", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.fuji").click();
+        cy.get(".themes .close").click();
+
+        cy.get("body").should("have.class", "fuji");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#9cc9e8");
+
+        cy.get(".help-link").click();
+
+        // Dimmed fuji: blend rgba(0,0,0,0.5) over rgb(156,201,232) = rgb(78,101,116) = #4e6574
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#4e6574");
     });
 
     it("should restore normal theme-color when dialog is closed", () => {

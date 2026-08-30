@@ -78,6 +78,65 @@
     --dialog-background-color: #070069;
 }
 
+.fuji {
+    --sakura-pale: #fbe3ec;
+    --fuji-sky: #9cc9e8;
+    --fuji-slope: #4a608f;
+    --fuji-snow: #fdfeff;
+    --fuji-ink: #3c2434;
+
+    --standard-color: #cb9db2;
+    --standard-block-color: rgba(255, 255, 255, 0.4);
+    --correct-color: #4c7c54;
+    --within-color: #e0a63f;
+    --incorrect-color: #7c7d9b;
+    --pressed-color: #cd93ae;
+    --held-color: #f0d2df;
+
+    --box-border-color: #c39bb0;
+    --box-border-color-highlighted: #9d6580;
+
+    --settings-item-border-color: 1px solid #c39bb0;
+
+    /* Layered from front to back: blossom petals, the haze the mountain's base dissolves into,
+       Fuji's snowcap, Fuji's slopes, then the sky. The two cones share a half angle of 40 degrees,
+       and the snowcap layer is sized so that its apex (91.43% of 70%) lands on the slope layer's
+       apex (64%), which is what keeps the cap seated on the peak at any size. */
+    --background-color:
+        radial-gradient(circle, rgba(244, 168, 195, 0.32) 2.2px, rgba(244, 168, 195, 0) 4px) 12px 31px / 89px 103px,
+        radial-gradient(circle, rgba(255, 255, 255, 0.45) 1.5px, rgba(255, 255, 255, 0) 3px) 41px 8px / 127px 71px,
+        radial-gradient(circle, rgba(216, 122, 162, 0.22) 2.8px, rgba(216, 122, 162, 0) 5px) 25px 64px / 53px 149px,
+        radial-gradient(circle, rgba(244, 168, 195, 0.3) 1.8px, rgba(244, 168, 195, 0) 3.4px) 7px 44px / 173px 97px,
+        linear-gradient(180deg, rgba(251, 227, 236, 0), rgba(250, 220, 232, 0.75) 35%, var(--sakura-pale) 70%) bottom /
+            100% 34% no-repeat,
+        conic-gradient(
+                from 0deg at 50% 91.43%,
+                rgba(253, 254, 255, 0) 0 140deg,
+                var(--fuji-snow) 140deg 220deg,
+                rgba(253, 254, 255, 0) 220deg
+            )
+            top / 100% 70% no-repeat,
+        conic-gradient(
+            from 0deg at 50% 64%,
+            rgba(74, 96, 143, 0) 0 140deg,
+            var(--fuji-slope) 140deg 220deg,
+            rgba(74, 96, 143, 0) 220deg
+        ),
+        linear-gradient(180deg, #9cc9e8 0%, #b9d6ec 26%, #dbdff0 48%, #eed4e2 66%, #f8d9e6 82%, #fbe3ec 100%);
+    --fallback-background-color: var(--fuji-sky);
+
+    --dialog-background-color: var(--sakura-pale);
+
+    --text-color: var(--fuji-ink);
+    --letter-text-color: var(--fuji-ink);
+    --letter-selected-text-color: var(--white);
+
+    --notification-background-color: var(--fuji-ink);
+    --notification-text-color: var(--sakura-pale);
+
+    --active-card-border-color: var(--fuji-ink);
+}
+
 .high-contrast {
     --correct-color: var(--orange);
     --within-color: var(--blue);
