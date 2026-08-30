@@ -1,7 +1,7 @@
 const LIGHT_MODE = "light";
 const DARK_MODE = "dark";
 const SNOW_THEME = "snow";
-const FUJI_THEME = "fuji";
+const SAKURA_THEME = "sakura";
 const QWERTY_KEYBOARD = "qwerty";
 const DVORAK_KEYBOARD = "dvorak";
 const ALPHABETICAL_KEYBOARD = "alphabetical";
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let day;
     let gameLoaded = false;
 
-    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME, FUJI_THEME];
+    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME, SAKURA_THEME];
     let themeManager = ThemeManager.getInstance();
     themeManager.setSelectableThemes(selectableThemes);
 

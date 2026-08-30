@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+    <defs>
+        <g id="blossom">
+            <circle cx="0" cy="-5.2" r="4.3" />
+            <circle cx="4.9" cy="-1.6" r="4.3" />
+            <circle cx="3" cy="4.2" r="4.3" />
+            <circle cx="-3" cy="4.2" r="4.3" />
+            <circle cx="-4.9" cy="-1.6" r="4.3" />
+        </g>
+    </defs>
+    <g transform="translate(300 0) scale(-1 1)">
+        <g fill="none" stroke="#4a2b39" stroke-linecap="round">
+            <path d="M-10 9 C70 24 140 36 206 52 C240 60 262 74 276 96" stroke-width="8" />
+            <path d="M52 21 C66 48 76 70 78 102" stroke-width="4.6" />
+            <path d="M78 102 C82 120 92 134 110 145" stroke-width="3" />
+            <path d="M128 32 C146 50 153 72 150 96" stroke-width="4.2" />
+            <path d="M150 96 C149 112 142 124 130 133" stroke-width="3.2" />
+            <path d="M24 13 C32 34 26 56 10 70" stroke-width="4" />
+            <path d="M196 49 C214 60 224 79 226 102" stroke-width="3.4" />
+            <path d="M166 44 C182 50 198 46 212 34" stroke-width="2.6" />
+            <path d="M232 66 C246 68 258 62 266 52" stroke-width="2.4" />
+        </g>
+        <g fill="#e29ebd">
+            <use href="#blossom" transform="translate(247.1 75.2) scale(1)" />
+            <use href="#blossom" transform="translate(268.9 79.6) scale(1)" />
+            <use href="#blossom" transform="translate(49 18.1) scale(1)" />
+            <use href="#blossom" transform="translate(66.5 63.9) scale(0.7)" />
+            <use href="#blossom" transform="translate(92.3 127.4) scale(0.8)" />
+            <use href="#blossom" transform="translate(94.9 128.7) scale(0.7)" />
+            <use href="#blossom" transform="translate(18.4 30) scale(0.8)" />
+            <use href="#blossom" transform="translate(221.6 98.1) scale(0.7)" />
+            <use href="#blossom" transform="translate(188.4 37.8) scale(0.9)" />
+            <use href="#blossom" transform="translate(195 36.1) scale(0.9)" />
+            <use href="#blossom" transform="translate(264.8 44.6) scale(1)" />
+            <use href="#blossom" transform="translate(257.2 63.6) scale(0.9)" />
+        </g>
+        <g fill="#f7c3d9">
+            <use href="#blossom" transform="translate(77.3 24.2) scale(1)" />
+            <use href="#blossom" transform="translate(155.1 43.8) scale(0.8)" />
+            <use href="#blossom" transform="translate(228.6 71.7) scale(0.8)" />
+            <use href="#blossom" transform="translate(234.1 57.9) scale(0.7)" />
+            <use href="#blossom" transform="translate(242.6 71.7) scale(0.8)" />
+            <use href="#blossom" transform="translate(242.6 72) scale(0.6)" />
+            <use href="#blossom" transform="translate(71.3 81.2) scale(0.6)" />
+            <use href="#blossom" transform="translate(67.6 96) scale(0.9)" />
+            <use href="#blossom" transform="translate(88.4 125.8) scale(0.9)" />
+            <use href="#blossom" transform="translate(142.9 62.6) scale(1)" />
+            <use href="#blossom" transform="translate(140.9 83.4) scale(0.9)" />
+            <use href="#blossom" transform="translate(158.1 108) scale(1)" />
+            <use href="#blossom" transform="translate(154.4 97.6) scale(0.6)" />
+            <use href="#blossom" transform="translate(152.1 120.3) scale(0.9)" />
+            <use href="#blossom" transform="translate(156.5 116.4) scale(0.9)" />
+            <use href="#blossom" transform="translate(125 130.4) scale(1)" />
+            <use href="#blossom" transform="translate(142.4 119.8) scale(0.8)" />
+            <use href="#blossom" transform="translate(137.2 130.5) scale(0.6)" />
+            <use href="#blossom" transform="translate(19.5 34.9) scale(1)" />
+            <use href="#blossom" transform="translate(22.7 67.4) scale(0.8)" />
+            <use href="#blossom" transform="translate(15.6 68.1) scale(0.7)" />
+            <use href="#blossom" transform="translate(11.5 58.8) scale(0.7)" />
+            <use href="#blossom" transform="translate(7.7 76) scale(0.6)" />
+            <use href="#blossom" transform="translate(226 80.5) scale(1)" />
+            <use href="#blossom" transform="translate(226.4 72.8) scale(0.9)" />
+            <use href="#blossom" transform="translate(216 82.9) scale(0.7)" />
+            <use href="#blossom" transform="translate(177.4 39.5) scale(0.8)" />
+            <use href="#blossom" transform="translate(179.7 42.4) scale(0.7)" />
+            <use href="#blossom" transform="translate(184 52.3) scale(1)" />
+            <use href="#blossom" transform="translate(182.3 49.4) scale(0.9)" />
+            <use href="#blossom" transform="translate(194.6 41.6) scale(0.6)" />
+            <use href="#blossom" transform="translate(197.6 55) scale(0.7)" />
+            <use href="#blossom" transform="translate(207.4 37.4) scale(0.8)" />
+            <use href="#blossom" transform="translate(254 75.8) scale(0.6)" />
+            <use href="#blossom" transform="translate(264.3 53) scale(0.9)" />
+            <use href="#blossom" transform="translate(257.3 66.5) scale(1)" />
+            <use href="#blossom" transform="translate(267.6 48.7) scale(0.6)" />
+            <use href="#blossom" transform="translate(246.5 169.3) scale(0.6)" />
+            <use href="#blossom" transform="translate(129.3 108.7) scale(0.6)" />
+            <use href="#blossom" transform="translate(262.1 48.1) scale(0.6)" />
+            <use href="#blossom" transform="translate(201.4 106.9) scale(0.5)" />
+            <use href="#blossom" transform="translate(152.1 79.6) scale(0.7)" />
+            <use href="#blossom" transform="translate(239.1 134.8) scale(0.4)" />
+            <use href="#blossom" transform="translate(232.5 59.1) scale(0.4)" />
+        </g>
+        <g fill="#fdeaf2">
+            <use href="#blossom" transform="translate(136.2 43.9) scale(1)" />
+            <use href="#blossom" transform="translate(244.4 75.8) scale(0.6)" />
+            <use href="#blossom" transform="translate(69.6 68.1) scale(0.9)" />
+            <use href="#blossom" transform="translate(68 73.6) scale(0.6)" />
+            <use href="#blossom" transform="translate(83.3 88.1) scale(0.8)" />
+            <use href="#blossom" transform="translate(67.1 87.1) scale(0.6)" />
+            <use href="#blossom" transform="translate(130.8 51.7) scale(0.7)" />
+            <use href="#blossom" transform="translate(136.9 54.5) scale(0.6)" />
+            <use href="#blossom" transform="translate(153.2 86.5) scale(1)" />
+            <use href="#blossom" transform="translate(145.6 121) scale(0.6)" />
+            <use href="#blossom" transform="translate(125.3 132.8) scale(0.9)" />
+            <use href="#blossom" transform="translate(19.5 61.3) scale(0.9)" />
+            <use href="#blossom" transform="translate(5.7 61.7) scale(0.8)" />
+            <use href="#blossom" transform="translate(225.3 92) scale(0.6)" />
+            <use href="#blossom" transform="translate(170.6 53.9) scale(0.8)" />
+            <use href="#blossom" transform="translate(184.6 42.5) scale(0.6)" />
+            <use href="#blossom" transform="translate(209.5 30.9) scale(1)" />
+            <use href="#blossom" transform="translate(219 108.9) scale(0.4)" />
+            <use href="#blossom" transform="translate(106.9 91.7) scale(0.5)" />
+            <use href="#blossom" transform="translate(159.3 140.4) scale(0.5)" />
+            <use href="#blossom" transform="translate(20.6 41.9) scale(0.4)" />
+        </g>
+    </g>
+</svg>

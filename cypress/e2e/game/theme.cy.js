@@ -38,10 +38,10 @@ describe("theme", () => {
         cy.get("body").should("have.class", "snow");
         cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
 
-        cy.get(".theme-card.fuji").click();
+        cy.get(".theme-card.sakura").click();
 
-        cy.get("body").should("have.class", "fuji");
-        cy.get("body").should("have.css", "background-color", "rgb(156, 201, 232)");
+        cy.get("body").should("have.class", "sakura");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 146, 226)");
 
         cy.get(".theme-card.dark").click();
 
@@ -83,21 +83,21 @@ describe("theme", () => {
         cy.get("body").should("have.css", "background-color", "rgb(2, 0, 36)");
     });
 
-    it("should set the fuji theme on page reload if it's enabled in local storage", () => {
-        cy.get("body").should("not.have.class", "fuji");
+    it("should set the sakura theme on page reload if it's enabled in local storage", () => {
+        cy.get("body").should("not.have.class", "sakura");
 
         window.localStorage.setItem(
             "wc_preferences",
             JSON.stringify({
-                theme: "fuji",
+                theme: "sakura",
             })
         );
 
         cy.reload();
         cy.waitForGameReady();
 
-        cy.get("body").should("have.class", "fuji");
-        cy.get("body").should("have.css", "background-color", "rgb(156, 201, 232)");
+        cy.get("body").should("have.class", "sakura");
+        cy.get("body").should("have.css", "background-color", "rgb(0, 146, 226)");
     });
 
     it("should set the dark theme on page reload if it's enabled in local storage", () => {
@@ -169,13 +169,13 @@ describe("theme", () => {
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#020024");
     });
 
-    it("should set the correct meta theme-color for fuji theme", () => {
+    it("should set the correct meta theme-color for sakura theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".theme-card.fuji").click();
+        cy.get(".theme-card.sakura").click();
 
-        cy.get("body").should("have.class", "fuji");
-        cy.get("meta[name='theme-color']").should("have.attr", "content", "#9cc9e8");
+        cy.get("body").should("have.class", "sakura");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#0092e2");
     });
 
     it("should apply dimmed theme-color when a dialog is opened in dark theme", () => {
@@ -218,19 +218,19 @@ describe("theme", () => {
         cy.get("meta[name='theme-color']").should("have.attr", "content", "#010012");
     });
 
-    it("should apply dimmed theme-color when a dialog is opened in fuji theme", () => {
+    it("should apply dimmed theme-color when a dialog is opened in sakura theme", () => {
         cy.get(".settings-link").click();
         cy.get(".setting.theme-switch").click();
-        cy.get(".theme-card.fuji").click();
+        cy.get(".theme-card.sakura").click();
         cy.get(".themes .close").click();
 
-        cy.get("body").should("have.class", "fuji");
-        cy.get("meta[name='theme-color']").should("have.attr", "content", "#9cc9e8");
+        cy.get("body").should("have.class", "sakura");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#0092e2");
 
         cy.get(".help-link").click();
 
-        // Dimmed fuji: blend rgba(0,0,0,0.5) over rgb(156,201,232) = rgb(78,101,116) = #4e6574
-        cy.get("meta[name='theme-color']").should("have.attr", "content", "#4e6574");
+        // Dimmed sakura: blend rgba(0,0,0,0.5) over rgb(0,146,226) = rgb(0,73,113) = #004971
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#004971");
     });
 
     it("should restore normal theme-color when dialog is closed", () => {

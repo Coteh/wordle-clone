@@ -78,63 +78,68 @@
     --dialog-background-color: #070069;
 }
 
-.fuji {
-    --sakura-pale: #fbe3ec;
-    --fuji-sky: #9cc9e8;
-    --fuji-slope: #4a608f;
-    --fuji-snow: #fdfeff;
-    --fuji-ink: #3c2434;
+.sakura {
+    --sakura-blossom: #f7c3d9;
+    --sakura-pale: #fdeaf2;
+    --sakura-ink: #2d1b2c;
+    --sakura-sky: #0092e2;
+    /* The branches hang from just under the top menu rather than behind it */
+    --sakura-branch-top: 64px;
+    --sakura-branch-size: min(48%, 340px);
+    --fuji-slope: #2f92d0;
+    --fuji-snow: #f6f9fe;
 
-    --standard-color: #cb9db2;
-    --standard-block-color: rgba(255, 255, 255, 0.4);
-    --correct-color: #4c7c54;
+    --standard-color: #f0c4d7;
+    --standard-block-color: rgba(255, 255, 255, 0.45);
+    --correct-color: #3d7a4a;
     --within-color: #e0a63f;
-    --incorrect-color: #7c7d9b;
-    --pressed-color: #cd93ae;
-    --held-color: #f0d2df;
+    --incorrect-color: #8a6f80;
+    --pressed-color: #d693b0;
+    --held-color: var(--sakura-pale);
 
-    --box-border-color: #c39bb0;
-    --box-border-color-highlighted: #9d6580;
+    --box-border-color: #d197b3;
+    --box-border-color-highlighted: #a85d84;
 
-    --settings-item-border-color: 1px solid #c39bb0;
+    --settings-item-border-color: 1px solid rgba(45, 27, 44, 0.3);
 
-    /* Layered from front to back: blossom petals, the haze the mountain's base dissolves into,
-       Fuji's snowcap, Fuji's slopes, then the sky. The two cones share a half angle of 40 degrees,
-       and the snowcap layer is sized so that its apex (81.25% of 64%) lands on the slope layer's
-       apex (52%), which is what keeps the cap seated on the peak at any size. */
+    /* Layered from front to back: the blossom branches framing the top corners, a blush of pink
+       haze the mountain's base dissolves into, Fuji's snowcap, Fuji's slopes, then the sky. The
+       two cones share a half angle of 40 degrees, and the snowcap layer is sized so that its apex
+       (81.25% of 64%) lands on the slope layer's apex (52%), which is what keeps the cap seated on
+       the peak at any size. */
     --background-color:
-        radial-gradient(circle, rgba(244, 168, 195, 0.32) 2.2px, rgba(244, 168, 195, 0) 4px) 12px 31px / 89px 103px,
-        radial-gradient(circle, rgba(255, 255, 255, 0.45) 1.5px, rgba(255, 255, 255, 0) 3px) 41px 8px / 127px 71px,
-        radial-gradient(circle, rgba(216, 122, 162, 0.22) 2.8px, rgba(216, 122, 162, 0) 5px) 25px 64px / 53px 149px,
-        radial-gradient(circle, rgba(244, 168, 195, 0.3) 1.8px, rgba(244, 168, 195, 0) 3.4px) 7px 44px / 173px 97px,
-        linear-gradient(180deg, rgba(251, 227, 236, 0), rgba(250, 220, 232, 0.45) 45%, rgba(251, 227, 236, 0.72))
+        url("images/sakura-branch.svg") 0 var(--sakura-branch-top) / var(--sakura-branch-size) auto no-repeat,
+        url("images/sakura-branch-flipped.svg") 100% var(--sakura-branch-top) / var(--sakura-branch-size) auto no-repeat,
+        linear-gradient(180deg, rgba(250, 214, 232, 0), rgba(249, 205, 226, 0.42) 45%, rgba(250, 222, 236, 0.62))
             bottom / 100% 30% no-repeat,
         conic-gradient(
                 from 0deg at 50% 81.25%,
-                rgba(253, 254, 255, 0) 0 140deg,
+                rgba(246, 249, 254, 0) 0 140deg,
                 var(--fuji-snow) 140deg 220deg,
-                rgba(253, 254, 255, 0) 220deg
+                rgba(246, 249, 254, 0) 220deg
             )
             top / 100% 64% no-repeat,
         conic-gradient(
             from 0deg at 50% 52%,
-            rgba(74, 96, 143, 0) 0 140deg,
+            rgba(47, 146, 208, 0) 0 140deg,
             var(--fuji-slope) 140deg 220deg,
-            rgba(74, 96, 143, 0) 220deg
+            rgba(47, 146, 208, 0) 220deg
         ),
-        linear-gradient(180deg, #9cc9e8 0%, #b9d6ec 26%, #dbdff0 48%, #eed4e2 66%, #f8d9e6 82%, #fbe3ec 100%);
-    --fallback-background-color: var(--fuji-sky);
+        linear-gradient(180deg, #0092e2 0%, #059feb 16%, #20a8ef 38%, #3fb0f0 58%, #63bcf2 78%, #8ccbf1 100%);
+    --fallback-background-color: var(--sakura-sky);
 
     --dialog-background-color: var(--sakura-pale);
 
-    --text-color: var(--fuji-ink);
-    --letter-text-color: var(--fuji-ink);
+    /* Ink rather than white, so that text stays readable wherever it falls: over the sky, over
+       the mountain's slopes, and over its snowcap */
+    --text-color: var(--sakura-ink);
+    --letter-text-color: var(--sakura-ink);
     --letter-selected-text-color: var(--white);
 
-    --notification-background-color: var(--fuji-ink);
+    --notification-background-color: var(--sakura-ink);
     --notification-text-color: var(--sakura-pale);
 
-    --active-card-border-color: var(--fuji-ink);
+    --active-card-border-color: var(--sakura-ink);
 }
 
 .high-contrast {
@@ -746,6 +751,12 @@ body a > .commit-hash {
     font-size: 16px;
 }
 
+body.sakura .dialog {
+    /* Dialogs in this theme are dark, so the example boxes inside them need more
+       frosting than the ones on the board to keep the letters in them readable */
+    --standard-block-color: rgba(255, 255, 255, 0.86);
+}
+
 /* Settings Toggle */
 
 .knob {
@@ -868,6 +879,13 @@ body a > .commit-hash {
         radial-gradient(circle, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px) 12px 24px / 22px 40px,
         linear-gradient(180deg, rgba(2, 0, 36, 1) 40%, rgba(9, 9, 121, 1) 100%);
     background-clip: padding-box;
+}
+
+.theme-card.sakura {
+    overflow: hidden;
+    /* The card hangs its branches below the theme name rather than below a top menu */
+    --sakura-branch-top: 26px;
+    --sakura-branch-size: 52%;
 }
 
 .theme-card:focus-visible {

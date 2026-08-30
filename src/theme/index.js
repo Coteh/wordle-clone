@@ -44,7 +44,7 @@ class ThemeManager {
 
     /**
      * Get the background color for a given theme
-     * @param {string} theme - Theme name (dark, light, snow, fuji)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getThemeColor(theme) {
@@ -53,7 +53,7 @@ class ThemeManager {
 
     /**
      * Get the dimmed (blended with overlay) color for a given theme
-     * @param {string} theme - Theme name (dark, light, snow, fuji)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getDimmedThemeColor(theme) {
@@ -64,7 +64,7 @@ class ThemeManager {
 
     /**
      * Switch themes
-     * @param {string} theme - Theme name to switch to (dark, light, snow, fuji)
+     * @param {string} theme - Theme name to switch to (dark, light, snow, sakura)
      */
     switchTheme(theme) {
         if (!theme || !this.selectableThemes.includes(theme)) {
@@ -127,7 +127,7 @@ class ThemeManager {
 
     /**
      * Get the background color for a given theme from CSS variables
-     * @param {string} theme - Theme name (dark, light, snow, fuji)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getThemeColorFromCSS(theme) {
@@ -136,7 +136,7 @@ class ThemeManager {
             [DARK_MODE]: "rgb(0, 0, 0)",
             [LIGHT_MODE]: "rgb(255, 255, 255)",
             [SNOW_THEME]: "rgb(2, 0, 36)",
-            [FUJI_THEME]: "rgb(168, 207, 233)"
+            [SAKURA_THEME]: "rgb(0, 146, 226)"
         };
         
         // Check if document.body exists
