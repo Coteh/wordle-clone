@@ -100,24 +100,24 @@
 
     /* Layered from front to back: blossom petals, the haze the mountain's base dissolves into,
        Fuji's snowcap, Fuji's slopes, then the sky. The two cones share a half angle of 40 degrees,
-       and the snowcap layer is sized so that its apex (91.43% of 70%) lands on the slope layer's
-       apex (64%), which is what keeps the cap seated on the peak at any size. */
+       and the snowcap layer is sized so that its apex (81.25% of 64%) lands on the slope layer's
+       apex (52%), which is what keeps the cap seated on the peak at any size. */
     --background-color:
         radial-gradient(circle, rgba(244, 168, 195, 0.32) 2.2px, rgba(244, 168, 195, 0) 4px) 12px 31px / 89px 103px,
         radial-gradient(circle, rgba(255, 255, 255, 0.45) 1.5px, rgba(255, 255, 255, 0) 3px) 41px 8px / 127px 71px,
         radial-gradient(circle, rgba(216, 122, 162, 0.22) 2.8px, rgba(216, 122, 162, 0) 5px) 25px 64px / 53px 149px,
         radial-gradient(circle, rgba(244, 168, 195, 0.3) 1.8px, rgba(244, 168, 195, 0) 3.4px) 7px 44px / 173px 97px,
-        linear-gradient(180deg, rgba(251, 227, 236, 0), rgba(250, 220, 232, 0.75) 35%, var(--sakura-pale) 70%) bottom /
-            100% 34% no-repeat,
+        linear-gradient(180deg, rgba(251, 227, 236, 0), rgba(250, 220, 232, 0.45) 45%, rgba(251, 227, 236, 0.72))
+            bottom / 100% 30% no-repeat,
         conic-gradient(
-                from 0deg at 50% 91.43%,
+                from 0deg at 50% 81.25%,
                 rgba(253, 254, 255, 0) 0 140deg,
                 var(--fuji-snow) 140deg 220deg,
                 rgba(253, 254, 255, 0) 220deg
             )
-            top / 100% 70% no-repeat,
+            top / 100% 64% no-repeat,
         conic-gradient(
-            from 0deg at 50% 64%,
+            from 0deg at 50% 52%,
             rgba(74, 96, 143, 0) 0 140deg,
             var(--fuji-slope) 140deg 220deg,
             rgba(74, 96, 143, 0) 220deg
