@@ -213,6 +213,35 @@ describe("keyboard", () => {
             checkKeyState("correct");
         });
 
+        it("should not attach more document-level move listeners when the keyboard re-renders", () => {
+            cy.window().then((win) => {
+                const addEventListenerSpy = cy.spy(win.document, "addEventListener");
+
+                // Re-render the keyboard by submitting a guess...
+                cy.keyboardItem("l").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("s").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("enter").click();
+
+                // ...and by switching to another keyboard layout
+                cy.get(".settings-link").click();
+                cy.get(".setting.keyboard-switch").click();
+                cy.get(".settings-link").click();
+                cy.get(".keyboard").should("contain.text", "PYFGCRL");
+
+                cy.then(() => {
+                    const moveListenerCalls = addEventListenerSpy
+                        .getCalls()
+                        .filter(
+                            (call) => call.args[0] === "mousemove" || call.args[0] === "touchmove"
+                        );
+                    expect(moveListenerCalls).to.have.length(0);
+                });
+            });
+        });
+
         it("should not type the letter when touch is released outside the key element", () => {
             cy.viewport('iphone-6');
 

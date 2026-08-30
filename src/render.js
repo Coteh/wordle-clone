@@ -18,6 +18,45 @@ const renderInputRow = (parentElem, numberOfLetters) => {
     return container;
 };
 
+// Only one keyboard key can be pressed at a time, so the pending hold timeout is tracked
+// here rather than per render, allowing the move handlers below to cancel a hold started
+// by any keyboard that has been rendered.
+let keyHoldTimeout;
+
+const releasePressedKeyIfOutside = (clientX, clientY) => {
+    const pressedKey = document.querySelector(".keyboard-item[data-pressed='true']");
+    if (!pressedKey) return;
+
+    const rect = pressedKey.getBoundingClientRect();
+
+    // Check if the pointer position is outside the element's boundaries
+    if (
+        clientX < rect.left ||
+        clientX > rect.right ||
+        clientY < rect.top ||
+        clientY > rect.bottom
+    ) {
+        pressedKey.classList.remove("pressed");
+        pressedKey.classList.remove("held");
+        pressedKey.classList.add(pressedKey.dataset.letterStatus || "standard");
+        delete pressedKey.dataset.pressed;
+        clearTimeout(keyHoldTimeout);
+    }
+};
+
+// Registered once for the lifetime of the page, since the pressed key and its letter status
+// are looked up from the DOM. Registering these per render would leak a listener on every
+// keyboard re-render.
+document.addEventListener("mousemove", (e) => {
+    releasePressedKeyIfOutside(e.clientX, e.clientY);
+});
+
+document.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    releasePressedKeyIfOutside(touch.clientX, touch.clientY);
+});
+
 const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, gameState, keyboard) => {
     let rows;
     switch (keyboard) {
@@ -48,55 +87,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
     container.id = "keyboard";
     container.classList.add("keyboard");
 
-    let downTime, timeout;
-
-    const handleMouseMove = (e) => {
-        const pressedKey = document.querySelector(".keyboard-item[data-pressed='true']");
-        if (!pressedKey) return;
-
-        const rect = pressedKey.getBoundingClientRect();
-        const { clientX, clientY } = e;
-
-        // Check if the mouse position is outside the element's boundaries
-        if (
-            clientX < rect.left ||
-            clientX > rect.right ||
-            clientY < rect.top ||
-            clientY > rect.bottom
-        ) {
-            pressedKey.classList.remove("pressed");
-            pressedKey.classList.remove("held");
-            pressedKey.classList.add(letterMap.get(pressedKey.innerText.toLowerCase()) || "standard");
-            delete pressedKey.dataset.pressed;
-            clearTimeout(timeout);
-        }
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-
-    const handleTouchMove = (e) => {
-        const pressedKey = document.querySelector(".keyboard-item[data-pressed='true']");
-        if (!pressedKey) return;
-
-        const rect = pressedKey.getBoundingClientRect();
-        const { clientX, clientY } = e.touches[0];
-
-        // Check if the touch position is outside the element's boundaries
-        if (
-            clientX < rect.left ||
-            clientX > rect.right ||
-            clientY < rect.top ||
-            clientY > rect.bottom
-        ) {
-            pressedKey.classList.remove("pressed");
-            pressedKey.classList.remove("held");
-            pressedKey.classList.add(letterMap.get(pressedKey.innerText.toLowerCase()) || "standard");
-            delete pressedKey.dataset.pressed;
-            clearTimeout(timeout);
-        }
-    };
-
-    document.addEventListener("touchmove", handleTouchMove);
+    let downTime;
 
     rows.forEach((row) => {
         const rowElem = document.createElement("div");
@@ -109,6 +100,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.add("big");
             }
             itemElem.classList.add(letterStatus || "standard");
+            itemElem.dataset.letterStatus = letterStatus || "standard";
             itemElem.addEventListener("click", (e) => {
                 e.preventDefault();
                 handleKeyInput(item, false, false);
@@ -120,7 +112,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.remove(letterStatus || "standard");
                 itemElem.classList.add("pressed");
                 itemElem.dataset.pressed = "true";
-                timeout = setTimeout(() => {
+                keyHoldTimeout = setTimeout(() => {
                     itemElem.classList.remove("pressed");
                     itemElem.classList.add("held");
                 }, KEY_HOLD_TIMEOUT_MS);
@@ -135,7 +127,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.remove("pressed");
                 itemElem.classList.remove("held");
                 itemElem.classList.add(letterStatus || "standard");
-                clearTimeout(timeout);
+                clearTimeout(keyHoldTimeout);
             };
             itemElem.addEventListener("touchstart", (e) => {
                 e.preventDefault();
