@@ -96,6 +96,75 @@ describe("high contrast mode", () => {
         cy.get("body").should("not.have.class", "high-contrast");
     });
 
+    it("should leave the sakura theme's tile state colours untouched when high contrast is enabled", () => {
+        const stateColours = () =>
+            cy.window().then((win) => {
+                const style = win.getComputedStyle(win.document.body);
+                return {
+                    correct: style.getPropertyValue("--correct-color").trim(),
+                    within: style.getPropertyValue("--within-color").trim(),
+                    incorrect: style.getPropertyValue("--incorrect-color").trim(),
+                    letter: style.getPropertyValue("--letter-selected-text-color").trim(),
+                    inverted: style.getPropertyValue("--letter-selected-inverted-text-color").trim(),
+                };
+            });
+
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.sakura").click();
+        cy.get(".themes .back").click();
+
+        // The absent tile and the letter colours are the theme's own, so high contrast must
+        // not shift them. The correct and present colours are swapped for the colourblind
+        // palette by the global high contrast rule, which every theme shares - the sakura
+        // theme must not override that with values of its own either.
+        let normal;
+        stateColours().then((colours) => {
+            normal = colours;
+        });
+
+        cy.get(".setting.high-contrast").click();
+        cy.get("body").should("have.class", "sakura");
+        cy.get("body").should("have.class", "high-contrast");
+
+        stateColours().then((contrast) => {
+            expect(contrast.incorrect).to.equal(normal.incorrect);
+            expect(contrast.letter).to.equal(normal.letter);
+            // The shared colourblind palette, not anything sakura declares
+            expect(contrast.correct).to.equal("#f5793a");
+            expect(contrast.within).to.equal("#85c0f9");
+            expect(contrast.inverted).to.equal("#000");
+        });
+
+        // ...and those are the same values every other theme gets in high contrast
+        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.dark").click();
+        cy.get(".themes .back").click();
+
+        stateColours().then((dark) => {
+            expect(dark.correct).to.equal("#f5793a");
+            expect(dark.within).to.equal("#85c0f9");
+        });
+    });
+
+    it("should repaint the sakura background for high contrast, including the browser theme colour", () => {
+        cy.get(".settings-link").click();
+        cy.get(".setting.theme-switch").click();
+        cy.get(".theme-card.sakura").click();
+        cy.get(".themes .back").click();
+
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#0092e2");
+
+        cy.get(".setting.high-contrast").click();
+
+        cy.get("body").should("have.class", "high-contrast");
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#061421");
+
+        cy.get(".setting.high-contrast").click();
+
+        cy.get("meta[name='theme-color']").should("have.attr", "content", "#0092e2");
+    });
+
     it("should recolour the tiles and share feature as high contrast when high contrast is enabled", () => {
         cy.get(".help-link").click();
 

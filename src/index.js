@@ -489,6 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     document.body.classList.remove(HIGH_CONTRAST);
                 }
+                themeManager.refreshThemeColor();
                 savePreferenceValue(
                     HIGH_CONTRAST_PREFERENCE_NAME,
                     highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
@@ -543,6 +544,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const knob = setting.querySelector(".knob");
         knob.classList.add("enabled");
         document.body.classList.add(HIGH_CONTRAST);
+        themeManager.refreshThemeColor();
     }
     if (getPreferenceValue(HARD_MODE_PREFERENCE_NAME) === SETTING_ENABLED) {
         hardMode = true;

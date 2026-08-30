@@ -82,6 +82,15 @@ class ThemeManager {
         }
         this.selectedTheme = theme;
 
+        this.refreshThemeColor();
+    }
+
+    /**
+     * Re-apply the selected theme's color, dimmed or not depending on whether a dialog
+     * is open. Needed whenever something other than the theme itself changes the color,
+     * such as high contrast being toggled on a theme that repaints for it.
+     */
+    refreshThemeColor() {
         // Check if a dialog is currently open
         const dialog = document.querySelector(".dialog");
         const overlayBack = document.querySelector(".overlay-back");
@@ -151,6 +160,11 @@ class ThemeManager {
         // Every theme but dark is scoped to a class of the same name, dark uses :root variables
         if (theme !== DARK_MODE) {
             tempElem.className = theme;
+        }
+        // A theme can repaint its background for high contrast, so the probe has to carry
+        // that class too, otherwise the browser chrome keeps the normal mode's colour
+        if (document.body.classList.contains(HIGH_CONTRAST)) {
+            tempElem.classList.add(HIGH_CONTRAST);
         }
         
         try {

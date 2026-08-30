@@ -27,6 +27,7 @@
     --box-border-color-highlighted: var(--gray-5);
 
     --settings-item-border-color: 1px solid var(--gray-4);
+    --key-border-color: rgba(0, 0, 0, 0);
 
     --background-color: var(--black);
     --fallback-background-color: var(--background-color);
@@ -148,6 +149,74 @@
     --letter-selected-inverted-text-color: var(--black);
 
     --focused-card-border-color: var(--within-color);
+}
+
+/*
+ * Sakura in high contrast. The state colours above are fixed, and the widest luminance
+ * a background can have and still hold 3:1 against all three of them is set by the absent
+ * tile (#8a6f80): every pixel a tile can sit against has to be at or below about #113145.
+ * The daylight sky (#0092e2) and the sunlit snowcap (#fafcfe) are both far outside that,
+ * so this variant repaints the scene at night. Only neutrals are touched here - none of
+ * --correct-color, --within-color, --incorrect-color, --letter-selected-text-color,
+ * --letter-selected-inverted-text-color or --focused-card-border-color are set, so the
+ * tile states stay byte-identical to normal mode.
+ *
+ * The second selector applies the same repaint to the sakura card in the themes pane,
+ * which carries the theme class but not the body's high-contrast class.
+ */
+.sakura.high-contrast,
+body.high-contrast .theme-card.sakura {
+    --sakura-sky: #061421;
+    --fuji-slope: #050d18;
+    --fuji-snow: #16283c;
+
+    /* Keys go dark so they clear all three state colours, and take a visible outline so
+       they still read against the night sky. A light key is not an option: it would have
+       to be above L 0.64 to clear the absent tile, which no value can do and still clear
+       the orange correct tile. */
+    --standard-color: #221b29;
+    --key-border-color: #9d8aa8;
+
+    /* Opaque, unlike the frosted tile in normal mode. Frosting made the empty tile range
+       from #83cef6 to #fafcfe depending on whether the peak was behind it, which left its
+       contrast against the state tiles dependent on board position. */
+    --standard-block-color: #151a24;
+    --box-border-color: #8d7794;
+    --box-border-color-highlighted: #c9a9d4;
+
+    --settings-item-border-color: 1px solid rgba(253, 234, 242, 0.4);
+
+    /* The blossom branches are dropped rather than dimmed. To sit inside the envelope
+       above they would have to be darker than #3a2536, which against this sky is a
+       contrast of about 1.1 - invisible art rather than a framing device. */
+    --background-color:
+        linear-gradient(180deg, rgba(6, 10, 20, 0), rgba(6, 10, 20, 0.6) 45%, rgba(6, 10, 20, 0.85)) bottom / 100% 30%
+            no-repeat,
+        conic-gradient(
+                from 0deg at 50% 81.25%,
+                rgba(22, 40, 60, 0) 0 140deg,
+                var(--fuji-snow) 140deg 220deg,
+                rgba(22, 40, 60, 0) 220deg
+            )
+            top / 100% 64% no-repeat,
+        conic-gradient(
+            from 0deg at 50% 52%,
+            rgba(5, 13, 24, 0) 0 140deg,
+            var(--fuji-slope) 140deg 220deg,
+            rgba(5, 13, 24, 0) 220deg
+        ),
+        linear-gradient(180deg, #061421 0%, #08192a 30%, #0a1d31 60%, #0d2339 100%);
+    --fallback-background-color: var(--sakura-sky);
+
+    --dialog-background-color: #1b1220;
+
+    --text-color: var(--sakura-pale);
+    --letter-text-color: var(--sakura-pale);
+
+    --notification-background-color: var(--sakura-pale);
+    --notification-text-color: var(--sakura-ink);
+
+    --active-card-border-color: var(--sakura-pale);
 }
 
 /* Main Content */
@@ -611,7 +680,7 @@ a {
     position: relative;
     padding: 1em 0.5em;
     margin: 0.1em;
-    border: 1px solid rgba(0, 0, 0, 0);
+    border: 1px solid var(--key-border-color);
     border-radius: 0.25em;
     width: 5%;
     height: 1em;
@@ -749,12 +818,6 @@ body a > .commit-hash {
 
 body a > .commit-hash {
     font-size: 16px;
-}
-
-body.sakura .dialog {
-    /* Dialogs in this theme are dark, so the example boxes inside them need more
-       frosting than the ones on the board to keep the letters in them readable */
-    --standard-block-color: rgba(255, 255, 255, 0.86);
 }
 
 /* Settings Toggle */
