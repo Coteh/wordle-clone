@@ -333,6 +333,50 @@ describe("gameplay", () => {
         cy.keyboardItem("z").should("have.class", "incorrect");
     });
 
+    it("stops the next Wordle countdown timer once the result dialog is closed", () => {
+        cy.window().then((win) => {
+            // The countdown is the only interval the game starts, so track every 1 second
+            // interval and whether it gets cleared
+            const runningIntervals = new Set();
+            const originalSetInterval = win.setInterval;
+            const originalClearInterval = win.clearInterval;
+
+            cy.stub(win, "setInterval").callsFake((fn, ms, ...args) => {
+                const id = originalSetInterval.call(win, fn, ms, ...args);
+                if (ms === 1000) runningIntervals.add(id);
+                return id;
+            });
+            cy.stub(win, "clearInterval").callsFake((id) => {
+                runningIntervals.delete(id);
+                return originalClearInterval.call(win, id);
+            });
+
+            // Lose the game to bring up the result dialog and its countdown
+            for (let i = 0; i < 6; i++) {
+                cy.keyboardItem("b").click();
+                cy.keyboardItem("a").click();
+                cy.keyboardItem("r").click();
+                cy.keyboardItem("g").click();
+                cy.keyboardItem("e").click();
+                cy.keyboardItem("enter").click();
+            }
+
+            cy.contains("Next Wordle").should("be.visible");
+            cy.then(() => {
+                expect(runningIntervals.size, "countdown interval while dialog is open").to.equal(1);
+            });
+
+            cy.get(".overlay-back").click("left");
+            cy.get(".dialog").should("not.exist");
+
+            // The countdown stops itself on its next tick after the dialog has gone away
+            cy.wait(1100);
+            cy.then(() => {
+                expect(runningIntervals.size, "countdown interval after dialog closed").to.equal(0);
+            });
+        });
+    });
+
     describe("when player wins", () => {
         beforeEach(() => {
             cy.keyboardItem("l").click();
