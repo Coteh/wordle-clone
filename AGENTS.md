@@ -88,11 +88,22 @@ Never carry issue-tracker or agent metadata into the repository:
   trailers naming an assistant, and no model names (`claude-*`, `gpt-*`, `gemini-*`, and the
   like) in commit messages, PR titles, PR descriptions, or any file pushed to the repository.
 
+## Agent instruction files
+
+This file is the source of truth, and every rule belongs here. `CLAUDE.md` exists only
+because Claude Code reads `CLAUDE.md` and not `AGENTS.md`; it is a single `@AGENTS.md`
+import line. Keep it that way — do not let an `/init`-style command copy this file's
+contents into it, since duplicated instructions drift apart and nothing says which copy is
+current.
+
 ## Environment gotchas
 
 - Cypress binaries download from `download.cypress.io`, which is blocked in some sandboxed
   agent environments, so `pnpm cypress:run` cannot run there. Install with
   `CYPRESS_INSTALL_BINARY=0` to get the rest of the dependencies, run the mocha tests, and
-  drive the app in a real browser by hand to check behaviour. CI runs the real suite.
+  drive the app in a real browser by hand to check behaviour. CI runs the real suite. Where
+  the sandbox ships Chromium and Playwright — Claude Code web sessions have them, with the
+  browsers at `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` — serving the repo root and
+  scripting the interaction is how DOM and input-handling changes get verified.
 - The app fetches `words.txt` at the site root, so a plain static server over the repo root
   is enough to exercise the browser game without `pnpm build`.
