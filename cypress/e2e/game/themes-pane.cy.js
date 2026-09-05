@@ -31,12 +31,14 @@ describe("themes pane", () => {
         cy.get(".theme-card.dark").should("be.visible");
         cy.get(".theme-card.light").should("be.visible");
         cy.get(".theme-card.snow").should("be.visible");
+        cy.get(".theme-card.sakura").should("be.visible");
     });
 
     it("should mark the currently active theme card", () => {
         cy.get(".theme-card.dark").should("have.class", "active");
         cy.get(".theme-card.light").should("not.have.class", "active");
         cy.get(".theme-card.snow").should("not.have.class", "active");
+        cy.get(".theme-card.sakura").should("not.have.class", "active");
     });
 
     it("should switch theme and update active card when a card is clicked", () => {

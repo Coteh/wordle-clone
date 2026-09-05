@@ -1,6 +1,7 @@
 const LIGHT_MODE = "light";
 const DARK_MODE = "dark";
 const SNOW_THEME = "snow";
+const SAKURA_THEME = "sakura";
 const QWERTY_KEYBOARD = "qwerty";
 const DVORAK_KEYBOARD = "dvorak";
 const ALPHABETICAL_KEYBOARD = "alphabetical";
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let day;
     let gameLoaded = false;
 
-    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME];
+    const selectableThemes = [DARK_MODE, LIGHT_MODE, SNOW_THEME, SAKURA_THEME];
     let themeManager = ThemeManager.getInstance();
     themeManager.setSelectableThemes(selectableThemes);
 
@@ -496,6 +497,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } else {
                     document.body.classList.remove(HIGH_CONTRAST);
                 }
+                themeManager.refreshThemeColor();
                 savePreferenceValue(
                     HIGH_CONTRAST_PREFERENCE_NAME,
                     highContrastMode ? SETTING_ENABLED : SETTING_DISABLED
@@ -550,6 +552,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const knob = setting.querySelector(".knob");
         knob.classList.add("enabled");
         document.body.classList.add(HIGH_CONTRAST);
+        themeManager.refreshThemeColor();
     }
     if (getPreferenceValue(HARD_MODE_PREFERENCE_NAME) === SETTING_ENABLED) {
         hardMode = true;

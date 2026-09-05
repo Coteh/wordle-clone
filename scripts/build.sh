@@ -25,6 +25,7 @@ cp src/theme/*.js $OUTPUT_DIR/src/theme
 cp vendor/*.js $OUTPUT_DIR/vendor
 cp vendor/*.css $OUTPUT_DIR/vendor
 cp images/*.png $OUTPUT_DIR/images
+cp images/*.svg $OUTPUT_DIR/images
 cp favicon.ico $OUTPUT_DIR
 cp manifest.json $OUTPUT_DIR
 cp words.txt $OUTPUT_DIR

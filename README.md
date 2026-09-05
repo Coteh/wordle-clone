@@ -149,6 +149,32 @@ pnpm run dev
 
 The game should render when navigating to http://localhost:5500.
 
+### Checking Theme Contrast
+
+When adding a theme, or giving one a high contrast variant, this reports the WCAG contrast ratios between its colours:
+
+```sh
+pnpm run contrast              # every theme, normal and high contrast
+pnpm run contrast sakura       # just one theme
+pnpm run contrast sakura -- --contrast   # just its high contrast mode
+```
+
+The colours are read out of `index.css`, so the report follows the themes as they change.
+
+High contrast fixes the tile state colours (orange, blue, and the theme's own absent colour), which leaves the background as the thing that has to move. To find one, sweep a hue:
+
+```sh
+pnpm run contrast -- --search --hue=204 --theme=sakura
+```
+
+That prints the lightest background per saturation level that still holds 3:1 against all three state colours. Stay at or below those, then pick whichever suits the theme.
+
+One caveat. A theme whose background is a gradient or an image has no single colour, so the script falls back to `--fallback-background-color` and says so in its output. That fallback is only one point of the real background — the sakura theme's runs from `#0092e2` at the top of the sky to `#fafcfe` on the snowcap. Where a ratio matters, screenshot the running game at a device pixel ratio of 1, sample the pixel in question (clear of any letter, or the antialiasing skews the reading), and pass it back in:
+
+```sh
+pnpm run contrast sakura -- --contrast --backdrop=#081a2c
+```
+
 ### HTTPS Local Development
 
 The share feature uses the share sheet provided by the browser/OS and can also fall back to the browser's clipboard feature if the share sheet isn't available. Both of these features need a secure context to operate, requiring the use of a local HTTPS server when developing them. However, the game can still run on a HTTP server, where it will default to legacy clipboard functionality.
