@@ -175,7 +175,7 @@ describe("keyboard", () => {
         });
 
         it("should not let an already released key shadow the next key pressed", () => {
-            // A press and release leaves nothing behind for the pressed key lookup to find
+            // A press and release should leave no marker behind
             cy.keyboardItem("a").trigger("mousedown");
             cy.keyboardItem("a").trigger("mouseup");
             cy.keyboardItem("a").should("not.have.attr", "data-pressed");
@@ -236,7 +236,7 @@ describe("keyboard", () => {
             cy.window().then((win) => {
                 const addEventListenerSpy = cy.spy(win.document, "addEventListener");
 
-                // Re-render the keyboard by submitting a guess...
+                // Submitting a guess re-renders the keyboard
                 cy.keyboardItem("l").click();
                 cy.keyboardItem("e").click();
                 cy.keyboardItem("a").click();
@@ -244,7 +244,7 @@ describe("keyboard", () => {
                 cy.keyboardItem("e").click();
                 cy.keyboardItem("enter").click();
 
-                // ...and by switching to another keyboard layout
+                // So does switching keyboard layout
                 cy.get(".settings-link").click();
                 cy.get(".setting.keyboard-switch").click();
                 cy.get(".settings-link").click();
