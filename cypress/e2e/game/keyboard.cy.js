@@ -174,6 +174,25 @@ describe("keyboard", () => {
             checkKeyStates("correct", "incorrect");
         });
 
+        it("should not let an already released key shadow the next key pressed", () => {
+            // A press and release leaves nothing behind for the pressed key lookup to find
+            cy.keyboardItem("a").trigger("mousedown");
+            cy.keyboardItem("a").trigger("mouseup");
+            cy.keyboardItem("a").should("not.have.attr", "data-pressed");
+
+            cy.keyboardItem("s").trigger("mousedown");
+            cy.keyboardItem("s").should("have.class", "pressed");
+
+            cy.keyboardItem("d").trigger("mousemove");
+
+            cy.keyboardItem("s").should("not.have.class", "pressed");
+            cy.keyboardItem("s").should("not.have.class", "held");
+            cy.keyboardItem("s").should("have.class", "standard");
+            cy.keyboardItem("s").should("not.have.attr", "data-pressed");
+
+            cy.keyboardItem("s").trigger("mouseup");
+        });
+
         it("should restore the letter status of the key when touch is moved outside the key element", () => {
             const checkKeyState = (originalState) => {
                 cy.keyboardItem("a").trigger("touchstart", {
