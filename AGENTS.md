@@ -51,6 +51,12 @@ npx prettier@3 src/render.js | diff -u src/render.js - # new lines should be the
 
 Prefer the idioms already in the file over a "better" pattern imported from elsewhere.
 
+Comment only what the code cannot say, and keep it to one line per section. Skip anything a
+well-named call, the symmetry with nearby code, or the very next line already makes clear.
+The comments that earn their place explain why code sits where it does, or a constraint that
+is invisible on the page. Reasoning about why one approach beat another belongs in the commit
+message, where it will not go stale.
+
 ## Testing
 
 - Game logic, storage, dates, sharing, migrations → unit tests in `test/` (mocha, sinon,
