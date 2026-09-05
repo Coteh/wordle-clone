@@ -122,7 +122,6 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.remove("pressed");
                 itemElem.classList.remove("held");
                 itemElem.classList.add(letterStatus || "standard");
-                // Clear the marker too, or this key shadows the one pressed next
                 delete itemElem.dataset.pressed;
                 clearTimeout(keyHoldTimeout);
             };
