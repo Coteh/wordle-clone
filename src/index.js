@@ -50,11 +50,9 @@ const clearCountdownInterval = () => {
 };
 
 const setCountdownInterval = (nextDate) => {
-    // Only one countdown is on screen, so never leave an older interval running
     clearCountdownInterval();
     countdownInterval = setInterval(() => {
         const nextDateElem = document.querySelector(".countdown");
-        // Dialogs close from several places, so the interval stops itself here instead
         if (!nextDateElem) return clearCountdownInterval();
         updateCountdown(nextDateElem, nextDate);
     }, 1000);
