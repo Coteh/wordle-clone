@@ -127,6 +127,9 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.remove("pressed");
                 itemElem.classList.remove("held");
                 itemElem.classList.add(letterStatus || "standard");
+                // Clear the marker too, otherwise a released key keeps matching the pressed
+                // key lookup in releasePressedKeyIfOutside and shadows the key pressed next
+                delete itemElem.dataset.pressed;
                 clearTimeout(keyHoldTimeout);
             };
             itemElem.addEventListener("touchstart", (e) => {
