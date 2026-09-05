@@ -335,8 +335,7 @@ describe("gameplay", () => {
 
     it("stops the next Wordle countdown timer once the result dialog is closed", () => {
         cy.window().then((win) => {
-            // The countdown is the only interval the game starts, so track every 1 second
-            // interval and whether it gets cleared
+            // The countdown is the game's only interval, so track every 1 second one
             const runningIntervals = new Set();
             const originalSetInterval = win.setInterval;
             const originalClearInterval = win.clearInterval;
@@ -351,7 +350,7 @@ describe("gameplay", () => {
                 return originalClearInterval.call(win, id);
             });
 
-            // Lose the game to bring up the result dialog and its countdown
+            // Lose the game to open the result dialog
             for (let i = 0; i < 6; i++) {
                 cy.keyboardItem("b").click();
                 cy.keyboardItem("a").click();
@@ -369,7 +368,7 @@ describe("gameplay", () => {
             cy.get(".overlay-back").click("left");
             cy.get(".dialog").should("not.exist");
 
-            // The countdown stops itself on its next tick after the dialog has gone away
+            // The interval stops itself on its next tick
             cy.wait(1100);
             cy.then(() => {
                 expect(runningIntervals.size, "countdown interval after dialog closed").to.equal(0);

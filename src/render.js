@@ -18,9 +18,7 @@ const renderInputRow = (parentElem, numberOfLetters) => {
     return container;
 };
 
-// Only one keyboard key can be pressed at a time, so the pending hold timeout is tracked
-// here rather than per render, allowing the move handlers below to cancel a hold started
-// by any keyboard that has been rendered.
+// Only one key is pressed at a time, so the move handlers below share this timeout
 let keyHoldTimeout;
 
 const releasePressedKeyIfOutside = (clientX, clientY) => {
@@ -29,7 +27,6 @@ const releasePressedKeyIfOutside = (clientX, clientY) => {
 
     const rect = pressedKey.getBoundingClientRect();
 
-    // Check if the pointer position is outside the element's boundaries
     if (
         clientX < rect.left ||
         clientX > rect.right ||
@@ -44,9 +41,7 @@ const releasePressedKeyIfOutside = (clientX, clientY) => {
     }
 };
 
-// Registered once for the lifetime of the page, since the pressed key and its letter status
-// are looked up from the DOM. Registering these per render would leak a listener on every
-// keyboard re-render.
+// Registered once rather than per render, so re-rendering the keyboard leaks no listeners
 document.addEventListener("mousemove", (e) => {
     releasePressedKeyIfOutside(e.clientX, e.clientY);
 });
@@ -127,8 +122,7 @@ const renderKeyboard = (parentElem, letterMap, handleKeyInput, handleHoldInput, 
                 itemElem.classList.remove("pressed");
                 itemElem.classList.remove("held");
                 itemElem.classList.add(letterStatus || "standard");
-                // Clear the marker too, otherwise a released key keeps matching the pressed
-                // key lookup in releasePressedKeyIfOutside and shadows the key pressed next
+                // Clear the marker too, or this key shadows the one pressed next
                 delete itemElem.dataset.pressed;
                 clearTimeout(keyHoldTimeout);
             };
