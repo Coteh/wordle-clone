@@ -96,11 +96,11 @@ Never carry issue-tracker or agent metadata into the repository:
 
 ## Agent instruction files
 
-This file is the source of truth, and every rule belongs here. `CLAUDE.md` exists only
-because Claude Code reads `CLAUDE.md` and not `AGENTS.md`; it is a single `@AGENTS.md`
-import line. Keep it that way — do not let an `/init`-style command copy this file's
-contents into it, since duplicated instructions drift apart and nothing says which copy is
-current.
+This file is the source of truth, and every rule belongs here. There is deliberately no
+`CLAUDE.md`: Claude Code reads `AGENTS.md` directly in a project that has no `CLAUDE.md`,
+so a second file would buy nothing. Do not add one back, and in particular do not let an
+`/init`-style command write this file's contents into one, since duplicated instructions
+drift apart and nothing says which copy is current.
 
 ## Environment gotchas
 
