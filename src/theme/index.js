@@ -44,7 +44,7 @@ class ThemeManager {
 
     /**
      * Get the background color for a given theme
-     * @param {string} theme - Theme name (dark, light, snow)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getThemeColor(theme) {
@@ -53,7 +53,7 @@ class ThemeManager {
 
     /**
      * Get the dimmed (blended with overlay) color for a given theme
-     * @param {string} theme - Theme name (dark, light, snow)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getDimmedThemeColor(theme) {
@@ -64,7 +64,7 @@ class ThemeManager {
 
     /**
      * Switch themes
-     * @param {string} theme - Theme name to switch to (dark, light, snow)
+     * @param {string} theme - Theme name to switch to (dark, light, snow, sakura)
      */
     switchTheme(theme) {
         if (!theme || !this.selectableThemes.includes(theme)) {
@@ -82,6 +82,15 @@ class ThemeManager {
         }
         this.selectedTheme = theme;
 
+        this.refreshThemeColor();
+    }
+
+    /**
+     * Re-apply the selected theme's color, dimmed or not depending on whether a dialog
+     * is open. Needed whenever something other than the theme itself changes the color,
+     * such as high contrast being toggled on a theme that repaints for it.
+     */
+    refreshThemeColor() {
         // Check if a dialog is currently open
         const dialog = document.querySelector(".dialog");
         const overlayBack = document.querySelector(".overlay-back");
@@ -127,7 +136,7 @@ class ThemeManager {
 
     /**
      * Get the background color for a given theme from CSS variables
-     * @param {string} theme - Theme name (dark, light, snow)
+     * @param {string} theme - Theme name (dark, light, snow, sakura)
      * @returns {string} RGB color string
      */
     getThemeColorFromCSS(theme) {
@@ -135,7 +144,8 @@ class ThemeManager {
         const fallbackColors = {
             [DARK_MODE]: "rgb(0, 0, 0)",
             [LIGHT_MODE]: "rgb(255, 255, 255)",
-            [SNOW_THEME]: "rgb(2, 0, 36)"
+            [SNOW_THEME]: "rgb(2, 0, 36)",
+            [SAKURA_THEME]: "rgb(0, 146, 226)"
         };
         
         // Check if document.body exists
@@ -147,36 +157,39 @@ class ThemeManager {
         const tempElem = document.createElement("div");
         tempElem.style.display = "none";
         
-        if (theme === LIGHT_MODE) {
-            tempElem.className = LIGHT_MODE;
-        } else if (theme === SNOW_THEME) {
-            tempElem.className = SNOW_THEME;
+        // Every theme but dark is scoped to a class of the same name, dark uses :root variables
+        if (theme !== DARK_MODE) {
+            tempElem.className = theme;
         }
-        // dark theme uses :root variables (no class needed)
+        // A theme can repaint its background for high contrast, so the probe has to carry
+        // that class too, otherwise the browser chrome keeps the normal mode's colour
+        if (document.body.classList.contains(HIGH_CONTRAST)) {
+            tempElem.classList.add(HIGH_CONTRAST);
+        }
         
         try {
             document.body.appendChild(tempElem);
             const computedStyle = window.getComputedStyle(tempElem);
             
-            // Get the background color from CSS variable
-            let bgColor = computedStyle.getPropertyValue("--background-color").trim();
+            // Resolve a CSS variable to an rgb string, or to an empty string if the variable
+            // doesn't hold a plain color. Themes that paint their background with gradients
+            // fall into the latter case, and declare a solid fallback color to use instead.
+            const resolveColor = (value) => {
+                if (!value) return "";
+                if (value.startsWith("rgb")) return value;
+                // Assigning an invalid value leaves the previous one in place, so clear it first
+                tempElem.style.backgroundColor = "";
+                tempElem.style.backgroundColor = value;
+                const resolved = window.getComputedStyle(tempElem).backgroundColor;
+                return resolved !== "rgba(0, 0, 0, 0)" ? resolved : "";
+            };
             
-            // For snow theme, use fallback color if gradient is defined
-            if (theme === SNOW_THEME && (bgColor.startsWith("linear-gradient") || bgColor.startsWith("radial-gradient"))) {
-                bgColor = computedStyle.getPropertyValue("--fallback-background-color").trim();
-            }
-            
-            // If CSS variable returns a named color or hex, convert to rgb
-            if (bgColor && !bgColor.startsWith("rgb")) {
-                // Apply to temp element and get computed color
-                tempElem.style.backgroundColor = bgColor;
-                // Reuse computedStyle by getting a fresh reference after style change
-                const updatedStyle = window.getComputedStyle(tempElem);
-                bgColor = updatedStyle.backgroundColor;
-            }
+            const bgColor =
+                resolveColor(computedStyle.getPropertyValue("--background-color").trim()) ||
+                resolveColor(computedStyle.getPropertyValue("--fallback-background-color").trim());
             
             // Return the color if valid, otherwise fallback
-            if (bgColor && bgColor !== "rgba(0, 0, 0, 0)") {
+            if (bgColor) {
                 return bgColor;
             }
         } finally {

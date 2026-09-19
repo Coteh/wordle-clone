@@ -17,7 +17,8 @@
     "test": "NODE_ENV=test mocha",
     "test-ci": "NODE_ENV=test mocha test --reporter mocha-junit-reporter --reporter-options mochaFile=./results/unit-test-results.xml",
     "cypress": "cypress",
-    "cypress:run": "cypress run --spec 'cypress/e2e/**/*.cy.js' --browser chrome"
+    "cypress:run": "cypress run --spec 'cypress/e2e/**/*.cy.js' --browser chrome",
+    "contrast": "node ./scripts/check_contrast.js"
   },
   "keywords": [],
   "author": "James Cote (Coteh)",
