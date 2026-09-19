@@ -4,6 +4,56 @@ const DAY_MS = 86400000;
 // March 23 2022 - initial release date
 const FIRST_DAY_MS = 1647993600000;
 
+describe("win dialog fadeIn animation", () => {
+    beforeEach(() => {
+        // Freeze ALL timers (including setTimeout) so we can control when the fadeIn timer fires.
+        // This lets us close the dialog before the 10ms timer runs - which is the race condition
+        // that causes "can't access property 'style', dialog is null" (render.js:221).
+        cy.clock(FIRST_DAY_MS + DAY_MS * 1 + (DAY_MS * 1) / 2);
+        cy.intercept("/words.txt", {
+            fixture: "words.txt",
+        });
+        cy.clearBrowserCache();
+        cy.visit("/", {
+            onBeforeLoad: (win) => {
+                win.localStorage.setItem("wc_played_before", "true");
+            },
+        });
+        cy.waitForGameReady();
+        // Win the game (word for this day is "leafy")
+        cy.keyboardItem("l").click();
+        cy.keyboardItem("e").click();
+        cy.keyboardItem("a").click();
+        cy.keyboardItem("f").click();
+        cy.keyboardItem("y").click();
+        cy.keyboardItem("enter").click();
+    });
+
+    it("should display win dialog after player wins", () => {
+        // Tick to fire the frozen fadeIn timer - dialog transitions from opacity:0 to visible
+        cy.tick(10);
+        cy.contains("You win!").should("be.visible");
+    });
+
+    it("should not throw when the dialog is removed before the fadeIn timer fires", () => {
+        // The win dialog is shown with opacity:0 (timer is frozen, so it stays invisible).
+        // Clicking the overlay while the dialog is invisible is what triggers the bug in prod -
+        // the player sees nothing and clicks through, closing the dialog. When the frozen 10ms
+        // timer eventually fires, document.querySelector(".dialog") returns null and throws.
+        cy.get(".dialog").should("exist");
+
+        // Close the dialog before the timer fires (simulates overlay click on the invisible dialog)
+        cy.get(".overlay-back").click();
+
+        cy.get(".dialog").should("not.exist");
+
+        // Fire the frozen fadeIn timer - this is where the crash occurs with the buggy code:
+        // "Uncaught TypeError: can't access property 'style', dialog is null" (render.js:221)
+        // Cypress automatically fails the test if an uncaught exception is thrown.
+        cy.tick(10);
+    });
+});
+
 describe("dialogs", () => {
     beforeEach(() => {
         // only mock the "Date" object, otherwise events that use setTimeout like dialog messages won't work
