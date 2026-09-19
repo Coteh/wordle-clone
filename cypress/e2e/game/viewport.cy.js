@@ -120,4 +120,27 @@ describe("viewport", () => {
             cy.contains("Next Wordle").should("be.visible").shouldBeInViewport();
         });
     });
+
+    [
+        {
+            name: "small mobile device",
+            width: 320,
+            height: 480,
+        },
+        {
+            name: "medium mobile device",
+            width: 375,
+            height: 667,
+        },
+    ].forEach((def) => {
+        it(`should show migration dialog OK button fully visible on a ${def.name}`, () => {
+            cy.viewport(def.width, def.height);
+
+            cy.get(".debug-link#debug").click();
+            cy.contains("Migration Dialog").click();
+
+            cy.get(".dialog").should("be.visible").shouldBeInViewport();
+            cy.get(".dialog .ok").should("be.visible").shouldBeInViewport();
+        });
+    });
 });
