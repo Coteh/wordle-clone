@@ -15,6 +15,7 @@ if (typeof process !== "undefined") {
     const datetime = require("./datetime");
     getCurrentDay = datetime.getCurrentDay;
 
+    WORD_LENGTH = require("./consts").WORD_LENGTH;
     STARTING_LIVES = require("./consts").STARTING_LIVES;
 
     debugEnabled = process.env.DEBUG === "true";
@@ -71,7 +72,7 @@ const getHardModeErrorMessage = (letterAttempt) => {
 const getErrorMessage = (error, userInput) => {
     switch (error.error) {
         case WORDS_DIFFERENT_LENGTH_ERROR_ID:
-            if (userInput && userInput.length > 5) {
+            if (userInput && userInput.length > WORD_LENGTH) {
                 return "Too many letters";
             } else {
                 return "Not enough letters";

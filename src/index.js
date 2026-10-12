@@ -66,8 +66,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let inputRowElems = [];
     let currentInputElem;
     let currentInput = "";
-    for (let i = 0; i < 6; i++) {
-        inputRowElems.push(renderInputRow(middleElem, 5));
+    for (let i = 0; i < STARTING_LIVES; i++) {
+        inputRowElems.push(renderInputRow(middleElem, WORD_LENGTH));
     }
 
     let gameState;
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const wordleRenderer = {
         renderInitialState(attempts) {
             attempts.forEach((attempt, index) => {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < WORD_LENGTH; i++) {
                     inputRowElems[index].querySelector(`div:nth-child(${i + 1}) > span`).innerText =
                         attempt[i].letter;
                     inputRowElems[index].querySelector(
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderKeyboard(bottomElem, letterMap, handleKeyInput, handleHoldInput, gameState, selectedKeyboard);
         },
         renderCheckResults(results) {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < WORD_LENGTH; i++) {
                 document.querySelector(
                     `#current-input > div:nth-child(${i + 1})`
                 ).className = `box ${getLetterColourClass(results, i)}`;
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         renderLifeDecrease(lives) {
             currentInputElem.id = "";
-            currentInputElem = inputRowElems[6 - lives];
+            currentInputElem = inputRowElems[STARTING_LIVES - lives];
             currentInputElem.id = "current-input";
             currentLetterIndex = 0;
             currentInput = "";
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     : null,
                 hardMode
             );
-        } else if (key.length === 1 && key >= "a" && key <= "z" && currentLetterIndex < 5) {
+        } else if (key.length === 1 && key >= "a" && key <= "z" && currentLetterIndex < WORD_LENGTH) {
             wordleRenderer.renderInput(key);
             currentInput = currentInput + key.toLowerCase();
         } else if (key === "backspace" && currentLetterIndex > 0) {
