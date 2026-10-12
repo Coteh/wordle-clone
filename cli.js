@@ -4,7 +4,7 @@ const fs = require("fs");
 const readline = require("readline");
 const { stdin: input, stdout: output } = require("process");
 const { generateShareText } = require("./src/share");
-const { STARTING_LIVES } = require("./src/consts");
+const { WORD_LENGTH, STARTING_LIVES } = require("./src/consts");
 const { getCountdownString, getNextDate } = require("./src/datetime");
 const { version } = require("./package");
 const { loadPreferences, savePreferences, STATE_JSON_FILENAME, PREFERENCES_JSON_FILENAME } = require("./src/storage/cli");
@@ -113,7 +113,7 @@ Good luck!`;
 };
 
 const renderState = (gameState) => {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < STARTING_LIVES; i++) {
         if (i < gameState.attempts.length) {
             console.log(
                 gameState.attempts[i]
@@ -127,7 +127,7 @@ const renderState = (gameState) => {
                     .join("")
             );
         } else {
-            console.log("_____");
+            console.log("_".repeat(WORD_LENGTH));
         }
     }
 };
